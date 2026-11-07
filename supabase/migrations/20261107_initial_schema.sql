@@ -565,3 +565,75 @@ BEGIN
 END;
 $$;
 
+-- ======================================================================================
+-- 35. REVIEWS & RATINGS (Amazon-Level Customer Appraisals)
+-- ======================================================================================
+CREATE TABLE IF NOT EXISTS reviews (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+    profile_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+    user_name VARCHAR(150) NOT NULL,
+    rating INT CHECK (rating >= 1 AND rating <= 5) NOT NULL,
+    title VARCHAR(255),
+    comment TEXT NOT NULL,
+    is_verified_purchase BOOLEAN DEFAULT false,
+    helpful_votes INT DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ======================================================================================
+-- 36. USER_ADDRESSES (Multi-Address Book)
+-- ======================================================================================
+CREATE TABLE IF NOT EXISTS user_addresses (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    profile_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
+    name VARCHAR(150) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    street TEXT NOT NULL,
+    landmark VARCHAR(150),
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
+    pincode VARCHAR(10) NOT NULL,
+    type VARCHAR(20) DEFAULT 'home', -- 'home', 'work', 'other'
+    is_default BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ======================================================================================
+-- 37. COUPONS & PROMOTIONAL OFFERS
+-- ======================================================================================
+CREATE TABLE IF NOT EXISTS coupons (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    code VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT,
+    discount_type VARCHAR(20) NOT NULL, -- 'percentage', 'fixed'
+    discount_value NUMERIC(10, 2) NOT NULL,
+    min_order_value NUMERIC(10, 2) DEFAULT 0,
+    max_discount NUMERIC(10, 2),
+    expires_at TIMESTAMPTZ,
+    usage_limit INT,
+    used_count INT DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ======================================================================================
+-- 38. FREQUENTLY_BOUGHT_TOGETHER BUNDLES
+-- ======================================================================================
+CREATE TABLE IF NOT EXISTS frequently_bought_together (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    main_product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+    bundled_product_id UUID REFERENCES products(id) ON DELETE CASCADE,
+    combo_discount_percent NUMERIC(5, 2) DEFAULT 10.00,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(main_product_id, bundled_product_id)
+);
+
+-- INDEXES FOR SCALE
+CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews(product_id);
+CREATE INDEX IF NOT EXISTS idx_user_addresses_profile ON user_addresses(profile_id);
+CREATE INDEX IF NOT EXISTS idx_coupons_code ON coupons(code);
+
+

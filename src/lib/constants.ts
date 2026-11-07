@@ -30,3 +30,4 @@ export const AVAILABLE_COUPONS: Coupon[] = [
     usedCount: 89,
   },
 ];
+
