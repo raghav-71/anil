@@ -4,6 +4,7 @@ import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import { AuthProvider } from "@/lib/auth-context";
 import { CartDrawer } from "@/components/storefront/CartDrawer";
+import { WhatsAppButton } from "@/components/storefront/WhatsAppButton";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({
           <CartProvider>
             {children}
             <CartDrawer />
+            <WhatsAppButton />
           </CartProvider>
         </AuthProvider>
       </body>

@@ -34,6 +34,8 @@ export async function POST(req: NextRequest) {
       items: orderDetails.items,
       paymentMethod: "razorpay",
       paymentId: razorpay_payment_id,
+      discountAmount: orderDetails.discountAmount || 0,
+      couponCode: orderDetails.couponCode,
     });
 
     if (!result.success) {

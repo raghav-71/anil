@@ -84,9 +84,10 @@ function TrackOrderContent() {
       pending: 0,
       confirmed: 1,
       processing: 2,
-      shipped: 3,
-      out_for_delivery: 4,
-      delivered: 5,
+      packed: 3,
+      shipped: 4,
+      out_for_delivery: 5,
+      delivered: 6,
       cancelled: -1,
       returned: -1,
     };

@@ -15,12 +15,18 @@ import {
   ShoppingBag,
   Award,
   Shield,
+  Heart,
+  Scale,
+  Tag,
+  Copy,
+  Clock,
 } from "lucide-react";
 
 export default function HomePage() {
-  const { addItem } = useCart();
+  const { addItem, toggleWishlist, isInWishlist, toggleCompare, isInCompare, recentlyViewed } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [copiedCoupon, setCopiedCoupon] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/products")
@@ -34,6 +40,13 @@ export default function HomePage() {
 
   const featuredPhones = products.filter((p) => p.categoryId === "cat-smartphones");
   const accessories = products.filter((p) => p.categoryId !== "cat-smartphones");
+  const recentProducts = products.filter((p) => recentlyViewed.includes(p.id)).slice(0, 4);
+
+  const handleCopyCoupon = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCoupon(code);
+    setTimeout(() => setCopiedCoupon(null), 2000);
+  };
 
   const handleQuickAdd = (product: Product, e: React.MouseEvent) => {
     e.preventDefault();
@@ -259,6 +272,38 @@ export default function HomePage() {
                         <div className="absolute top-3 left-3 bg-[#ffdec7] text-[#493129] text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
                           {product.brandName}
                         </div>
+
+                        {/* Card Actions: Wishlist & Compare */}
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              toggleCompare(product.id);
+                            }}
+                            className={`p-1.5 rounded-full border transition ${
+                              isInCompare(product.id)
+                                ? "bg-[#8b597b] text-white border-[#8b597b]"
+                                : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
+                            }`}
+                            title="Compare"
+                          >
+                            <Scale className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              toggleWishlist(product.id);
+                            }}
+                            className={`p-1.5 rounded-full border transition ${
+                              isInWishlist(product.id)
+                                ? "bg-[#efa3a0] text-[#493129] border-[#efa3a0]"
+                                : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
+                            }`}
+                            title="Save"
+                          >
+                            <Heart className={`w-3.5 h-3.5 ${isInWishlist(product.id) ? "fill-[#493129]" : ""}`} />
+                          </button>
+                        </div>
                       </div>
 
                       {/* Content */}
@@ -311,6 +356,48 @@ export default function HomePage() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* PROMOTIONAL PRIVILEGE OFFERS & VOUCHERS */}
+        <section className="py-12 bg-[#ffdec7]/40 border-y border-[#493129]/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+              <div>
+                <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8b597b]">Exclusive Privileges</span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-[#493129]">Boutique Promotional Codes</h3>
+              </div>
+              <p className="text-xs text-[#493129]/70 font-sans max-w-sm">
+                Apply during checkout for immediate discount on insured consignments.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { code: "WELCOME500", desc: "Flat ₹500 discount on flagship phones above ₹10,000", tag: "First Order" },
+                { code: "ANIL5", desc: "5% savings on all flagship devices & genuine accessories", tag: "Storewide" },
+                { code: "FESTIVE1000", desc: "₹1,000 festive gift voucher on orders above ₹25,000", tag: "Festive Exclusive" },
+              ].map((v) => (
+                <div key={v.code} className="p-5 rounded-3xl bg-[#fffaf5] border border-[#493129]/15 shadow-subtle space-y-3 relative overflow-hidden">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#ffeedb] text-[#8b597b]">
+                      {v.tag}
+                    </span>
+                    <button
+                      onClick={() => handleCopyCoupon(v.code)}
+                      className="text-xs font-semibold text-[#8b597b] hover:text-[#493129] flex items-center gap-1 transition"
+                    >
+                      {copiedCoupon === v.code ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5 text-[#8b597b]" />}
+                      <span>{copiedCoupon === v.code ? "Copied" : "Copy Code"}</span>
+                    </button>
+                  </div>
+                  <div>
+                    <span className="font-mono font-bold text-lg text-[#493129] tracking-wider block">{v.code}</span>
+                    <p className="text-xs text-[#493129]/70 mt-1">{v.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -383,6 +470,40 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* RECENTLY VIEWED SHELF */}
+        {recentProducts.length > 0 && (
+          <section className="py-14 bg-[#fffaf5] border-b border-[#493129]/10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Your Session</span>
+                  <h3 className="font-serif text-2xl text-[#493129]">Recently Perused Instruments</h3>
+                </div>
+                <Link href="/account?tab=recent" className="text-xs font-semibold text-[#8b597b] hover:underline">
+                  View All History
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {recentProducts.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/product/${p.slug}`}
+                    className="p-4 rounded-2xl bg-[#ffeedb]/40 border border-[#493129]/10 hover:border-[#8b597b] transition group"
+                  >
+                    <div className="relative h-36 bg-white rounded-xl p-2 mb-2 flex items-center justify-center overflow-hidden">
+                      <img src={p.images[0]} alt={p.title} className="max-h-full max-w-full object-contain group-hover:scale-105 transition" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase text-[#8b597b]">{p.brandName}</span>
+                    <h4 className="font-serif font-bold text-xs text-[#493129] truncate">{p.title}</h4>
+                    <span className="text-xs font-bold text-[#8b597b] mt-1 block">{formatCurrency(p.basePrice)}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* BOUTIQUE ATELIER ESSAY */}
         <section className="py-20 bg-[#fffaf5]">

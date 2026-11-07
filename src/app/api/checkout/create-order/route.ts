@@ -4,7 +4,7 @@ import { db } from "@/lib/database/store";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { customerName, customerPhone, customerEmail, shippingAddress, items, paymentMethod } = body;
+    const { customerName, customerPhone, customerEmail, shippingAddress, items, paymentMethod, discountAmount, couponCode } = body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
         shippingAddress,
         items,
         paymentMethod: "cod",
+        discountAmount: discountAmount || 0,
+        couponCode,
       });
 
       if (!result.success) {
@@ -53,9 +55,11 @@ export async function POST(req: NextRequest) {
       const v = db.getVariantById(item.variantId)!;
       subtotal += v.variant.sellingPrice * item.quantity;
     }
+    const appliedDiscount = discountAmount || 0;
+    const taxableBasis = Math.max(0, subtotal - appliedDiscount);
     const settings = db.getShopSettings();
-    const shippingFee = subtotal >= settings.freeShippingThreshold ? 0 : settings.standardShippingFee;
-    const grandTotal = subtotal + shippingFee;
+    const shippingFee = taxableBasis >= settings.freeShippingThreshold ? 0 : settings.standardShippingFee;
+    const grandTotal = taxableBasis + shippingFee;
 
     // Simulated Razorpay Order ID for standard test integration
     const razorpayOrderId = `order_${Math.random().toString(36).substring(2, 12)}`;

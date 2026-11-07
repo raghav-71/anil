@@ -2,40 +2,32 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import {
-  Search,
   ShoppingBag,
   Menu,
   X,
   User,
   Package,
+  Heart,
+  Scale,
 } from "lucide-react";
+import { SearchAutocomplete } from "./SearchAutocomplete";
 
 export function Navbar() {
-  const router = useRouter();
-  const { totalItems, setIsCartOpen } = useCart();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { totalItems, setIsCartOpen, wishlist, compareList } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
-
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#ffeedb]/90 backdrop-blur-md border-b border-[#493129]/10 transition-all">
+    <header className="sticky top-0 z-40 w-full bg-[#ffeedb]/95 backdrop-blur-md border-b border-[#493129]/10 transition-all">
       {/* Editorial Announcement Banner */}
-      <div className="bg-[#493129] text-[#ffeedb] text-[11px] py-2 px-4 text-center font-medium tracking-wide">
-        <span>Bespoke Flagships & Acoustic Accoutrements • Complimentary Insured Shipping on Orders Over ₹999</span>
+      <div className="bg-[#493129] text-[#ffeedb] text-[11px] py-1.5 px-4 text-center font-medium tracking-wide">
+        <span>Bespoke Flagships & Acoustic Accoutrements • Free Insured Shipping on Orders Over ₹999 • 100% Genuine Indian GST Warranty</span>
       </div>
 
       {/* Main Editorial Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-4">
+        <div className="flex items-center justify-between h-20 gap-3">
           {/* Brand Logo - Editorial Serif */}
           <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
             <div>
@@ -49,7 +41,7 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-[#493129]">
+          <nav className="hidden xl:flex items-center gap-7 text-sm font-medium text-[#493129]">
             <Link href="/shop" className="hover:text-[#8b597b] transition">
               The Collection
             </Link>
@@ -63,28 +55,49 @@ export function Navbar() {
               The Maison
             </Link>
             <Link href="/contact" className="hover:text-[#8b597b] transition">
-              Concierge & Store
+              Concierge
             </Link>
           </nav>
 
-          {/* Search, Account, Orders & Cart */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Search Input */}
-            <form onSubmit={handleSearch} className="hidden md:flex relative w-48 lg:w-56">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search catalog..."
-                className="w-full pl-8 pr-3 py-1.5 rounded-full bg-[#fffaf5] border border-[#493129]/15 text-xs text-[#493129] placeholder-[#493129]/40 focus:outline-none focus:border-[#8b597b] focus:ring-1 focus:ring-[#8b597b]"
-              />
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#493129]/40 pointer-events-none" />
-            </form>
+          {/* Live Autocomplete Search Input */}
+          <div className="hidden md:block flex-1 max-w-xs lg:max-w-sm mx-2">
+            <SearchAutocomplete />
+          </div>
+
+          {/* Action Links: Compare, Wishlist, Orders, Account, Cart */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Compare Tool */}
+            <Link
+              href="/compare"
+              className="relative p-2 rounded-full hover:bg-[#ffdec7]/50 text-[#493129] transition hidden sm:inline-flex"
+              title="Compare Devices"
+            >
+              <Scale className="w-4 h-4" />
+              {compareList.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#8b597b] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs">
+                  {compareList.length}
+                </span>
+              )}
+            </Link>
+
+            {/* Wishlist */}
+            <Link
+              href="/account?tab=wishlist"
+              className="relative p-2 rounded-full hover:bg-[#ffdec7]/50 text-[#493129] transition hidden sm:inline-flex"
+              title="Saved Wishlist"
+            >
+              <Heart className="w-4 h-4" />
+              {wishlist.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#efa3a0] text-[#493129] text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
 
             {/* Track Orders Link */}
             <Link
               href="/orders"
-              className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#8b597b] hover:text-[#493129] transition px-3 py-1.5 rounded-full hover:bg-[#ffdec7]/40"
+              className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-[#8b597b] hover:text-[#493129] transition px-3 py-1.5 rounded-full hover:bg-[#ffdec7]/40"
               title="Track Orders"
             >
               <Package className="w-3.5 h-3.5" />
@@ -93,9 +106,9 @@ export function Navbar() {
 
             {/* Customer Account */}
             <Link
-              href="/login"
-              className="p-2 rounded-full hover:bg-[#ffdec7]/40 text-[#493129] transition"
-              title="Customer Sign In"
+              href="/account"
+              className="p-2 rounded-full hover:bg-[#ffdec7]/50 text-[#493129] transition"
+              title="My Account"
             >
               <User className="w-4 h-4" />
             </Link>
@@ -103,8 +116,8 @@ export function Navbar() {
             {/* Cart Trigger with Soft Coral Badge */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 rounded-full hover:bg-[#ffdec7]/40 text-[#493129] transition"
-              aria-label="View Shopping Cart"
+              className="relative p-2 rounded-full hover:bg-[#ffdec7]/50 text-[#493129] transition"
+              aria-label="View Shopping Bag"
             >
               <ShoppingBag className="w-4 h-4" />
               {totalItems > 0 && (
@@ -117,7 +130,7 @@ export function Navbar() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-full text-[#493129]"
+              className="xl:hidden p-2 rounded-full text-[#493129]"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -127,17 +140,10 @@ export function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#493129]/10 bg-[#fffaf5] px-6 py-6 space-y-4">
-          <form onSubmit={handleSearch} className="relative w-full">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#493129]/40" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search catalog..."
-              className="w-full pl-9 pr-3 py-2 rounded-full bg-[#ffeedb] border border-[#493129]/20 text-xs text-[#493129]"
-            />
-          </form>
+        <div className="xl:hidden border-t border-[#493129]/10 bg-[#fffaf5] px-6 py-6 space-y-4">
+          <div className="w-full">
+            <SearchAutocomplete />
+          </div>
           <div className="flex flex-col space-y-3 font-serif text-base text-[#493129]">
             <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10">
               The Full Collection
@@ -148,8 +154,19 @@ export function Navbar() {
             <Link href="/accessories" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10">
               Adapters & Acoustic Gear
             </Link>
+            <Link href="/compare" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10 font-sans text-xs flex items-center justify-between">
+              <span>Compare Devices</span>
+              {compareList.length > 0 && <span className="bg-[#8b597b] text-white px-2 py-0.5 rounded-full text-[10px]">{compareList.length}</span>}
+            </Link>
+            <Link href="/account?tab=wishlist" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10 font-sans text-xs flex items-center justify-between">
+              <span>My Wishlist</span>
+              {wishlist.length > 0 && <span className="bg-[#efa3a0] text-[#493129] px-2 py-0.5 rounded-full text-[10px]">{wishlist.length}</span>}
+            </Link>
             <Link href="/orders" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10 font-sans text-xs font-semibold text-[#8b597b]">
-              Track Your Order
+              Track Your Orders
+            </Link>
+            <Link href="/account" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10 font-sans text-xs">
+              Account & Saved Addresses
             </Link>
             <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10 font-sans text-xs">
               The Maison Story

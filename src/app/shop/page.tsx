@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Navbar } from "@/components/storefront/Navbar";
 import { Footer } from "@/components/storefront/Footer";
 import { useCart } from "@/lib/cart-context";
@@ -14,15 +15,20 @@ import {
   ShoppingBag,
   SlidersHorizontal,
   RotateCcw,
+  Heart,
+  Scale,
+  ArrowRight,
+  Zap,
 } from "lucide-react";
 
 function ShopContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const initialBrand = searchParams.get("brand") || "all";
   const initialQuery = searchParams.get("q") || "";
 
-  const { addItem } = useCart();
+  const { addItem, toggleWishlist, isInWishlist, toggleCompare, isInCompare } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -33,6 +39,7 @@ function ShopContent() {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [sortBy, setSortBy] = useState("featured");
   const [maxPrice, setMaxPrice] = useState<number>(200000);
+  const [inStockOnly, setInStockOnly] = useState(false);
 
   useEffect(() => {
     fetch("/api/products")
@@ -51,6 +58,11 @@ function ShopContent() {
     if (selectedBrand !== "all" && p.brandId !== selectedBrand) return false;
     if (p.basePrice > maxPrice) return false;
 
+    if (inStockOnly) {
+      const stock = p.variants.reduce((acc, v) => acc + v.stockQuantity, 0);
+      if (stock <= 0) return false;
+    }
+
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const matchTitle = p.title.toLowerCase().includes(q);
@@ -66,6 +78,8 @@ function ShopContent() {
     filteredProducts.sort((a, b) => b.basePrice - a.basePrice);
   } else if (sortBy === "rating") {
     filteredProducts.sort((a, b) => b.rating - a.rating);
+  } else if (sortBy === "newest") {
+    filteredProducts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
   const resetFilters = () => {
@@ -74,6 +88,7 @@ function ShopContent() {
     setSearchQuery("");
     setSortBy("featured");
     setMaxPrice(200000);
+    setInStockOnly(false);
   };
 
   const handleQuickAdd = (product: Product, e: React.MouseEvent) => {
@@ -99,6 +114,12 @@ function ShopContent() {
     });
   };
 
+  const handleBuyNow = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault();
+    handleQuickAdd(product, e);
+    router.push("/checkout");
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-[#ffeedb]">
       <Navbar />
@@ -114,7 +135,7 @@ function ShopContent() {
               The Complete Collection
             </h1>
             <p className="text-xs text-[#493129]/70 mt-1.5 font-sans">
-              Displaying {filteredProducts.length} authenticated instruments of communication & audio
+              Displaying {filteredProducts.length} authenticated instruments of communication & acoustic design
             </p>
           </div>
 
@@ -129,7 +150,8 @@ function ShopContent() {
                 <option value="featured">Featured First</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
+                <option value="rating">Top Customer Rated</option>
+                <option value="newest">New Arrivals</option>
               </select>
             </div>
           </div>
@@ -150,6 +172,17 @@ function ShopContent() {
                   <span>Reset</span>
                 </button>
               </div>
+
+              {/* In-Stock Filter Toggle */}
+              <label className="flex items-center justify-between p-3 rounded-2xl bg-[#ffeedb] border border-[#493129]/10 text-xs font-semibold text-[#493129] cursor-pointer">
+                <span>In-Stock Ready to Dispatch</span>
+                <input
+                  type="checkbox"
+                  checked={inStockOnly}
+                  onChange={(e) => setInStockOnly(e.target.checked)}
+                  className="w-4 h-4 accent-[#8b597b] rounded"
+                />
+              </label>
 
               {/* Categories */}
               <div className="space-y-2">
@@ -206,7 +239,7 @@ function ShopContent() {
               {/* Max Price Slider */}
               <div className="space-y-2 pt-2 border-t border-[#493129]/10">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Price Limit</span>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Price Ceiling</span>
                   <span className="font-serif font-bold text-[#493129]">{formatCurrency(maxPrice)}</span>
                 </div>
                 <input
@@ -227,11 +260,11 @@ function ShopContent() {
             {loading ? (
               <div className="text-center py-20 text-[#8b597b] font-serif">Curating the collection...</div>
             ) : filteredProducts.length === 0 ? (
-              <div className="bg-[#fffaf5] rounded-3xl p-12 text-center border border-[#493129]/10">
+              <div className="bg-[#fffaf5] rounded-3xl p-12 text-center border border-[#493129]/10 space-y-3">
                 <p className="font-serif text-lg text-[#493129]">No items match your curation</p>
                 <button
                   onClick={resetFilters}
-                  className="mt-4 px-5 py-2 bg-[#efa3a0] text-[#493129] rounded-full text-xs font-semibold"
+                  className="px-5 py-2 bg-[#efa3a0] text-[#493129] rounded-full text-xs font-semibold"
                 >
                   Clear Selection
                 </button>
@@ -240,29 +273,66 @@ function ShopContent() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => {
                   const variant = product.variants[0];
+                  const totalStock = product.variants.reduce((acc, v) => acc + v.stockQuantity, 0);
+
                   return (
                     <div
                       key={product.id}
-                      className="editorial-card rounded-3xl p-6 flex flex-col justify-between"
+                      className="editorial-card rounded-3xl p-6 flex flex-col justify-between group"
                     >
                       <div>
-                        <div className="relative h-56 rounded-2xl bg-[#ffeedb]/50 flex items-center justify-center p-4">
+                        <div className="relative h-56 rounded-2xl bg-[#ffeedb]/50 flex items-center justify-center p-4 overflow-hidden">
                           <Link href={`/product/${product.slug}`} className="w-full h-full flex items-center justify-center">
                             <img
                               src={product.images[0]}
                               alt={product.title}
-                              className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-500"
+                              className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
                             />
                           </Link>
+
+                          {/* Brand badge */}
                           <div className="absolute top-3 left-3 bg-[#ffdec7] text-[#493129] text-[10px] font-semibold px-2 py-0.5 rounded-full">
                             {product.brandName}
+                          </div>
+
+                          {/* Card Actions: Wishlist & Compare */}
+                          <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toggleCompare(product.id);
+                              }}
+                              className={`p-1.5 rounded-full border transition ${
+                                isInCompare(product.id)
+                                  ? "bg-[#8b597b] text-white border-[#8b597b]"
+                                  : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
+                              }`}
+                              title="Compare Device"
+                            >
+                              <Scale className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                toggleWishlist(product.id);
+                              }}
+                              className={`p-1.5 rounded-full border transition ${
+                                isInWishlist(product.id)
+                                  ? "bg-[#efa3a0] text-[#493129] border-[#efa3a0]"
+                                  : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
+                              }`}
+                              title="Save to Wishlist"
+                            >
+                              <Heart className={`w-3.5 h-3.5 ${isInWishlist(product.id) ? "fill-[#493129]" : ""}`} />
+                            </button>
                           </div>
                         </div>
 
                         <div className="pt-5 space-y-1">
                           <div className="flex items-center gap-1 text-[#8b597b] text-xs">
                             <Star className="w-3.5 h-3.5 fill-[#efa3a0] text-[#efa3a0]" />
-                            <span>{product.rating}</span>
+                            <span className="font-bold">{product.rating}</span>
+                            <span className="text-[#493129]/40 text-[10px]">({product.reviewCount})</span>
                           </div>
 
                           <Link href={`/product/${product.slug}`}>
@@ -279,22 +349,25 @@ function ShopContent() {
                           <span className="font-serif text-lg font-bold text-[#493129]">
                             {formatCurrency(variant ? variant.sellingPrice : product.basePrice)}
                           </span>
-                          <span className="text-[10px] text-[#8b597b] uppercase font-bold">In Stock</span>
+                          <span className={`text-[10px] uppercase font-bold ${totalStock > 0 ? "text-[#8b597b]" : "text-red-700"}`}>
+                            {totalStock > 0 ? "In Stock" : "Sold Out"}
+                          </span>
                         </div>
 
                         <div className="grid grid-cols-2 gap-2">
-                          <Link
-                            href={`/product/${product.slug}`}
-                            className="py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition"
-                          >
-                            Details
-                          </Link>
                           <button
                             onClick={(e) => handleQuickAdd(product, e)}
-                            className="py-2.5 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
+                            className="py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffeedb] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
                           >
                             <ShoppingBag className="w-3.5 h-3.5" />
-                            <span>Bag</span>
+                            <span>Add to Bag</span>
+                          </button>
+                          <button
+                            onClick={(e) => handleBuyNow(product, e)}
+                            className="py-2.5 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-bold flex items-center justify-center gap-1 shadow-coral transition"
+                          >
+                            <Zap className="w-3.5 h-3.5" />
+                            <span>Buy Now</span>
                           </button>
                         </div>
                       </div>
@@ -319,4 +392,3 @@ export default function ShopPage() {
     </Suspense>
   );
 }
-

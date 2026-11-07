@@ -11,6 +11,8 @@ import {
   Invoice,
   ShopSettings,
   UserRole,
+  Review,
+  UserAddress,
 } from "@/types";
 import { generateInvoiceNumber, generateOrderNumber } from "../utils";
 import { calculateGstInclusive } from "../tax-calculator";
@@ -690,6 +692,96 @@ class StoreDatabase {
     standardShippingFee: 99,
   };
 
+  private reviews: Review[] = [
+    {
+      id: "rev-1",
+      productId: "prod-iphone-16-pro",
+      productName: "Apple iPhone 16 Pro",
+      userName: "Vikramaditya Hegde",
+      rating: 5,
+      title: "Pinnacle of luxury craft and pure performance",
+      comment: "Purchased the Desert Titanium 256GB from Anil Communications boutique. The titanium chassis feels exceptionally light yet rigid in hand. Camera control button is genuinely useful for one-handed street photography. Battery easily sails through 28 hours.",
+      isVerifiedPurchase: true,
+      helpfulVotes: 34,
+      date: "2026-10-24",
+    },
+    {
+      id: "rev-2",
+      productId: "prod-iphone-16-pro",
+      productName: "Apple iPhone 16 Pro",
+      userName: "Dr. Ananya Rao",
+      rating: 5,
+      title: "Seamless 4K 120fps recording & boutique delivery",
+      comment: "Delivered to Indiranagar within 3 hours in pristine sealed condition with GST tax invoice. Audio mix microphone features are studio-grade. Truly an Amazon-beating concierge shopping experience.",
+      isVerifiedPurchase: true,
+      helpfulVotes: 19,
+      date: "2026-10-29",
+    },
+    {
+      id: "rev-3",
+      productId: "prod-s24-ultra",
+      productName: "Samsung Galaxy S24 Ultra",
+      userName: "Rahul Narang",
+      rating: 5,
+      title: "The antireflective screen alone is worth the upgrade",
+      comment: "Zero glare in harsh Bengaluru afternoon sun. The Titanium Violet finish looks bespoke. S-Pen precision and Galaxy AI live audio call translation are game-changers for business meetings.",
+      isVerifiedPurchase: true,
+      helpfulVotes: 28,
+      date: "2026-11-01",
+    },
+    {
+      id: "rev-4",
+      productId: "prod-oneplus-12",
+      productName: "OnePlus 12 5G",
+      userName: "Gautam Shenoy",
+      rating: 5,
+      title: "100W SUPERVOOC charging is witchcraft",
+      comment: "0 to 100% in 26 minutes flat. Hasselblad portrait mode depth separation is indistinguishable from my mirrorless setup. Smooth Aqua Touch screen works even with rainy fingers.",
+      isVerifiedPurchase: true,
+      helpfulVotes: 15,
+      date: "2026-11-03",
+    },
+    {
+      id: "rev-5",
+      productId: "prod-apple-20w-adapter",
+      productName: "Apple 20W USB-C Power Adapter",
+      userName: "Pooja Kulkarni",
+      rating: 5,
+      title: "100% Genuine Apple unit with warranty registration",
+      comment: "Scanned the serial number on Apple coverage and verified immediately. Perfect fast charge companion for both iPhone and AirPods.",
+      isVerifiedPurchase: true,
+      helpfulVotes: 12,
+      date: "2026-11-04",
+    },
+  ];
+
+  private userAddresses: UserAddress[] = [
+    {
+      id: "addr-1",
+      name: "Raghav Anil",
+      phone: "+91 98450 12345",
+      street: "Flat 402, Prestige Hermitage, MG Road",
+      landmark: "Near Trinity Metro Station",
+      city: "Bengaluru",
+      state: "Karnataka",
+      pincode: "560001",
+      type: "home",
+      isDefault: true,
+    },
+    {
+      id: "addr-2",
+      name: "Raghav Anil (Office)",
+      phone: "+91 98450 12345",
+      street: "Level 7, Brigade Gateway, Malleshwaram",
+      landmark: "World Trade Center",
+      city: "Bengaluru",
+      state: "Karnataka",
+      pincode: "560055",
+      type: "work",
+      isDefault: false,
+    },
+  ];
+
   // --- QUERY & MUTATION METHODS ---
 
   public getCategories(): Category[] {
@@ -993,6 +1085,8 @@ class StoreDatabase {
     items: { variantId: string; quantity: number }[];
     paymentMethod: "razorpay" | "cod";
     paymentId?: string;
+    discountAmount?: number;
+    couponCode?: string;
   }): { success: boolean; order?: Order; error?: string } {
     // 1. Concurrency Check
     for (const item of params.items) {
@@ -1051,8 +1145,10 @@ class StoreDatabase {
       };
     });
 
-    const shippingFee = subtotal >= this.shopSettings.freeShippingThreshold ? 0 : this.shopSettings.standardShippingFee;
-    const grandTotal = subtotal + shippingFee;
+    const discountAmount = params.discountAmount || 0;
+    const taxableBasis = Math.max(0, subtotal - discountAmount);
+    const shippingFee = taxableBasis >= this.shopSettings.freeShippingThreshold ? 0 : this.shopSettings.standardShippingFee;
+    const grandTotal = taxableBasis + shippingFee;
 
     const order: Order = {
       id: `ord-${Date.now()}`,
@@ -1063,14 +1159,14 @@ class StoreDatabase {
       shippingAddress: params.shippingAddress,
       items: orderItems,
       subtotal,
-      discountAmount: 0,
+      discountAmount,
       shippingFee,
       taxAmount,
       grandTotal,
       paymentMethod: params.paymentMethod,
       paymentStatus: params.paymentMethod === "razorpay" ? "paid" : "pending",
       status: "confirmed",
-      notes: "Website order placed",
+      notes: params.couponCode ? `Coupon applied: ${params.couponCode}` : "Website order placed",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -1113,6 +1209,164 @@ class StoreDatabase {
     if (trackingNumber) order.trackingNumber = trackingNumber;
     order.updatedAt = new Date().toISOString();
     return true;
+  }
+
+  public cancelOrder(orderId: string, reason: string): { success: boolean; message: string } {
+    const order = this.orders.find((o) => o.id === orderId || o.orderNumber === orderId);
+    if (!order) return { success: false, message: "Order not found." };
+    if (order.status === "shipped" || order.status === "out_for_delivery" || order.status === "delivered") {
+      return { success: false, message: "Order has already been dispatched and cannot be cancelled directly. Please initiate a return upon receipt." };
+    }
+    if (order.status === "cancelled") {
+      return { success: false, message: "Order is already cancelled." };
+    }
+
+    order.status = "cancelled";
+    order.notes = `Cancelled by customer: ${reason}`;
+    order.updatedAt = new Date().toISOString();
+
+    // Restock items atomically
+    for (const item of order.items) {
+      const match = this.getVariantById(item.variantId);
+      if (match) {
+        const prev = match.variant.stockQuantity;
+        match.variant.stockQuantity += item.quantity;
+        this.inventoryMovements.unshift({
+          id: `mov-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+          variantId: match.variant.id,
+          productName: match.product.title,
+          variantTitle: item.variantDetails,
+          movementType: "return_restock",
+          quantityChange: item.quantity,
+          previousQuantity: prev,
+          newQuantity: match.variant.stockQuantity,
+          referenceId: order.orderNumber,
+          notes: `Restock from cancelled order #${order.orderNumber}`,
+          performedBy: "Automated Order Manager",
+          createdAt: new Date().toISOString(),
+        });
+      }
+    }
+
+    return { success: true, message: `Order #${order.orderNumber} successfully cancelled and items restocked.` };
+  }
+
+  public requestReturn(orderId: string, reason: string): { success: boolean; message: string } {
+    const order = this.orders.find((o) => o.id === orderId || o.orderNumber === orderId);
+    if (!order) return { success: false, message: "Order not found." };
+    if (order.status !== "delivered") {
+      return { success: false, message: "Returns can only be requested for delivered consignments." };
+    }
+    order.status = "returned";
+    order.notes = `Return requested: ${reason}`;
+    order.updatedAt = new Date().toISOString();
+    return { success: true, message: "Return request registered. Our logistics concierge will schedule pickup within 24-48 hours." };
+  }
+
+  // --- REVIEWS SYSTEM ---
+  public getReviews(productId?: string): Review[] {
+    if (productId) {
+      return this.reviews.filter((r) => r.productId === productId);
+    }
+    return this.reviews;
+  }
+
+  public addReview(reviewData: Omit<Review, "id" | "date" | "helpfulVotes">): Review {
+    const newRev: Review = {
+      ...reviewData,
+      id: `rev-${Date.now()}`,
+      helpfulVotes: 0,
+      date: new Date().toISOString().split("T")[0],
+    };
+    this.reviews.unshift(newRev);
+
+    // Update product rating and review count
+    const prod = this.getProductById(reviewData.productId);
+    if (prod) {
+      const prodReviews = this.reviews.filter((r) => r.productId === prod.id);
+      const avg = prodReviews.reduce((acc, r) => acc + r.rating, 0) / prodReviews.length;
+      prod.rating = parseFloat(avg.toFixed(1));
+      prod.reviewCount = prodReviews.length;
+    }
+
+    return newRev;
+  }
+
+  public voteReviewHelpful(reviewId: string): boolean {
+    const r = this.reviews.find((rev) => rev.id === reviewId);
+    if (!r) return false;
+    r.helpfulVotes += 1;
+    return true;
+  }
+
+  // --- USER ADDRESSES ---
+  public getUserAddresses(): UserAddress[] {
+    return this.userAddresses;
+  }
+
+  public addUserAddress(addressData: Omit<UserAddress, "id">): UserAddress {
+    if (addressData.isDefault) {
+      this.userAddresses.forEach((a) => (a.isDefault = false));
+    }
+    const newAddr: UserAddress = {
+      ...addressData,
+      id: `addr-${Date.now()}`,
+    };
+    this.userAddresses.push(newAddr);
+    return newAddr;
+  }
+
+  public deleteUserAddress(id: string): boolean {
+    const idx = this.userAddresses.findIndex((a) => a.id === id);
+    if (idx === -1) return false;
+    this.userAddresses.splice(idx, 1);
+    return true;
+  }
+
+  public setDefaultUserAddress(id: string): boolean {
+    const target = this.userAddresses.find((a) => a.id === id);
+    if (!target) return false;
+    this.userAddresses.forEach((a) => (a.isDefault = a.id === id));
+    return true;
+  }
+
+  // --- FREQUENTLY BOUGHT TOGETHER RECOMMENDATIONS ---
+  public getFrequentlyBoughtTogether(productId: string) {
+    const mainProduct = this.getProductById(productId);
+    if (!mainProduct) return null;
+
+    // Smart accessory bundle pairing
+    let bundledIds: string[] = [];
+    if (mainProduct.categoryId === "cat-smartphones") {
+      // Find 2 top accessories: charger and case
+      const charger = this.products.find((p) => p.categoryId === "cat-chargers");
+      const caseItem = this.products.find((p) => p.categoryId === "cat-accessories");
+      if (charger) bundledIds.push(charger.id);
+      if (caseItem) bundledIds.push(caseItem.id);
+    } else {
+      // Find another accessory
+      const others = this.products.filter((p) => p.id !== productId && p.categoryId !== "cat-smartphones").slice(0, 2);
+      bundledIds = others.map((p) => p.id);
+    }
+
+    const bundledProducts = bundledIds
+      .map((id) => this.getProductById(id))
+      .filter((p): p is Product => Boolean(p));
+
+    if (bundledProducts.length === 0) return null;
+
+    const originalPrice = mainProduct.basePrice + bundledProducts.reduce((acc, p) => acc + p.basePrice, 0);
+    const bundleDiscountPercent = 10; // 10% combo discount
+    const bundlePrice = Math.round(originalPrice * (1 - bundleDiscountPercent / 100));
+
+    return {
+      mainProduct,
+      bundledProducts,
+      bundleDiscountPercent,
+      originalPrice,
+      bundlePrice,
+      savings: originalPrice - bundlePrice,
+    };
   }
 
   public getInvoices(): Invoice[] {

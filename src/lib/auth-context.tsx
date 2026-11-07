@@ -6,6 +6,7 @@ import { UserRole } from "@/types";
 export interface CurrentUser {
   id: string;
   name: string;
+  fullName?: string;
   email: string;
   role: UserRole;
   avatar?: string;

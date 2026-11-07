@@ -17,6 +17,8 @@ import {
   Barcode,
   Layers,
   ArrowRight,
+  Printer,
+  X,
 } from "lucide-react";
 
 export default function AdminProductsPage() {
@@ -24,6 +26,10 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+
+  // Barcode Printing Modal State
+  const [barcodeModalProduct, setBarcodeModalProduct] = useState<Product | null>(null);
+  const [labelQuantity, setLabelQuantity] = useState(12);
 
   const loadProducts = () => {
     setLoading(true);
@@ -90,13 +96,15 @@ export default function AdminProductsPage() {
           </p>
         </div>
 
-        <Link
-          href="/admin/products/new"
-          className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/20 transition"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add New Product</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/products/new"
+            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/20 transition"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add New Product</span>
+          </Link>
+        </div>
       </div>
 
       {/* Main Table Card */}
@@ -138,7 +146,7 @@ export default function AdminProductsPage() {
                 <th className="py-3 px-3">Product Name & Category</th>
                 <th className="py-3 px-3">Variants</th>
                 <th className="py-3 px-3">Base Price / MRP</th>
-                <th className="py-3 px-3">HSN / GST</th>
+                <th className="py-3 px-3">HSN Code & GST</th>
                 <th className="py-3 px-3 text-center">Total Stock</th>
                 <th className="py-3 px-3 text-center">Status</th>
                 <th className="py-3 px-3 text-right">Actions</th>
@@ -155,7 +163,7 @@ export default function AdminProductsPage() {
                         <img
                           src={prod.images[0]}
                           alt={prod.title}
-                          className="w-12 h-12 object-contain rounded-xl bg-slate-800 border border-slate-700 p-1 flex-shrink-0"
+                          className="w-10 h-10 rounded-xl object-contain bg-slate-800 p-1 border border-slate-700 flex-shrink-0"
                         />
                         <div>
                           <span className="font-bold text-white block">{prod.title}</span>
@@ -166,15 +174,15 @@ export default function AdminProductsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-3">
-                      <span className="font-semibold text-slate-200 block">{prod.variants.length} Variants</span>
-                      <span className="text-[10px] text-slate-400 block max-w-xs truncate">
-                        {prod.variants.map((v) => `${v.color || ""} ${v.storage || ""}`.trim()).filter(Boolean).join(", ")}
+                      <span className="inline-flex items-center gap-1 font-mono text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-md">
+                        <Layers className="w-3 h-3 text-blue-400" />
+                        <span>{prod.variants.length} Variants</span>
                       </span>
                     </td>
-                    <td className="py-3 px-3">
+                    <td className="py-3 px-3 font-mono">
                       <span className="font-bold text-white block">{formatCurrency(prod.basePrice)}</span>
                       {prod.mrp > prod.basePrice && (
-                        <span className="text-[10px] text-slate-400 line-through">MRP: {formatCurrency(prod.mrp)}</span>
+                        <span className="text-slate-500 line-through text-[10px]">{formatCurrency(prod.mrp)}</span>
                       )}
                     </td>
                     <td className="py-3 px-3 font-mono text-[11px]">
@@ -208,8 +216,15 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="py-3 px-3 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => setBarcodeModalProduct(prod)}
+                          className="p-1.5 text-slate-400 hover:text-blue-400"
+                          title="Print Barcode Labels"
+                        >
+                          <Barcode className="w-4 h-4" />
+                        </button>
                         <Link
-                          href={`/products/${prod.slug}`}
+                          href={`/product/${prod.slug}`}
                           target="_blank"
                           className="p-1.5 text-slate-400 hover:text-white"
                           title="View on Storefront"
@@ -232,7 +247,94 @@ export default function AdminProductsPage() {
           </table>
         </div>
       </div>
+
+      {/* Barcode Sticker Label Sheet Modal */}
+      {barcodeModalProduct && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-2xl w-full space-y-4">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div>
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <Barcode className="w-5 h-5 text-blue-400" />
+                  <span>Print Barcode Sticker Sheet (24-up)</span>
+                </h3>
+                <p className="text-xs text-slate-400">{barcodeModalProduct.title}</p>
+              </div>
+              <button onClick={() => setBarcodeModalProduct(null)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-slate-300 bg-slate-800/60 p-3 rounded-xl border border-slate-700">
+              <span>Select Label Quantity:</span>
+              <div className="flex gap-2">
+                {[6, 12, 24].map((qty) => (
+                  <button
+                    key={qty}
+                    onClick={() => setLabelQuantity(qty)}
+                    className={`px-3 py-1 rounded-lg font-bold text-xs transition ${
+                      labelQuantity === qty ? "bg-blue-600 text-white" : "bg-slate-700 text-slate-300"
+                    }`}
+                  >
+                    {qty} Labels
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Printable Label Grid Preview */}
+            <div className="max-h-96 overflow-y-auto bg-white rounded-2xl p-4 text-black font-sans">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {[...Array(labelQuantity)].map((_, i) => {
+                  const v = barcodeModalProduct.variants[0];
+                  return (
+                    <div
+                      key={i}
+                      className="border border-dashed border-gray-400 p-2.5 rounded-lg text-center space-y-1 bg-white shadow-2xs"
+                    >
+                      <div className="text-[9px] font-black tracking-wider uppercase text-gray-800">
+                        ANIL COMMUNICATIONS
+                      </div>
+                      <div className="text-[10px] font-bold truncate leading-tight text-gray-900">
+                        {barcodeModalProduct.title}
+                      </div>
+                      <div className="text-[8px] text-gray-600">
+                        {[v?.color, v?.storage].filter(Boolean).join(" • ") || "Standard Edition"}
+                      </div>
+                      {/* Barcode Graphic Representation */}
+                      <div className="py-0.5 flex justify-center">
+                        <div className="font-mono text-xs tracking-widest font-black py-0.5 px-2 bg-gray-100 rounded border border-gray-300">
+                          |||| ||| ||||| |||||
+                        </div>
+                      </div>
+                      <div className="text-[9px] font-mono font-bold text-gray-700">{v?.barcode || "8901234567890"}</div>
+                      <div className="text-[10px] font-black text-gray-900">
+                        MRP: ₹{v?.mrp.toLocaleString("en-IN")} • SALE: ₹{v?.sellingPrice.toLocaleString("en-IN")}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setBarcodeModalProduct(null)}
+                className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold"
+              >
+                Close Preview
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
+              >
+                <Printer className="w-4 h-4" />
+                <span>Print Sticker Sheet</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-

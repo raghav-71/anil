@@ -21,7 +21,10 @@ import {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, subtotal, shippingFee, grandTotal, clearCart } = useCart();
+  const { items, subtotal, discountAmount, appliedCoupon, shippingFee, grandTotal, clearCart } = useCart();
+
+  const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("custom");
 
   const [formData, setFormData] = useState({
     fullName: "Ramesh Sharma",
@@ -38,6 +41,45 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orderSuccess, setOrderSuccess] = useState<any | null>(null);
+
+  React.useEffect(() => {
+    fetch("/api/addresses")
+      .then((res) => res.json())
+      .then((d) => {
+        if (d.addresses && d.addresses.length > 0) {
+          setSavedAddresses(d.addresses);
+          const defaultAddr = d.addresses.find((a: any) => a.isDefault) || d.addresses[0];
+          if (defaultAddr) {
+            setSelectedAddressId(defaultAddr.id);
+            setFormData((prev) => ({
+              ...prev,
+              fullName: defaultAddr.name,
+              phone: defaultAddr.phone.replace(/\D/g, ""),
+              street: defaultAddr.street,
+              landmark: defaultAddr.landmark || "",
+              city: defaultAddr.city,
+              state: defaultAddr.state,
+              pincode: defaultAddr.pincode,
+            }));
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleSelectAddress = (addr: any) => {
+    setSelectedAddressId(addr.id);
+    setFormData((prev) => ({
+      ...prev,
+      fullName: addr.name,
+      phone: addr.phone.replace(/\D/g, ""),
+      street: addr.street,
+      landmark: addr.landmark || "",
+      city: addr.city,
+      state: addr.state,
+      pincode: addr.pincode,
+    }));
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -66,6 +108,8 @@ export default function CheckoutPage() {
         },
         items: items.map((i) => ({ variantId: i.variantId, quantity: i.quantity })),
         paymentMethod: formData.paymentMethod,
+        discountAmount: discountAmount || 0,
+        couponCode: appliedCoupon?.code,
       };
 
       const res = await fetch("/api/checkout/create-order", {
@@ -254,7 +298,37 @@ export default function CheckoutPage() {
             </div>
 
             <div className="p-8 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle space-y-4">
-              <h2 className="font-serif text-lg text-[#493129]">2. Shipping Address</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="font-serif text-lg text-[#493129]">2. Shipping Address</h2>
+                {savedAddresses.length > 0 && (
+                  <span className="text-[11px] text-[#8b597b] font-medium">Select a saved address</span>
+                )}
+              </div>
+
+              {savedAddresses.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-2">
+                  {savedAddresses.map((addr) => (
+                    <button
+                      key={addr.id}
+                      type="button"
+                      onClick={() => handleSelectAddress(addr)}
+                      className={`p-3 rounded-2xl border text-left text-xs transition ${
+                        selectedAddressId === addr.id
+                          ? "border-[#8b597b] bg-[#ffeedb] ring-1 ring-[#8b597b]"
+                          : "border-[#493129]/10 bg-white hover:border-[#493129]/30"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[#493129]">{addr.name}</span>
+                        <span className="text-[10px] uppercase font-bold text-[#8b597b]">{addr.type}</span>
+                      </div>
+                      <p className="text-[11px] text-[#493129]/70 truncate mt-1">{addr.street}</p>
+                      <p className="text-[11px] text-[#493129]/70">{addr.city} - {addr.pincode}</p>
+                    </button>
+                  ))}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="sm:col-span-2">
                   <label className="font-semibold text-[#493129] block mb-1">House / Building / Street *</label>
@@ -401,6 +475,12 @@ export default function CheckoutPage() {
                   <span>Subtotal (GST Included)</span>
                   <span className="font-bold text-[#493129] font-serif">{formatCurrency(subtotal)}</span>
                 </div>
+                {discountAmount > 0 && (
+                  <div className="flex justify-between text-emerald-800 font-semibold">
+                    <span>Coupon Savings ({appliedCoupon?.code})</span>
+                    <span>-{formatCurrency(discountAmount)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-[#493129]/70">
                   <span>Insured Shipping</span>
                   <span>{shippingFee === 0 ? <strong className="text-[#8b597b] uppercase">Complimentary</strong> : formatCurrency(shippingFee)}</span>

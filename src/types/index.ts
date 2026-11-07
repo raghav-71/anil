@@ -177,6 +177,7 @@ export type OrderStatus =
   | "pending"
   | "confirmed"
   | "processing"
+  | "packed"
   | "shipped"
   | "out_for_delivery"
   | "delivered"
@@ -277,5 +278,51 @@ export interface ShopSettings {
   codEnabled: boolean;
   freeShippingThreshold: number;
   standardShippingFee: number;
+}
+
+export interface Review {
+  id: string;
+  productId: string;
+  productName: string;
+  userName: string;
+  rating: number; // 1-5
+  title: string;
+  comment: string;
+  isVerifiedPurchase: boolean;
+  helpfulVotes: number;
+  date: string;
+}
+
+export interface UserAddress {
+  id: string;
+  name: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  pincode: string;
+  landmark?: string;
+  type: "home" | "work" | "other";
+  isDefault: boolean;
+}
+
+export interface Coupon {
+  code: string;
+  description: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  minOrderValue: number;
+  maxDiscount?: number;
+  expiresAt: string;
+  usageLimit?: number;
+  usedCount: number;
+}
+
+export interface FrequentlyBoughtTogetherBundle {
+  id: string;
+  mainProductId: string;
+  bundledProductIds: string[];
+  discountPercent: number;
+  title: string;
 }
 
