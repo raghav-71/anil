@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffeedb;
+  --foreground: #493129;
+  --primary: #493129;
+  --accent-mauve: #8b597b;
+  --accent-coral: #efa3a0;
+  --accent-peach: #ffdec7;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--background);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Editorial Serif Headings */
+h1, h2, h3, .font-editorial {
+  font-family: var(--font-serif), Georgia, serif;
+  letter-spacing: -0.015em;
+  color: #493129;
+}
+
+/* Luxury Editorial Cards */
+.editorial-card {
+  background-color: #fffaf5;
+  border: 1px solid rgba(73, 49, 41, 0.1);
+  box-shadow: 0 4px 20px -2px rgba(73, 49, 41, 0.04);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(139, 89, 123, 0.3);
+  box-shadow: 0 16px 36px -4px rgba(73, 49, 41, 0.09);
+}
+
+/* Coral Luxury CTA */
+.btn-coral {
+  background-color: #efa3a0;
+  color: #493129;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.75rem 1.75rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(239, 163, 160, 0.35);
+}
+
+.btn-coral:hover {
+  background-color: #e58e8b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(239, 163, 160, 0.45);
+}
+
+.btn-editorial-dark {
+  background-color: #493129;
+  color: #ffeedb;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.75rem 1.75rem;
+  transition: all 0.25s ease;
+}
+
+.btn-editorial-dark:hover {
+  background-color: #35221b;
+  transform: translateY(-1px);
+}
+
+/* Custom Scrollbar in Muted Mauve & Peach */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #ffeedb;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffdec7;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8b597b;
+}
+
+/* PRINT MEDIA QUERIES FOR THERMAL PRINTERS (80mm, 58mm) & A4 INVOICES */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area, .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
