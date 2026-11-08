@@ -45,8 +45,11 @@ export function Navbar() {
             <Link href="/shop" className="hover:text-[#8b597b] transition">
               The Collection
             </Link>
+            <Link href="/catalog" className="hover:text-[#8b597b] transition">
+              Catalogue
+            </Link>
             <Link href="/mobiles" className="hover:text-[#8b597b] transition">
-              Flagship Mobiles
+              Smartphones
             </Link>
             <Link href="/accessories" className="hover:text-[#8b597b] transition">
               Accessories
@@ -147,6 +150,9 @@ export function Navbar() {
           <div className="flex flex-col space-y-3 font-serif text-base text-[#493129]">
             <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10">
               The Full Collection
+            </Link>
+            <Link href="/catalog" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10">
+              Product Catalogue
             </Link>
             <Link href="/mobiles" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-[#493129]/10">
               Flagship Smartphones

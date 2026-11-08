@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffaf5" />
+      <stop offset="100%" stop-color="#ffeedb" />
+    </linearGradient>
+    <radialGradient id="peachGlow" cx="50%" cy="45%" r="40%">
+      <stop offset="0%" stop-color="#ffdec7" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#ffdec7" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" rx="24" fill="url(#bgGrad)" stroke="#493129" stroke-opacity="0.08" stroke-width="1.5" />
+  <circle cx="200" cy="170" r="120" fill="url(#peachGlow)" />
+
+  <!-- Device Artwork -->
+  
+      <!-- Headphones Silhouette -->
+      <path d="M125,180 C125,85 275,85 275,180" fill="none" stroke="#493129" stroke-width="7" stroke-linecap="round" />
+      <rect x="110" y="160" width="28" height="55" rx="12" fill="#8b597b" stroke="#493129" stroke-width="2" />
+      <rect x="262" y="160" width="28" height="55" rx="12" fill="#8b597b" stroke="#493129" stroke-width="2" />
+      <circle cx="124" cy="187" r="6" fill="#ffdec7" />
+      <circle cx="276" cy="187" r="6" fill="#ffdec7" />
+    
+
+  <!-- Brand Eyebrow -->
+  <text x="200" y="325" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" font-weight="700" letter-spacing="2.5" fill="#8b597b">
+    BOAT · HEADPHONES
+  </text>
+
+  <!-- Product Name -->
+  <text x="200" y="352" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="17" font-weight="600" fill="#493129">
+    boAt Rockerz 425
+  </text>
+
+  <!-- Store Tag -->
+  <text x="200" y="375" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="9" font-weight="600" letter-spacing="1.5" fill="#efa3a0">
+    ANIL COMMUNICATIONS · AUTHENTIC RETAIL
+  </text>
+</svg>

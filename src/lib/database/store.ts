@@ -16,6 +16,7 @@ import {
 } from "@/types";
 import { generateInvoiceNumber, generateOrderNumber } from "../utils";
 import { calculateGstInclusive } from "../tax-calculator";
+import importedCatalog from "./imported-catalog.json";
 
 // In-Memory Synchronized Store (Initial seed data mirroring the 34 tables)
 class StoreDatabase {
@@ -74,6 +75,42 @@ class StoreDatabase {
       isActive: true,
       itemCount: 2,
     },
+    {
+      id: "cat-keypad",
+      name: "Keypad Phones",
+      slug: "keypad-phones",
+      description: "Reliable, durable feature phones with long-lasting battery life",
+      imageUrl: "/images/products/lava-a3-torch.svg",
+      isActive: true,
+      itemCount: 6,
+    },
+    {
+      id: "cat-earbuds",
+      name: "Earbuds",
+      slug: "earbuds",
+      description: "True Wireless Stereo (TWS) earbuds with deep bass and ENC",
+      imageUrl: "/images/products/boat-airdopes-156-nirvana.svg",
+      isActive: true,
+      itemCount: 6,
+    },
+    {
+      id: "cat-neckbands",
+      name: "Neckbands",
+      slug: "neckbands",
+      description: "Comfortable ergonomic wireless neckbands for music and all-day calling",
+      imageUrl: "/images/products/kdm-evergreen.svg",
+      isActive: true,
+      itemCount: 8,
+    },
+    {
+      id: "cat-headphones",
+      name: "Headphones",
+      slug: "headphones",
+      description: "Over-ear and on-ear wireless headphones with immersive sound",
+      imageUrl: "/images/products/boat-rockerz-425.svg",
+      isActive: true,
+      itemCount: 3,
+    },
   ];
 
   private brands: Brand[] = [
@@ -84,6 +121,20 @@ class StoreDatabase {
     { id: "b-xiaomi", name: "Xiaomi", slug: "xiaomi", logoUrl: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=200&q=80", isFeatured: true },
     { id: "b-anker", name: "Anker", slug: "anker", logoUrl: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=200&q=80", isFeatured: false },
     { id: "b-sony", name: "Sony", slug: "sony", logoUrl: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-motorola", name: "Motorola", slug: "motorola", logoUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-oppo", name: "OPPO", slug: "oppo", logoUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-vivo", name: "Vivo", slug: "vivo", logoUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-realme", name: "Realme", slug: "realme", logoUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-redmi", name: "Redmi", slug: "redmi", logoUrl: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-poco", name: "POCO", slug: "poco", logoUrl: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-itel", name: "itel", slug: "itel", logoUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=200&q=80", isFeatured: false },
+    { id: "b-lava", name: "Lava", slug: "lava", logoUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=200&q=80", isFeatured: false },
+    { id: "b-cellecor", name: "Cellecor", slug: "cellecor", logoUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=200&q=80", isFeatured: false },
+    { id: "b-jio", name: "Jio", slug: "jio", logoUrl: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=200&q=80", isFeatured: false },
+    { id: "b-boat", name: "boAt", slug: "boat", logoUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-kdm", name: "KDM", slug: "kdm", logoUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=200&q=80", isFeatured: true },
+    { id: "b-morbi", name: "Morbi", slug: "morbi", logoUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=200&q=80", isFeatured: false },
+    { id: "b-zebronics", name: "Zebronics", slug: "zebronics", logoUrl: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=200&q=80", isFeatured: false },
   ];
 
   private products: Product[] = [
@@ -455,6 +506,7 @@ class StoreDatabase {
       ],
       createdAt: new Date().toISOString(),
     },
+    ...(importedCatalog as unknown as Product[]),
   ];
 
   private customers: Customer[] = [

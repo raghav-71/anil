@@ -8,8 +8,14 @@ export async function GET(req: NextRequest) {
   const q = searchParams.get("q")?.toLowerCase();
   const sort = searchParams.get("sort") || "featured";
   const inStockOnly = searchParams.get("inStock") === "true";
+  const includeUnpublished = searchParams.get("includeUnpublished") === "true";
 
   let products = db.getProducts();
+
+  // Public storefront should only see published/active products unless admin specifies includeUnpublished
+  if (!includeUnpublished) {
+    products = products.filter((p) => p.isActive);
+  }
 
   if (category && category !== "all") {
     products = products.filter((p) => p.categoryId === category || p.categoryName.toLowerCase() === category.toLowerCase());

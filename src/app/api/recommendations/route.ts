@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
       const product = db.getProductById(productId);
       const similar = db
         .getProducts()
-        .filter((p) => p.id !== productId && p.categoryId === product?.categoryId)
+        .filter((p) => p.isActive && p.id !== productId && p.categoryId === product?.categoryId)
         .slice(0, 4);
 
       return NextResponse.json({
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Default trending and best sellers
-    const all = db.getProducts();
+    const all = db.getProducts().filter((p) => p.isActive);
     const trending = all.filter((p) => p.isFeatured).slice(0, 4);
     const bestSellers = all.slice(0, 4);
 

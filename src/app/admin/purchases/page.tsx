@@ -24,7 +24,7 @@ export default function PurchasesPage() {
 
   const loadData = () => {
     setLoading(true);
-    fetch("/api/products")
+    fetch("/api/products?includeUnpublished=true")
       .then((res) => res.json())
       .then((d) => setProducts(d.products || []));
 

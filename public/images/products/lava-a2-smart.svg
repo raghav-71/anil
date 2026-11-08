@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffaf5" />
+      <stop offset="100%" stop-color="#ffeedb" />
+    </linearGradient>
+    <radialGradient id="peachGlow" cx="50%" cy="45%" r="40%">
+      <stop offset="0%" stop-color="#ffdec7" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#ffdec7" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" rx="24" fill="url(#bgGrad)" stroke="#493129" stroke-opacity="0.08" stroke-width="1.5" />
+  <circle cx="200" cy="170" r="120" fill="url(#peachGlow)" />
+
+  <!-- Device Artwork -->
+  
+      <!-- Keypad Phone Silhouette -->
+      <rect x="145" y="55" width="110" height="240" rx="16" fill="#fff" stroke="#493129" stroke-width="2.5" />
+      <rect x="155" y="70" width="90" height="85" rx="6" fill="#ffdec7" />
+      <!-- D-Pad -->
+      <circle cx="200" cy="180" r="14" fill="#8b597b" />
+      <circle cx="200" cy="180" r="6" fill="#fff" />
+      <!-- Numeric Grid -->
+      <rect x="160" y="206" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="190" y="206" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="220" y="206" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="160" y="226" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="190" y="226" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="220" y="226" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="160" y="246" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="190" y="246" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="220" y="246" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+      <rect x="190" y="266" width="20" height="12" rx="3" fill="#493129" opacity="0.6" />
+    
+
+  <!-- Brand Eyebrow -->
+  <text x="200" y="325" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="11" font-weight="700" letter-spacing="2.5" fill="#8b597b">
+    LAVA · KEYPAD PHONES
+  </text>
+
+  <!-- Product Name -->
+  <text x="200" y="352" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-size="17" font-weight="600" fill="#493129">
+    Lava A2 Smart
+  </text>
+
+  <!-- Store Tag -->
+  <text x="200" y="375" text-anchor="middle" font-family="'DM Sans', sans-serif" font-size="9" font-weight="600" letter-spacing="1.5" fill="#efa3a0">
+    ANIL COMMUNICATIONS · AUTHENTIC RETAIL
+  </text>
+</svg>

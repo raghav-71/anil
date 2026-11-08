@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const allProducts = db.getProducts();
+    const allProducts = db.getProducts().filter((p) => p.isActive);
     const allCategories = db.getCategories();
     const allBrands = db.getBrands();
 

@@ -23,6 +23,7 @@ import {
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -31,12 +32,81 @@ export default function AdminProductsPage() {
   const [barcodeModalProduct, setBarcodeModalProduct] = useState<Product | null>(null);
   const [labelQuantity, setLabelQuantity] = useState(12);
 
+  // Quick Edit Pricing & Stock Modal State
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [editPrice, setEditPrice] = useState<number>(0);
+  const [editMrp, setEditMrp] = useState<number>(0);
+  const [editCost, setEditCost] = useState<number>(0);
+  const [editStock, setEditStock] = useState<number>(0);
+  const [editIsActive, setEditIsActive] = useState<boolean>(false);
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  const openEditModal = (p: Product) => {
+    setEditProduct(p);
+    setEditPrice(p.basePrice || 0);
+    setEditMrp(p.mrp || 0);
+    const firstVar = p.variants[0];
+    setEditCost(firstVar?.costPrice || 0);
+    const totalStk = p.variants.reduce((acc, v) => acc + v.stockQuantity, 0);
+    setEditStock(totalStk || 0);
+    setEditIsActive(p.isActive);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editProduct) return;
+    setSavingEdit(true);
+    try {
+      const updatedVariants = editProduct.variants.map((v, i) => ({
+        ...v,
+        sellingPrice: editPrice,
+        mrp: editMrp,
+        costPrice: editCost,
+        stockQuantity: i === 0 ? editStock : v.stockQuantity,
+        isActive: editIsActive,
+      }));
+
+      const res = await fetch("/api/products", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: editProduct.id,
+          basePrice: editPrice,
+          mrp: editMrp,
+          isActive: editIsActive,
+          variants: updatedVariants,
+        }),
+      });
+
+      if (res.ok) {
+        setProducts(
+          products.map((p) =>
+            p.id === editProduct.id
+              ? {
+                  ...p,
+                  basePrice: editPrice,
+                  mrp: editMrp,
+                  isActive: editIsActive,
+                  variants: updatedVariants,
+                }
+              : p
+          )
+        );
+        setEditProduct(null);
+      } else {
+        alert("Failed to update product");
+      }
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
   const loadProducts = () => {
     setLoading(true);
-    fetch("/api/products")
+    fetch("/api/products?includeUnpublished=true")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products || []);
+        setCategories(data.categories || []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -129,11 +199,25 @@ export default function AdminProductsPage() {
               className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white"
             >
               <option value="all">All Categories</option>
-              <option value="cat-smartphones">Smartphones</option>
-              <option value="cat-chargers">Chargers & Cables</option>
-              <option value="cat-audio">Audio & Headphones</option>
-              <option value="cat-powerbanks">Power Banks</option>
-              <option value="cat-accessories">Cases & Protection</option>
+              {categories.length > 0 ? (
+                categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))
+              ) : (
+                <>
+                  <option value="cat-smartphones">Smartphones</option>
+                  <option value="cat-keypad">Keypad Phones</option>
+                  <option value="cat-earbuds">Earbuds</option>
+                  <option value="cat-neckbands">Neckbands</option>
+                  <option value="cat-headphones">Headphones</option>
+                  <option value="cat-chargers">Chargers & Cables</option>
+                  <option value="cat-audio">Audio & Headphones</option>
+                  <option value="cat-powerbanks">Power Banks</option>
+                  <option value="cat-accessories">Cases & Protection</option>
+                </>
+              )}
             </select>
           </div>
         </div>
@@ -180,9 +264,15 @@ export default function AdminProductsPage() {
                       </span>
                     </td>
                     <td className="py-3 px-3 font-mono">
-                      <span className="font-bold text-white block">{formatCurrency(prod.basePrice)}</span>
-                      {prod.mrp > prod.basePrice && (
-                        <span className="text-slate-500 line-through text-[10px]">{formatCurrency(prod.mrp)}</span>
+                      {prod.basePrice > 0 ? (
+                        <>
+                          <span className="font-bold text-white block">{formatCurrency(prod.basePrice)}</span>
+                          {prod.mrp > prod.basePrice && (
+                            <span className="text-slate-500 line-through text-[10px]">{formatCurrency(prod.mrp)}</span>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-amber-400 font-sans font-medium text-[11px] block">Unset (Draft)</span>
                       )}
                     </td>
                     <td className="py-3 px-3 font-mono text-[11px]">
@@ -208,14 +298,23 @@ export default function AdminProductsPage() {
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase transition ${
                           prod.isActive
                             ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
+                            : prod.basePrice === 0
+                            ? "bg-amber-950/60 text-amber-300 border border-amber-800"
                             : "bg-slate-800 text-slate-500 border border-slate-700"
                         }`}
                       >
-                        {prod.isActive ? "Active" : "Archived"}
+                        {prod.isActive ? "Published" : prod.basePrice === 0 ? "Draft" : "Unpublished"}
                       </button>
                     </td>
                     <td className="py-3 px-3 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openEditModal(prod)}
+                          className="p-1.5 text-slate-400 hover:text-amber-400 transition"
+                          title="Edit Pricing & Stock"
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                        </button>
                         <button
                           onClick={() => setBarcodeModalProduct(prod)}
                           className="p-1.5 text-slate-400 hover:text-blue-400"
@@ -330,6 +429,111 @@ export default function AdminProductsPage() {
               >
                 <Printer className="w-4 h-4" />
                 <span>Print Sticker Sheet</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick Edit Pricing & Stock Modal */}
+      {editProduct && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-5">
+            <div className="flex justify-between items-start border-b border-slate-800 pb-3">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                  {editProduct.brandName} • {editProduct.categoryName}
+                </span>
+                <h3 className="text-base font-bold text-white mt-0.5">{editProduct.title}</h3>
+                <p className="text-[11px] text-slate-400 font-mono mt-0.5">HSN: {editProduct.hsnCode} • GST: {editProduct.gstRate}%</p>
+              </div>
+              <button onClick={() => setEditProduct(null)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Selling Price (₹)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editPrice}
+                    onChange={(e) => setEditPrice(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:ring-1 focus:ring-blue-500"
+                    placeholder="Enter selling price"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">MRP Price (₹)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editMrp}
+                    onChange={(e) => setEditMrp(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:ring-1 focus:ring-blue-500"
+                    placeholder="Enter printed MRP"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Cost / Purchase Price (₹)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editCost}
+                    onChange={(e) => setEditCost(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:ring-1 focus:ring-blue-500"
+                    placeholder="Enter unit cost"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">Available Stock (Units)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editStock}
+                    onChange={(e) => setEditStock(Number(e.target.value))}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-white text-xs focus:ring-1 focus:ring-blue-500"
+                    placeholder="Units in shop"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
+                <div>
+                  <span className="font-semibold text-white block">Publish on Storefront & POS</span>
+                  <span className="text-[11px] text-slate-400">
+                    When active, product will be visible to online customers and searchable in POS.
+                  </span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={editIsActive}
+                  onChange={(e) => setEditIsActive(e.target.checked)}
+                  className="w-5 h-5 rounded border-slate-700 text-blue-600 focus:ring-0 cursor-pointer"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-3 border-t border-slate-800">
+              <button
+                type="button"
+                onClick={() => setEditProduct(null)}
+                className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={savingEdit}
+                onClick={handleSaveEdit}
+                className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition disabled:opacity-50"
+              >
+                {savingEdit ? "Saving Changes..." : "Save & Update Product"}
               </button>
             </div>
           </div>
