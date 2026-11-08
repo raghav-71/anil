@@ -20,6 +20,10 @@ import {
   Tag,
   Copy,
   Clock,
+  Smartphone,
+  Headphones,
+  Radio,
+  Zap,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -38,8 +42,12 @@ export default function HomePage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const featuredPhones = products.filter((p) => p.categoryId === "cat-smartphones");
-  const accessories = products.filter((p) => p.categoryId !== "cat-smartphones");
+  // Filter distinct product lines
+  const smartphones = products.filter((p) => p.categoryId === "cat-smartphones");
+  const keypadPhones = products.filter((p) => p.categoryId === "cat-keypad");
+  const audioAndAccessories = products.filter(
+    (p) => p.categoryId !== "cat-smartphones" && p.categoryId !== "cat-keypad"
+  );
   const recentProducts = products.filter((p) => recentlyViewed.includes(p.id)).slice(0, 4);
 
   const handleCopyCoupon = (code: string) => {
@@ -51,7 +59,7 @@ export default function HomePage() {
   const handleQuickAdd = (product: Product, e: React.MouseEvent) => {
     e.preventDefault();
     const primaryVariant = product.variants[0];
-    if (!primaryVariant) return;
+    if (!primaryVariant || primaryVariant.sellingPrice <= 0) return;
 
     addItem({
       variantId: primaryVariant.id,
@@ -77,43 +85,43 @@ export default function HomePage() {
 
       <main className="flex-1">
         {/* EDITORIAL HERO SECTION */}
-        <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-32 border-b border-[#493129]/10">
+        <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28 border-b border-[#493129]/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              {/* Left Column: Editorial Headline & Story */}
+              {/* Left Column: Headline & Value Proposition */}
               <div className="lg:col-span-7 space-y-6 text-left">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ffdec7] text-[#493129] text-xs font-semibold uppercase tracking-[0.2em]">
                   <Sparkles className="w-3.5 h-3.5 text-[#8b597b]" />
-                  <span>Autumn 2026 Curated Collection</span>
+                  <span>Anil Communications · Belagavi</span>
                 </div>
 
                 <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-[#493129] tracking-tight leading-[1.08]">
                   Precision <br />
-                  <span className="italic font-normal text-[#8b597b]">Titanium</span> & Light.
+                  <span className="italic font-normal text-[#8b597b]">Technology</span> & Trust.
                 </h1>
 
                 <p className="text-base sm:text-lg text-[#493129]/80 max-w-xl font-sans leading-relaxed">
-                  Welcome to Anil Communications. We present an extraordinary assembly of flagship telecommunications devices, sculptural audio systems, and rapid GaN charging accoutrements.
+                  Belagavi’s premier retail destination for 5G smartphones, reliable feature phones, and certified acoustic accessories. 100% genuine sealed boxes with official manufacturer GST warranty.
                 </p>
 
-                <div className="flex flex-wrap items-center gap-4 pt-4">
+                <div className="flex flex-wrap items-center gap-4 pt-2">
                   <Link
-                    href="/shop"
-                    className="inline-flex items-center gap-2 bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] font-semibold text-sm px-7 py-3.5 rounded-full shadow-coral transition transform hover:-translate-y-0.5"
+                    href="/catalog"
+                    className="inline-flex items-center gap-2 bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] font-bold text-sm px-7 py-3.5 rounded-full shadow-coral transition transform hover:-translate-y-0.5"
                   >
-                    <span>Explore The Collection</span>
+                    <span>Browse Product Catalogue</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                   <Link
                     href="/mobiles"
                     className="inline-flex items-center gap-2 bg-[#fffaf5] hover:bg-[#ffdec7]/60 text-[#493129] font-semibold text-sm px-7 py-3.5 rounded-full border border-[#493129]/15 transition"
                   >
-                    <span>View Flagships</span>
+                    <span>Flagship Smartphones</span>
                   </Link>
                 </div>
 
                 {/* Sub-Headline Guarantees */}
-                <div className="grid grid-cols-3 gap-6 pt-8 border-t border-[#493129]/10 max-w-lg">
+                <div className="grid grid-cols-3 gap-6 pt-6 border-t border-[#493129]/10 max-w-lg">
                   <div>
                     <span className="font-serif text-2xl font-bold text-[#493129]">100%</span>
                     <p className="text-[11px] text-[#8b597b] uppercase tracking-wider font-semibold mt-0.5">
@@ -129,23 +137,23 @@ export default function HomePage() {
                   <div>
                     <span className="font-serif text-2xl font-bold text-[#493129]">GST</span>
                     <p className="text-[11px] text-[#8b597b] uppercase tracking-wider font-semibold mt-0.5">
-                      Input Tax Credit
+                      Tax Invoice
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Right Column: Editorial Showcase Masterpiece */}
+              {/* Right Column: Hero Visual Card */}
               <div className="lg:col-span-5 relative">
                 <div className="relative mx-auto rounded-3xl p-8 bg-[#fffaf5] border border-[#493129]/10 shadow-card">
                   <div className="absolute top-5 right-5 bg-[#ffdec7] text-[#493129] text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-                    The Pinnacle
+                    Featured Model
                   </div>
 
                   <div className="h-72 sm:h-80 w-full rounded-2xl bg-[#ffeedb]/60 flex items-center justify-center p-6">
                     <img
-                      src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80"
-                      alt="iPhone 16 Pro Max Natural Titanium"
+                      src="https://cdn.beebom.com/mobile/moto-g37-power-back-front.png"
+                      alt="Moto G37 Power"
                       className="max-h-full max-w-full object-contain filter drop-shadow-xl hover:scale-105 transition-transform duration-500"
                     />
                   </div>
@@ -153,50 +161,42 @@ export default function HomePage() {
                   <div className="mt-6 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8b597b]">
-                        Apple India Flagship
+                        Motorola 5G Series
                       </span>
                       <div className="flex items-center gap-1 text-[#493129] text-xs font-semibold">
                         <Star className="w-3.5 h-3.5 fill-[#efa3a0] text-[#efa3a0]" />
-                        <span>4.9</span>
+                        <span>4.8</span>
                       </div>
                     </div>
 
-                    <h3 className="font-serif text-2xl text-[#493129]">iPhone 16 Pro Max</h3>
+                    <h3 className="font-serif text-2xl text-[#493129]">Moto G37 Power</h3>
                     <p className="text-xs text-[#493129]/70 line-clamp-1 font-sans">
-                      Grade 5 Titanium, A18 Pro silicon, and revolutionary 48MP Camera Control
+                      Massive Battery, Rapid TurboPower Charging, and Vibrant Display
                     </p>
 
                     <div className="pt-2 flex items-baseline justify-between">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-serif font-bold text-[#493129]">
-                          {formatCurrency(144900)}
-                        </span>
-                        <span className="text-xs text-[#493129]/40 line-through">
-                          {formatCurrency(149900)}
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-bold text-[#8b597b] uppercase tracking-wider">
-                        Immediate Dispatch
+                      <span className="text-sm font-semibold text-[#8b597b] italic">
+                        Price available in store
+                      </span>
+                      <span className="text-[10px] font-bold text-[#493129] uppercase tracking-wider bg-[#ffdec7] px-2.5 py-0.5 rounded-full">
+                        In Stock Belagavi
                       </span>
                     </div>
 
                     <div className="pt-4 flex gap-2">
                       <Link
-                        href="/product/apple-iphone-16-pro-max"
+                        href="/product/moto-g37-power"
                         className="flex-1 py-3 rounded-full bg-[#493129] hover:bg-[#35221b] text-[#ffeedb] text-xs font-semibold text-center transition"
                       >
-                        Acquire Now
+                        View Product Details
                       </Link>
-                      <button
-                        onClick={(e) => {
-                          const p = products.find((x) => x.id === "prod-iphone-16-pro");
-                          if (p) handleQuickAdd(p, e);
-                        }}
-                        className="px-5 py-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold transition"
-                        title="Add to Bag"
+                      <Link
+                        href="/contact"
+                        className="px-5 py-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-bold transition flex items-center justify-center"
+                        title="Enquire"
                       >
-                        <ShoppingBag className="w-4 h-4" />
-                      </button>
+                        Enquire
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -205,17 +205,107 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* MAISON BRANDS RUNWAY */}
-        <section className="py-10 border-b border-[#493129]/10 bg-[#fffaf5]">
+        {/* FIVE CORE RETAIL CATEGORIES SHELF */}
+        <section className="py-12 bg-[#fffaf5] border-b border-[#493129]/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-[10px] uppercase font-bold tracking-[0.3em] text-[#8b597b] mb-6">
-              Authorized Stockist For Celebrated Manufacturers
+            <div className="text-center max-w-xl mx-auto mb-8">
+              <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8b597b]">
+                Curated Departments
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl text-[#493129] mt-1">
+                Explore by Category
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              {[
+                {
+                  title: "Smartphones",
+                  count: "15+ Models",
+                  desc: "5G & Flagship Mobiles",
+                  href: "/mobiles",
+                  icon: <Smartphone className="w-5 h-5 text-[#8b597b]" />,
+                },
+                {
+                  title: "Keypad Phones",
+                  count: "6 Models",
+                  desc: "Durable Battery Life",
+                  href: "/shop?category=cat-keypad",
+                  icon: <Radio className="w-5 h-5 text-[#8b597b]" />,
+                },
+                {
+                  title: "TWS Earbuds",
+                  count: "6 Models",
+                  desc: "boAt, KDM, Morbi",
+                  href: "/shop?category=cat-earbuds",
+                  icon: <Headphones className="w-5 h-5 text-[#8b597b]" />,
+                },
+                {
+                  title: "Neckbands",
+                  count: "8 Models",
+                  desc: "Ergonomic Bluetooth",
+                  href: "/shop?category=cat-neckbands",
+                  icon: <Zap className="w-5 h-5 text-[#8b597b]" />,
+                },
+                {
+                  title: "Headphones",
+                  count: "3+ Models",
+                  desc: "Over-Ear Acoustics",
+                  href: "/shop?category=cat-headphones",
+                  icon: <Headphones className="w-5 h-5 text-[#8b597b]" />,
+                },
+              ].map((c) => (
+                <Link
+                  key={c.title}
+                  href={c.href}
+                  className="p-5 rounded-2xl bg-[#ffeedb]/50 border border-[#493129]/10 hover:border-[#8b597b] hover:bg-[#ffdec7]/40 transition group flex flex-col justify-between"
+                >
+                  <div className="space-y-3">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-2xs group-hover:scale-110 transition-transform">
+                      {c.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-base font-bold text-[#493129] group-hover:text-[#8b597b] transition">
+                        {c.title}
+                      </h3>
+                      <p className="text-[11px] text-[#493129]/65 mt-0.5">{c.desc}</p>
+                    </div>
+                  </div>
+                  <div className="pt-3 border-t border-[#493129]/10 mt-3 flex items-center justify-between text-[10px] font-bold text-[#8b597b]">
+                    <span>{c.count}</span>
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* AUTHORIZED BRAND PARTNERS RUNWAY */}
+        <section className="py-8 border-b border-[#493129]/10 bg-[#ffeedb]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-center text-[10px] uppercase font-bold tracking-[0.3em] text-[#8b597b] mb-4">
+              Authorized Stockist For Premier Brands
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
-              {["Apple", "Samsung Galaxy", "OnePlus", "Nothing", "Sony Audio", "Anker Power"].map((brandName) => (
+            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+              {[
+                "Motorola",
+                "Vivo",
+                "Realme",
+                "OPPO",
+                "Redmi",
+                "POCO",
+                "boAt",
+                "KDM",
+                "Lava",
+                "Jio",
+                "Cellecor",
+                "Apple",
+                "Samsung",
+              ].map((brandName) => (
                 <span
                   key={brandName}
-                  className="font-serif text-lg md:text-xl font-normal text-[#493129]/80 tracking-wide hover:text-[#8b597b] transition cursor-default"
+                  className="font-serif text-base md:text-lg font-medium text-[#493129]/75 tracking-wide hover:text-[#8b597b] transition cursor-default"
                 >
                   {brandName}
                 </span>
@@ -224,19 +314,19 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* CURATED SMARTPHONES COLLECTION */}
-        <section className="py-16 md:py-24">
+        {/* SMARTPHONES COLLECTION */}
+        <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
               <div>
                 <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#8b597b]">
-                  The Salon Collection
+                  Next-Gen Connectivity
                 </span>
                 <h2 className="font-serif text-3xl sm:text-4xl text-[#493129] mt-1">
-                  Masterpiece Smartphones
+                  Smartphones Collection
                 </h2>
                 <p className="text-xs text-[#493129]/70 mt-1 max-w-md">
-                  Precision telecommunications crafted in titanium, aerospace aluminum, and sculpted glass.
+                  From Motorola TurboPower to Realme and Vivo 5G powerhouses with Indian GST warranty.
                 </p>
               </div>
 
@@ -244,24 +334,25 @@ export default function HomePage() {
                 href="/mobiles"
                 className="text-xs font-bold uppercase tracking-[0.15em] text-[#8b597b] hover:text-[#493129] flex items-center gap-1 group pb-1 border-b border-[#8b597b]"
               >
-                <span>Browse All Mobiles</span>
+                <span>View All 15+ Mobiles</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredPhones.slice(0, 4).map((product) => {
+              {smartphones.slice(0, 8).map((product) => {
                 const variant = product.variants[0];
+                const price = (variant ? variant.sellingPrice : product.basePrice) || 0;
                 const totalStock = product.variants.reduce((acc, v) => acc + v.stockQuantity, 0);
 
                 return (
                   <div
                     key={product.id}
-                    className="editorial-card rounded-3xl p-6 flex flex-col justify-between"
+                    className="editorial-card rounded-3xl p-5 flex flex-col justify-between"
                   >
                     <div>
                       {/* Product Visual */}
-                      <div className="relative h-60 rounded-2xl bg-[#ffeedb]/40 flex items-center justify-center p-4 overflow-hidden">
+                      <div className="relative h-56 rounded-2xl bg-[#ffeedb]/50 flex items-center justify-center p-4 overflow-hidden">
                         <Link href={`/product/${product.slug}`} className="w-full h-full flex items-center justify-center">
                           <img
                             src={product.images[0]}
@@ -307,7 +398,7 @@ export default function HomePage() {
                       </div>
 
                       {/* Content */}
-                      <div className="pt-5 space-y-1.5">
+                      <div className="pt-4 space-y-1">
                         <div className="flex items-center gap-1 text-[#8b597b] text-xs font-medium">
                           <Star className="w-3.5 h-3.5 fill-[#efa3a0] text-[#efa3a0]" />
                           <span>{product.rating}</span>
@@ -315,7 +406,7 @@ export default function HomePage() {
                         </div>
 
                         <Link href={`/product/${product.slug}`}>
-                          <h3 className="font-serif text-lg text-[#493129] hover:text-[#8b597b] transition line-clamp-1">
+                          <h3 className="font-serif text-base text-[#493129] hover:text-[#8b597b] transition line-clamp-1">
                             {product.title}
                           </h3>
                         </Link>
@@ -326,11 +417,11 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    <div className="pt-6 border-t border-[#493129]/10 mt-6 space-y-3">
+                    <div className="pt-5 border-t border-[#493129]/10 mt-5 space-y-3">
                       <div className="flex items-baseline justify-between">
-                        {((variant ? variant.sellingPrice : product.basePrice) || 0) > 0 ? (
+                        {price > 0 ? (
                           <span className="font-serif text-xl font-bold text-[#493129]">
-                            {formatCurrency(variant ? variant.sellingPrice : product.basePrice)}
+                            {formatCurrency(price)}
                           </span>
                         ) : (
                           <span className="text-xs font-semibold text-[#8b597b] italic">
@@ -338,23 +429,23 @@ export default function HomePage() {
                           </span>
                         )}
                         <span className="text-[10px] uppercase font-bold text-[#8b597b]">
-                          {totalStock > 0 ? "Available" : "Check availability"}
+                          {totalStock > 0 ? "In Stock" : "Check availability"}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2">
                         <Link
                           href={`/product/${product.slug}`}
-                          className={`py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition ${
-                            ((variant ? variant.sellingPrice : product.basePrice) || 0) <= 0 || totalStock <= 0 ? "col-span-2" : ""
+                          className={`py-2 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition ${
+                            price <= 0 || totalStock <= 0 ? "col-span-2" : ""
                           }`}
                         >
                           View Details
                         </Link>
-                        {((variant ? variant.sellingPrice : product.basePrice) || 0) > 0 && totalStock > 0 && (
+                        {price > 0 && totalStock > 0 && (
                           <button
                             onClick={(e) => handleQuickAdd(product, e)}
-                            className="py-2.5 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
+                            className="py-2 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
                           >
                             <ShoppingBag className="w-3.5 h-3.5" />
                             <span>Bag</span>
@@ -369,8 +460,145 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* KEYPAD PHONES SPOTLIGHT */}
+        <section className="py-14 bg-[#fffaf5] border-y border-[#493129]/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#8b597b]">
+                  Reliable & Durable
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl text-[#493129] mt-1">
+                  Feature & Keypad Phones
+                </h2>
+                <p className="text-xs text-[#493129]/70 mt-1 max-w-md">
+                  Extraordinary battery life, crystal clear calls, and rugged reliability from Lava, Jio, and Cellecor.
+                </p>
+              </div>
+
+              <Link
+                href="/shop?category=cat-keypad"
+                className="text-xs font-bold uppercase tracking-[0.15em] text-[#8b597b] hover:text-[#493129] flex items-center gap-1 group pb-1 border-b border-[#8b597b]"
+              >
+                <span>All 6 Keypad Phones</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {keypadPhones.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-4 rounded-2xl bg-white border border-[#493129]/10 hover:shadow-md transition flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="h-36 bg-[#ffeedb]/40 rounded-xl p-3 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={item.images[0]}
+                        alt={item.title}
+                        className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <div className="pt-3 space-y-1">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-[#8b597b]">
+                        {item.brandName}
+                      </span>
+                      <h4 className="font-serif text-xs font-bold text-[#493129] truncate">{item.title}</h4>
+                    </div>
+                  </div>
+                  <div className="pt-3 border-t border-[#493129]/10 mt-3 flex items-center justify-between">
+                    <span className="text-[10px] text-[#8b597b] italic">Store stock</span>
+                    <Link
+                      href={`/product/${item.slug}`}
+                      className="text-[10px] font-bold text-[#493129] hover:underline"
+                    >
+                      Details →
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ACOUSTIC & ACCESSORIES SECTION */}
+        <section className="py-16 md:py-20 bg-[#ffdec7]/40 border-b border-[#493129]/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#8b597b]">
+                  Acoustic Excellence
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl text-[#493129] mt-1">
+                  Earbuds, Neckbands & Audio
+                </h2>
+                <p className="text-xs text-[#493129]/70 mt-1 max-w-md">
+                  Premium wireless sound by boAt and KDM with environmental noise cancellation and rich bass.
+                </p>
+              </div>
+
+              <Link
+                href="/accessories"
+                className="text-xs font-bold uppercase tracking-[0.15em] text-[#8b597b] hover:text-[#493129] flex items-center gap-1 group pb-1 border-b border-[#8b597b]"
+              >
+                <span>Browse Audio Gear</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {audioAndAccessories.slice(0, 8).map((item) => {
+                const variant = item.variants[0];
+                const price = (variant ? variant.sellingPrice : item.basePrice) || 0;
+
+                return (
+                  <div
+                    key={item.id}
+                    className="editorial-card rounded-3xl p-5 flex flex-col justify-between bg-white"
+                  >
+                    <div>
+                      <div className="h-48 rounded-2xl bg-[#ffeedb]/50 flex items-center justify-center p-4">
+                        <img
+                          src={item.images[0]}
+                          alt={item.title}
+                          className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div className="pt-4 space-y-1">
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#8b597b]">
+                          {item.categoryName}
+                        </span>
+                        <h3 className="font-serif text-base text-[#493129] line-clamp-1">{item.title}</h3>
+                        <p className="text-xs text-[#493129]/70 line-clamp-2">{item.shortDescription}</p>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-[#493129]/10 mt-4 flex items-center justify-between">
+                      {price > 0 ? (
+                        <span className="font-serif text-base font-bold text-[#493129]">
+                          {formatCurrency(price)}
+                        </span>
+                      ) : (
+                        <span className="text-xs font-semibold text-[#8b597b] italic">
+                          Price coming soon
+                        </span>
+                      )}
+                      <Link
+                        href={`/product/${item.slug}`}
+                        className="py-1.5 px-3.5 rounded-full bg-[#ffeedb] hover:bg-[#ffdec7] text-[#493129] text-xs font-bold transition"
+                      >
+                        Details
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
         {/* PROMOTIONAL PRIVILEGE OFFERS & VOUCHERS */}
-        <section className="py-12 bg-[#ffdec7]/40 border-y border-[#493129]/10">
+        <section className="py-12 bg-[#fffaf5] border-b border-[#493129]/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
               <div>
@@ -388,9 +616,9 @@ export default function HomePage() {
                 { code: "ANIL5", desc: "5% savings on all flagship devices & genuine accessories", tag: "Storewide" },
                 { code: "FESTIVE1000", desc: "₹1,000 festive gift voucher on orders above ₹25,000", tag: "Festive Exclusive" },
               ].map((v) => (
-                <div key={v.code} className="p-5 rounded-3xl bg-[#fffaf5] border border-[#493129]/15 shadow-subtle space-y-3 relative overflow-hidden">
+                <div key={v.code} className="p-5 rounded-3xl bg-[#ffeedb]/40 border border-[#493129]/15 shadow-subtle space-y-3 relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#ffeedb] text-[#8b597b]">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white text-[#8b597b]">
                       {v.tag}
                     </span>
                     <button
@@ -407,90 +635,6 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* HIGHLIGHTED PEACH SECTION: ACOUSTIC & CHARGING ACCESSOIRES */}
-        <section className="py-16 md:py-24 bg-[#ffdec7]/50 border-y border-[#493129]/10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12">
-              <div>
-                <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#8b597b]">
-                  Acoustic & Rapid Power
-                </span>
-                <h2 className="font-serif text-3xl sm:text-4xl text-[#493129] mt-1">
-                  Accessories of Distinction
-                </h2>
-                <p className="text-xs text-[#493129]/70 mt-1 max-w-md">
-                  GaN high-velocity adapters, studio active noise-cancelling acoustics, and military-spec armors.
-                </p>
-              </div>
-
-              <Link
-                href="/accessories"
-                className="text-xs font-bold uppercase tracking-[0.15em] text-[#8b597b] hover:text-[#493129] flex items-center gap-1 group pb-1 border-b border-[#8b597b]"
-              >
-                <span>Explore Accessories</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-              {accessories.slice(0, 3).map((item) => {
-                const variant = item.variants[0];
-                return (
-                  <div
-                    key={item.id}
-                    className="editorial-card rounded-3xl p-6 flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="h-52 rounded-2xl bg-[#ffeedb] flex items-center justify-center p-4">
-                        <img
-                          src={item.images[0]}
-                          alt={item.title}
-                          className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
-                        />
-                      </div>
-                      <div className="pt-4 space-y-1">
-                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#8b597b]">
-                          {item.categoryName}
-                        </span>
-                        <h3 className="font-serif text-base text-[#493129] line-clamp-1">{item.title}</h3>
-                        <p className="text-xs text-[#493129]/70 line-clamp-2">{item.shortDescription}</p>
-                      </div>
-                    </div>
-
-                    <div className="pt-5 border-t border-[#493129]/10 mt-4 flex items-center justify-between">
-                      {((variant ? variant.sellingPrice : item.basePrice) || 0) > 0 ? (
-                        <span className="font-serif text-lg font-bold text-[#493129]">
-                          {formatCurrency(variant ? variant.sellingPrice : item.basePrice)}
-                        </span>
-                      ) : (
-                        <span className="text-xs font-semibold text-[#8b597b] italic">
-                          Price coming soon
-                        </span>
-                      )}
-                      {((variant ? variant.sellingPrice : item.basePrice) || 0) > 0 && (variant?.stockQuantity || 0) > 0 ? (
-                        <button
-                          onClick={(e) => handleQuickAdd(item, e)}
-                          className="py-2 px-4 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center gap-1.5 transition"
-                        >
-                          <ShoppingBag className="w-3.5 h-3.5" />
-                          <span>Add</span>
-                        </button>
-                      ) : (
-                        <Link
-                          href={`/product/${item.slug}`}
-                          className="py-1.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold"
-                        >
-                          Details
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           </div>
         </section>
@@ -521,7 +665,9 @@ export default function HomePage() {
                     </div>
                     <span className="text-[10px] font-bold uppercase text-[#8b597b]">{p.brandName}</span>
                     <h4 className="font-serif font-bold text-xs text-[#493129] truncate">{p.title}</h4>
-                    <span className="text-xs font-bold text-[#8b597b] mt-1 block">{formatCurrency(p.basePrice)}</span>
+                    <span className="text-xs font-bold text-[#8b597b] mt-1 block">
+                      {p.basePrice > 0 ? formatCurrency(p.basePrice) : "Price coming soon"}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -529,24 +675,24 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* BOUTIQUE ATELIER ESSAY */}
+        {/* STORE HERITAGE ESSAY */}
         <section className="py-20 bg-[#fffaf5]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#8b597b]">
               The Anil Communications Promise
             </span>
             <h2 className="font-serif text-3xl sm:text-5xl text-[#493129] leading-snug">
-              &ldquo;Technology elevated into an art form, backed by unmatched personal service.&rdquo;
+              &ldquo;Technology elevated into an art form, backed by authentic personal service.&rdquo;
             </h2>
             <p className="text-xs sm:text-sm text-[#493129]/75 font-sans max-w-2xl mx-auto leading-relaxed">
-              Founded on the belief that a smartphone is the most intimate artifact of modern existence, our Bengaluru salon delivers an unparalleled purchasing experience. Every unit is factory sealed, official Indian specification, and backed by genuine manufacturer warranty.
+              Serving our valued patrons in Belagavi, Karnataka. Every mobile device, earbud, and accessory is 100% genuine, factory sealed, and backed by authentic manufacturer service and GST invoices.
             </p>
-            <div className="pt-4">
+            <div className="pt-2">
               <Link
                 href="/about"
                 className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#8b597b] hover:text-[#493129] pb-1 border-b border-[#8b597b]"
               >
-                <span>Read The Maison Heritage</span>
+                <span>Read Store Heritage</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
