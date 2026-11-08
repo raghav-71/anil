@@ -36,7 +36,10 @@ export default function CatalogPage() {
   const visibleProducts = useMemo(() => {
     const q = query.trim().toLowerCase();
     return products.filter((p) => {
-      const categoryMatch = category === "All" || p.categoryName === category;
+      const categoryMatch =
+        category === "All" ||
+        p.categoryName === category ||
+        (category === "Headphones" && p.categoryName.includes("Headphones"));
       const searchMatch =
         !q ||
         [p.title, p.brandName, p.categoryName, ...p.variants.map((v) => `${v.ram || ""} ${v.storage || ""}`)]

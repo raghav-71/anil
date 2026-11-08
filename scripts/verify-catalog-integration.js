@@ -43,3 +43,4 @@ if (priceSetCount === 0 && stockCount === 0 && publishedCount === 0) {
   console.error('[FAIL] Rule violation detected!');
   process.exit(1);
 }
+

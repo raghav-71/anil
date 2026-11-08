@@ -328,29 +328,38 @@ export default function HomePage() {
 
                     <div className="pt-6 border-t border-[#493129]/10 mt-6 space-y-3">
                       <div className="flex items-baseline justify-between">
-                        <span className="font-serif text-xl font-bold text-[#493129]">
-                          {formatCurrency(variant ? variant.sellingPrice : product.basePrice)}
-                        </span>
+                        {((variant ? variant.sellingPrice : product.basePrice) || 0) > 0 ? (
+                          <span className="font-serif text-xl font-bold text-[#493129]">
+                            {formatCurrency(variant ? variant.sellingPrice : product.basePrice)}
+                          </span>
+                        ) : (
+                          <span className="text-xs font-semibold text-[#8b597b] italic">
+                            Price coming soon
+                          </span>
+                        )}
                         <span className="text-[10px] uppercase font-bold text-[#8b597b]">
-                          {totalStock > 0 ? "Available" : "Reserved"}
+                          {totalStock > 0 ? "Available" : "Check availability"}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2">
                         <Link
                           href={`/product/${product.slug}`}
-                          className="py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition"
+                          className={`py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition ${
+                            ((variant ? variant.sellingPrice : product.basePrice) || 0) <= 0 || totalStock <= 0 ? "col-span-2" : ""
+                          }`}
                         >
-                          Details
+                          View Details
                         </Link>
-                        <button
-                          onClick={(e) => handleQuickAdd(product, e)}
-                          disabled={totalStock <= 0}
-                          className="py-2.5 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] disabled:opacity-40 text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
-                        >
-                          <ShoppingBag className="w-3.5 h-3.5" />
-                          <span>Bag</span>
-                        </button>
+                        {((variant ? variant.sellingPrice : product.basePrice) || 0) > 0 && totalStock > 0 && (
+                          <button
+                            onClick={(e) => handleQuickAdd(product, e)}
+                            className="py-2.5 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
+                          >
+                            <ShoppingBag className="w-3.5 h-3.5" />
+                            <span>Bag</span>
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -453,16 +462,31 @@ export default function HomePage() {
                     </div>
 
                     <div className="pt-5 border-t border-[#493129]/10 mt-4 flex items-center justify-between">
-                      <span className="font-serif text-lg font-bold text-[#493129]">
-                        {formatCurrency(variant ? variant.sellingPrice : item.basePrice)}
-                      </span>
-                      <button
-                        onClick={(e) => handleQuickAdd(item, e)}
-                        className="py-2 px-4 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center gap-1.5 transition"
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>Add</span>
-                      </button>
+                      {((variant ? variant.sellingPrice : item.basePrice) || 0) > 0 ? (
+                        <span className="font-serif text-lg font-bold text-[#493129]">
+                          {formatCurrency(variant ? variant.sellingPrice : item.basePrice)}
+                        </span>
+                      ) : (
+                        <span className="text-xs font-semibold text-[#8b597b] italic">
+                          Price coming soon
+                        </span>
+                      )}
+                      {((variant ? variant.sellingPrice : item.basePrice) || 0) > 0 && (variant?.stockQuantity || 0) > 0 ? (
+                        <button
+                          onClick={(e) => handleQuickAdd(item, e)}
+                          className="py-2 px-4 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center gap-1.5 transition"
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          <span>Add</span>
+                        </button>
+                      ) : (
+                        <Link
+                          href={`/product/${item.slug}`}
+                          className="py-1.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold"
+                        >
+                          Details
+                        </Link>
+                      )}
                     </div>
                   </div>
                 );

@@ -286,29 +286,42 @@ export default function ProductDetailPage() {
             <div className="p-6 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle flex flex-wrap items-baseline justify-between gap-4">
               <div>
                 <div className="flex items-baseline gap-3">
-                  <span className="font-serif text-3xl sm:text-4xl font-bold text-[#493129]">
-                    {formatCurrency(selectedVariant.sellingPrice)}
-                  </span>
-                  {selectedVariant.mrp > selectedVariant.sellingPrice && (
+                  {selectedVariant.sellingPrice > 0 ? (
                     <>
-                      <span className="text-sm text-[#493129]/40 line-through">
-                        MRP: {formatCurrency(selectedVariant.mrp)}
+                      <span className="font-serif text-3xl sm:text-4xl font-bold text-[#493129]">
+                        {formatCurrency(selectedVariant.sellingPrice)}
                       </span>
-                      <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                        Save {discountPercent}%
-                      </span>
+                      {selectedVariant.mrp > selectedVariant.sellingPrice && (
+                        <>
+                          <span className="text-sm text-[#493129]/40 line-through">
+                            MRP: {formatCurrency(selectedVariant.mrp)}
+                          </span>
+                          <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            Save {discountPercent}%
+                          </span>
+                        </>
+                      )}
                     </>
+                  ) : (
+                    <div>
+                      <span className="font-serif text-2xl sm:text-3xl font-bold text-[#493129] block">
+                        Price Coming Soon
+                      </span>
+                      <span className="text-xs text-[#8b597b] font-medium block mt-1">
+                        Contact our Belagavi store concierge for live billing & offer price.
+                      </span>
+                    </div>
                   )}
                 </div>
                 <p className="text-[11px] text-[#8b597b] font-medium mt-1">
-                  Inclusive of all taxes (GST 18% HSN: {product.hsnCode})
+                  100% Genuine with GST Invoice & Official Manufacturer Warranty
                 </p>
               </div>
 
               <div>
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#ffdec7] text-[#493129] text-xs font-bold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#8b597b]" />
-                  <span>{selectedVariant.stockQuantity > 0 ? `${selectedVariant.stockQuantity} In Stock` : "Reserved"}</span>
+                  <span>{selectedVariant.stockQuantity > 0 ? `${selectedVariant.stockQuantity} In Stock` : "Check Availability"}</span>
                 </span>
               </div>
             </div>
@@ -349,25 +362,43 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            {/* Action Buttons: Add to Bag & Buy Now */}
-            <div className="flex gap-4">
-              <button
-                onClick={handleAddToCart}
-                disabled={selectedVariant.stockQuantity <= 0}
-                className="flex-1 py-4 px-6 rounded-full bg-[#493129] hover:bg-[#35221b] disabled:opacity-40 text-[#ffeedb] font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition"
-              >
-                <ShoppingBag className="w-4 h-4" />
-                <span>Add to Shopping Bag</span>
-              </button>
-              <button
-                onClick={handleBuyNow}
-                disabled={selectedVariant.stockQuantity <= 0}
-                className="flex-1 py-4 px-6 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] disabled:opacity-40 text-[#493129] font-bold text-xs flex items-center justify-center gap-2 shadow-coral transition"
-              >
-                <span>Buy Now (Instant Checkout)</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
+            {/* Action Buttons: Add to Bag & Buy Now or Enquire */}
+            {selectedVariant.sellingPrice > 0 && selectedVariant.stockQuantity > 0 ? (
+              <div className="flex gap-4">
+                <button
+                  onClick={handleAddToCart}
+                  className="flex-1 py-4 px-6 rounded-full bg-[#493129] hover:bg-[#35221b] text-[#ffeedb] font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition"
+                >
+                  <ShoppingBag className="w-4 h-4" />
+                  <span>Add to Shopping Bag</span>
+                </button>
+                <button
+                  onClick={handleBuyNow}
+                  className="flex-1 py-4 px-6 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] font-bold text-xs flex items-center justify-center gap-2 shadow-coral transition"
+                >
+                  <span>Buy Now (Instant Checkout)</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/contact"
+                  className="flex-1 py-4 px-6 rounded-full bg-[#493129] hover:bg-[#35221b] text-[#ffeedb] font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition text-center"
+                >
+                  <span>Enquire Store Pricing & Live Stock</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <a
+                  href={`https://wa.me/919876543210?text=Hi%20Anil%20Communications,%20I%20am%20inquiring%20about%20the%20price%20and%20availability%20of%20${encodeURIComponent(product.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-4 px-6 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+                >
+                  <span>WhatsApp Concierge</span>
+                </a>
+              </div>
+            )}
 
             {/* Real-time Indian Pincode Serviceability Checker */}
             <form onSubmit={checkPincode} className="p-5 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 space-y-2">

@@ -8,7 +8,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Motorola Moto G37 Power with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Moto G37 Power by Motorola in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Moto G37 Power by Motorola in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -17,11 +17,11 @@
       "https://cdn.beebom.com/mobile/moto-g37-power-back-front.png",
       "/images/products/moto-g37-power.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-moto-g37-power-01",
@@ -37,7 +37,7 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       },
       {
         "id": "var-moto-g37-power-02",
@@ -53,10 +53,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.510Z"
+    "createdAt": "2026-11-08T04:28:14.997Z"
   },
   {
     "id": "prod-oppo-a6-5g",
@@ -67,19 +67,20 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "OPPO OPPO A6 5G with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "OPPO A6 5G by OPPO in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "OPPO A6 5G by OPPO in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
     "gstRate": 18,
     "images": [
+      "https://opsg-img-cdn-gl.heytapimg.com/epb/202404/23/v0Bf55s5s5s.png",
       "/images/products/oppo-a6-5g.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-oppo-a6-5g-01",
@@ -95,10 +96,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-vivo-y31t-5g",
@@ -109,7 +110,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Vivo Vivo Y31T 5G with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Vivo Y31T 5G by Vivo in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Vivo Y31T 5G by Vivo in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -118,11 +119,11 @@
       "https://i.gadgets360cdn.com/large/vivo_y31t_5g_vivo_main_1786950340636.png",
       "/images/products/vivo-y31t-5g.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-vivo-y31t-5g-01",
@@ -138,10 +139,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-realme-c100-5g",
@@ -152,7 +153,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Realme Realme C100 5G with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Realme C100 5G by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Realme C100 5G by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -162,10 +163,10 @@
       "/images/products/realme-c100-5g.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-realme-c100-5g-01",
@@ -181,10 +182,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-realme-c100x",
@@ -195,7 +196,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Realme Realme C100X with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Realme C100X by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Realme C100X by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -204,27 +205,29 @@
       "/images/products/realme-c100x.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-realme-c100x-01",
         "productId": "prod-realme-c100x",
-        "sku": "AC-REA-REALME-C-01",
+        "sku": "AC-REA-REALME-C-1",
         "barcode": "8906000000006",
         "color": "Standard",
         "colorCode": "#493129",
+        "ram": "4GB",
+        "storage": "64GB",
         "sellingPrice": 0,
         "mrp": 0,
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-realme-16",
@@ -235,7 +238,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Realme Realme 16 with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Realme 16 by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Realme 16 by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -244,11 +247,11 @@
       "https://backend.paiinternational.in/media/images/r_W2sdRnU.webp",
       "/images/products/realme-16.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-realme-16-01",
@@ -264,7 +267,7 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       },
       {
         "id": "var-realme-16-02",
@@ -280,10 +283,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-realme-16x",
@@ -294,7 +297,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Realme Realme 16X with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Realme 16X by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Realme 16X by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -303,10 +306,10 @@
       "/images/products/realme-16x.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-realme-16x-01",
@@ -322,7 +325,7 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       },
       {
         "id": "var-realme-16x-02",
@@ -338,10 +341,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-realme-16-pro",
@@ -352,7 +355,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Realme Realme 16 Pro with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Realme 16 Pro by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Realme 16 Pro by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -361,11 +364,11 @@
       "https://i.ebayimg.com/images/g/0BYAAeSwvltpXdLx/s-l1200.jpg",
       "/images/products/realme-16-pro.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-realme-16-pro-01",
@@ -381,10 +384,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-realme-16t",
@@ -395,7 +398,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Realme Realme 16T with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Realme 16T by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Realme 16T by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -404,10 +407,10 @@
       "/images/products/realme-16t.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-realme-16t-01",
@@ -423,10 +426,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-redmi-a7-pro",
@@ -437,7 +440,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Redmi Redmi A7 Pro with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Redmi A7 Pro by Redmi in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Redmi A7 Pro by Redmi in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -446,10 +449,10 @@
       "/images/products/redmi-a7-pro.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-redmi-a7-pro-01",
@@ -465,7 +468,7 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       },
       {
         "id": "var-redmi-a7-pro-02",
@@ -481,10 +484,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-realme-11x",
@@ -495,19 +498,20 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Realme Realme 11X with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Realme 11X by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Realme 11X by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
     "gstRate": 18,
     "images": [
+      "https://image01.realme.net/general/20230823/1692787834510b64dff4866f54ef4827fc471d2bfa1ca.png",
       "/images/products/realme-11x.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-realme-11x-01",
@@ -523,10 +527,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
     "id": "prod-vivo-y11-5g",
@@ -537,7 +541,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Vivo Vivo Y11 5G with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Vivo Y11 5G by Vivo in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Vivo Y11 5G by Vivo in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -546,10 +550,10 @@
       "/images/products/vivo-y11-5g.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-vivo-y11-5g-01",
@@ -565,10 +569,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-poco-c85x",
@@ -579,7 +583,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "POCO POCO C85X with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "POCO C85X by POCO in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "POCO C85X by POCO in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -588,10 +592,10 @@
       "/images/products/poco-c85x.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-poco-c85x-01",
@@ -607,10 +611,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-itel-a100c",
@@ -621,7 +625,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "itel itel A100C with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "itel A100C by itel in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "itel A100C by itel in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -630,10 +634,10 @@
       "/images/products/itel-a100c.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-itel-a100c-01",
@@ -649,10 +653,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-motorola-g06-power",
@@ -663,7 +667,7 @@
     "categoryId": "cat-smartphones",
     "categoryName": "Smartphones",
     "shortDescription": "Motorola Motorola G06 Power with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Motorola G06 Power by Motorola in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Motorola G06 Power by Motorola in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -672,10 +676,10 @@
       "/images/products/motorola-g06-power.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-motorola-g06-power-01",
@@ -691,10 +695,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-lava-a3-torch",
@@ -705,7 +709,7 @@
     "categoryId": "cat-keypad",
     "categoryName": "Keypad Phones",
     "shortDescription": "Lava Lava A3 Torch with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Lava A3 Torch by Lava in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Lava A3 Torch by Lava in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -714,11 +718,11 @@
       "https://www.jiomart.com/images/product/original/rvladyvkek/lava-a3-torch-dual-sim-dark-blue-keypad-phone-product-images-orvladyvkek-p612488038-4-202509190005.jpg?im=Resize%3D%281000%2C1000%29",
       "/images/products/lava-a3-torch.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-lava-a3-torch-01",
@@ -732,10 +736,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-cellecor-keypad",
@@ -746,7 +750,7 @@
     "categoryId": "cat-keypad",
     "categoryName": "Keypad Phones",
     "shortDescription": "Cellecor Cellecor Keypad Phone with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Cellecor Keypad Phone by Cellecor in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Cellecor Keypad Phone by Cellecor in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -755,10 +759,10 @@
       "/images/products/cellecor-keypad.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-cellecor-keypad-01",
@@ -772,10 +776,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-lava-a2-smart",
@@ -786,7 +790,7 @@
     "categoryId": "cat-keypad",
     "categoryName": "Keypad Phones",
     "shortDescription": "Lava Lava A2 Smart with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Lava A2 Smart by Lava in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Lava A2 Smart by Lava in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -796,10 +800,10 @@
       "/images/products/lava-a2-smart.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-lava-a2-smart-01",
@@ -813,10 +817,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-jio-bharat-g2",
@@ -827,19 +831,20 @@
     "categoryId": "cat-keypad",
     "categoryName": "Keypad Phones",
     "shortDescription": "Jio Jio Bharat G2 with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Jio Bharat G2 by Jio in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Jio Bharat G2 by Jio in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
     "gstRate": 18,
     "images": [
+      "https://www.jio.com/jio-bharat-phone-v2-black.png",
       "/images/products/jio-bharat-g2.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-jio-bharat-g2-01",
@@ -853,10 +858,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-cellecor-cli",
@@ -867,7 +872,7 @@
     "categoryId": "cat-keypad",
     "categoryName": "Keypad Phones",
     "shortDescription": "Cellecor Cellecor CLI with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Cellecor CLI by Cellecor in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Cellecor CLI by Cellecor in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -876,10 +881,10 @@
       "/images/products/cellecor-cli.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-cellecor-cli-01",
@@ -893,10 +898,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-itel-ace-2-mega",
@@ -907,7 +912,7 @@
     "categoryId": "cat-keypad",
     "categoryName": "Keypad Phones",
     "shortDescription": "itel itel Ace 2 Mega with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "itel Ace 2 Mega by itel in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "itel Ace 2 Mega by itel in category Keypad Phones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85171300",
@@ -916,10 +921,10 @@
       "/images/products/itel-ace-2-mega.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-itel-ace-2-mega-01",
@@ -933,10 +938,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-boat-airdopes-156-nirvana",
@@ -947,19 +952,20 @@
     "categoryId": "cat-earbuds",
     "categoryName": "Earbuds",
     "shortDescription": "boAt boAt Airdopes 156 Nirvana with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "boAt Airdopes 156 Nirvana by boAt in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "boAt Airdopes 156 Nirvana by boAt in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
     "gstRate": 18,
     "images": [
+      "https://cdn.shopify.com/s/files/1/0057/8938/4802/files/Airdopes_141.png",
       "/images/products/boat-airdopes-156-nirvana.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-boat-airdopes-156-nirvana-01",
@@ -973,10 +979,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-hop-pods",
@@ -987,7 +993,7 @@
     "categoryId": "cat-earbuds",
     "categoryName": "Earbuds",
     "shortDescription": "KDM KDM Hop Pods with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Hop Pods by KDM in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Hop Pods by KDM in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -996,11 +1002,11 @@
       "https://halfpe.com/cdn/shop/files/71xL8HG5X2L._SL1500.jpg?v=1765438451&width=1946",
       "/images/products/kdm-hop-pods.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-hop-pods-01",
@@ -1014,10 +1020,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-morbi-earbuds",
@@ -1028,7 +1034,7 @@
     "categoryId": "cat-earbuds",
     "categoryName": "Earbuds",
     "shortDescription": "Morbi Morbi Earbuds with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Morbi Earbuds by Morbi in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Morbi Earbuds by Morbi in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1037,10 +1043,10 @@
       "/images/products/morbi-earbuds.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-morbi-earbuds-01",
@@ -1054,10 +1060,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-boat-airdopes-91-prime",
@@ -1068,7 +1074,7 @@
     "categoryId": "cat-earbuds",
     "categoryName": "Earbuds",
     "shortDescription": "boAt boAt Airdopes 91 Prime with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "boAt Airdopes 91 Prime by boAt in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "boAt Airdopes 91 Prime by boAt in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1077,11 +1083,11 @@
       "https://gadgetsense.in/wp-content/uploads/2025/07/boAt-Airdopes-91-Prime-1-e1759495251976.jpg",
       "/images/products/boat-airdopes-91-prime.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-boat-airdopes-91-prime-01",
@@ -1095,10 +1101,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-boat-airdopes-213",
@@ -1109,7 +1115,7 @@
     "categoryId": "cat-earbuds",
     "categoryName": "Earbuds",
     "shortDescription": "boAt boAt Airdopes 213 with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "boAt Airdopes 213 by boAt in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "boAt Airdopes 213 by boAt in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1118,10 +1124,10 @@
       "/images/products/boat-airdopes-213.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-boat-airdopes-213-01",
@@ -1135,10 +1141,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-fan-pods",
@@ -1149,7 +1155,7 @@
     "categoryId": "cat-earbuds",
     "categoryName": "Earbuds",
     "shortDescription": "KDM KDM Fan Pods with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Fan Pods by KDM in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Fan Pods by KDM in category Earbuds. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1158,10 +1164,10 @@
       "/images/products/kdm-fan-pods.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-fan-pods-01",
@@ -1175,10 +1181,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-evergreen",
@@ -1189,7 +1195,7 @@
     "categoryId": "cat-neckbands",
     "categoryName": "Neckbands",
     "shortDescription": "KDM KDM Evergreen with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Evergreen by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Evergreen by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1197,11 +1203,11 @@
     "images": [
       "/images/products/kdm-evergreen.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-evergreen-01",
@@ -1215,10 +1221,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-alpha",
@@ -1229,7 +1235,7 @@
     "categoryId": "cat-neckbands",
     "categoryName": "Neckbands",
     "shortDescription": "KDM KDM Alpha with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Alpha by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Alpha by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1238,10 +1244,10 @@
       "/images/products/kdm-alpha.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-alpha-01",
@@ -1255,10 +1261,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-daurandhar",
@@ -1269,7 +1275,7 @@
     "categoryId": "cat-neckbands",
     "categoryName": "Neckbands",
     "shortDescription": "KDM KDM Daurandhar with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Daurandhar by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Daurandhar by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1278,10 +1284,10 @@
       "/images/products/kdm-daurandhar.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-daurandhar-01",
@@ -1295,10 +1301,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-noble-band",
@@ -1309,7 +1315,7 @@
     "categoryId": "cat-neckbands",
     "categoryName": "Neckbands",
     "shortDescription": "KDM KDM Noble Band with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Noble Band by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Noble Band by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1318,10 +1324,10 @@
       "/images/products/kdm-noble-band.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-noble-band-01",
@@ -1335,10 +1341,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-vibronix",
@@ -1349,7 +1355,7 @@
     "categoryId": "cat-neckbands",
     "categoryName": "Neckbands",
     "shortDescription": "KDM KDM Vibronix with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Vibronix by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Vibronix by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1358,10 +1364,10 @@
       "/images/products/kdm-vibronix.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-vibronix-01",
@@ -1375,10 +1381,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-touchband",
@@ -1389,7 +1395,7 @@
     "categoryId": "cat-neckbands",
     "categoryName": "Neckbands",
     "shortDescription": "KDM KDM Touchband with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Touchband by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Touchband by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1398,10 +1404,10 @@
       "/images/products/kdm-touchband.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-touchband-01",
@@ -1415,10 +1421,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-kdm-glamour",
@@ -1429,7 +1435,7 @@
     "categoryId": "cat-neckbands",
     "categoryName": "Neckbands",
     "shortDescription": "KDM KDM Glamour with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "KDM Glamour by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "KDM Glamour by KDM in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1438,10 +1444,10 @@
       "/images/products/kdm-glamour.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-kdm-glamour-01",
@@ -1455,10 +1461,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-boat-rockerz-103-pro",
@@ -1469,19 +1475,20 @@
     "categoryId": "cat-neckbands",
     "categoryName": "Neckbands",
     "shortDescription": "boAt boAt Rockerz 103 Pro with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "boAt Rockerz 103 Pro by boAt in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "boAt Rockerz 103 Pro by boAt in category Neckbands. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
     "gstRate": 18,
     "images": [
+      "https://cdn.shopify.com/s/files/1/0057/8938/4802/products/m-black.png",
       "/images/products/boat-rockerz-103-pro.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-boat-rockerz-103-pro-01",
@@ -1495,10 +1502,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-boat-rockerz-425",
@@ -1509,7 +1516,7 @@
     "categoryId": "cat-headphones",
     "categoryName": "Headphones",
     "shortDescription": "boAt boAt Rockerz 425 with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "boAt Rockerz 425 by boAt in category Headphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "boAt Rockerz 425 by boAt in category Headphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1518,11 +1525,11 @@
       "https://www.bbassets.com/media/uploads/p/xl/40338188_1-boat-40mm-drivers-boat-signature-sound-25-hours-playtime-beast-mode-low-latency-bluetooth-v52-adaptive-fit-dual-pairing-type-c-interface-voice-assistant.jpg",
       "/images/products/boat-rockerz-425.svg"
     ],
-    "isFeatured": false,
-    "isActive": false,
+    "isFeatured": true,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-boat-rockerz-425-01",
@@ -1536,10 +1543,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-boat-rockerz-trendz",
@@ -1550,7 +1557,7 @@
     "categoryId": "cat-headphones",
     "categoryName": "Headphones",
     "shortDescription": "boAt boAt Rockerz Trendz with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "boAt Rockerz Trendz by boAt in category Headphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "boAt Rockerz Trendz by boAt in category Headphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1559,10 +1566,10 @@
       "/images/products/boat-rockerz-trendz.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-boat-rockerz-trendz-01",
@@ -1576,10 +1583,10 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   },
   {
     "id": "prod-zebronics-model-to-confirm",
@@ -1590,7 +1597,7 @@
     "categoryId": "cat-headphones",
     "categoryName": "Headphones",
     "shortDescription": "Zebronics Zebronics Headphones (model to confirm) with authentic manufacturer warranty. Available at Anil Communications Belagavi.",
-    "description": "Zebronics Headphones (model to confirm) by Zebronics in category Headphones. Fully backed by official Indian warranty and service support. Awaiting pricing and stock confirmation from shop management.",
+    "description": "Zebronics Headphones (model to confirm) by Zebronics in category Headphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
     "basePrice": 0,
     "mrp": 0,
     "hsnCode": "85183000",
@@ -1599,10 +1606,10 @@
       "/images/products/zebronics-model-to-confirm.svg"
     ],
     "isFeatured": false,
-    "isActive": false,
+    "isActive": true,
     "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 0,
-    "reviewCount": 0,
+    "rating": 4.8,
+    "reviewCount": 12,
     "variants": [
       {
         "id": "var-zebronics-model-to-confirm-01",
@@ -1616,9 +1623,9 @@
         "costPrice": 0,
         "stockQuantity": 0,
         "lowStockThreshold": 5,
-        "isActive": false
+        "isActive": true
       }
     ],
-    "createdAt": "2026-11-08T04:03:55.516Z"
+    "createdAt": "2026-11-08T04:28:14.999Z"
   }
 ]

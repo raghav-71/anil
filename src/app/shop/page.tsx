@@ -54,9 +54,21 @@ function ShopContent() {
   }, []);
 
   const filteredProducts = products.filter((p) => {
-    if (selectedCategory !== "all" && p.categoryId !== selectedCategory) return false;
-    if (selectedBrand !== "all" && p.brandId !== selectedBrand) return false;
-    if (p.basePrice > maxPrice) return false;
+    if (selectedCategory !== "all") {
+      const matchCat =
+        p.categoryId === selectedCategory ||
+        p.categoryId.replace("cat-", "") === selectedCategory.replace("cat-", "") ||
+        p.categoryName.toLowerCase() === selectedCategory.toLowerCase();
+      if (!matchCat) return false;
+    }
+    if (selectedBrand !== "all") {
+      const matchBrand =
+        p.brandId === selectedBrand ||
+        p.brandId.replace("b-", "") === selectedBrand.replace("b-", "") ||
+        p.brandName.toLowerCase() === selectedBrand.toLowerCase();
+      if (!matchBrand) return false;
+    }
+    if (p.basePrice > 0 && p.basePrice > maxPrice) return false;
 
     if (inStockOnly) {
       const stock = p.variants.reduce((acc, v) => acc + v.stockQuantity, 0);
@@ -67,7 +79,8 @@ function ShopContent() {
       const q = searchQuery.toLowerCase();
       const matchTitle = p.title.toLowerCase().includes(q);
       const matchBrand = p.brandName.toLowerCase().includes(q);
-      if (!matchTitle && !matchBrand) return false;
+      const matchCat = p.categoryName.toLowerCase().includes(q);
+      if (!matchTitle && !matchBrand && !matchCat) return false;
     }
     return true;
   });
@@ -346,30 +359,45 @@ function ShopContent() {
 
                       <div className="pt-5 border-t border-[#493129]/10 mt-5 space-y-3">
                         <div className="flex items-baseline justify-between">
-                          <span className="font-serif text-lg font-bold text-[#493129]">
-                            {formatCurrency(variant ? variant.sellingPrice : product.basePrice)}
-                          </span>
-                          <span className={`text-[10px] uppercase font-bold ${totalStock > 0 ? "text-[#8b597b]" : "text-red-700"}`}>
-                            {totalStock > 0 ? "In Stock" : "Sold Out"}
+                          {((variant ? variant.sellingPrice : product.basePrice) || 0) > 0 ? (
+                            <span className="font-serif text-lg font-bold text-[#493129]">
+                              {formatCurrency(variant ? variant.sellingPrice : product.basePrice)}
+                            </span>
+                          ) : (
+                            <span className="text-xs font-semibold text-[#8b597b] italic">
+                              Price coming soon
+                            </span>
+                          )}
+                          <span className={`text-[10px] uppercase font-bold ${totalStock > 0 ? "text-[#8b597b]" : "text-[#8b597b]"}`}>
+                            {totalStock > 0 ? "In Stock" : "Check availability"}
                           </span>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2">
-                          <button
-                            onClick={(e) => handleQuickAdd(product, e)}
-                            className="py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffeedb] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
+                        {((variant ? variant.sellingPrice : product.basePrice) || 0) > 0 && totalStock > 0 ? (
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              onClick={(e) => handleQuickAdd(product, e)}
+                              className="py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffeedb] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
+                            >
+                              <ShoppingBag className="w-3.5 h-3.5" />
+                              <span>Add to Bag</span>
+                            </button>
+                            <button
+                              onClick={(e) => handleBuyNow(product, e)}
+                              className="py-2.5 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-bold flex items-center justify-center gap-1 shadow-coral transition"
+                            >
+                              <Zap className="w-3.5 h-3.5" />
+                              <span>Buy Now</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <Link
+                            href={`/product/${product.slug}`}
+                            className="w-full block py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition"
                           >
-                            <ShoppingBag className="w-3.5 h-3.5" />
-                            <span>Add to Bag</span>
-                          </button>
-                          <button
-                            onClick={(e) => handleBuyNow(product, e)}
-                            className="py-2.5 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-bold flex items-center justify-center gap-1 shadow-coral transition"
-                          >
-                            <Zap className="w-3.5 h-3.5" />
-                            <span>Buy Now</span>
-                          </button>
-                        </div>
+                            View Details & Enquire
+                          </Link>
+                        )}
                       </div>
                     </div>
                   );
