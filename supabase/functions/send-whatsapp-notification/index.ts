@@ -1,6 +1,14 @@
+// @ts-nocheck
 // Supabase Edge Function: send-whatsapp-notification
 // Sends transactional notifications via Meta WhatsApp Business Cloud API (WhatsApp Coexistence)
 // Recipient: Anil Communications Owner (+91 9380124254)
+
+// Declare Deno types for Node/VS Code TypeScript environments
+declare const Deno: {
+  env: {
+    get(key: string): string | undefined;
+  };
+};
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
