@@ -9,12 +9,14 @@ interface PincodeDetail {
 }
 
 const PINCODE_DATABASE: Record<string, PincodeDetail> = {
-  // Metro Bengaluru
-  "560001": { city: "Bengaluru", state: "Karnataka", deliveryDays: "Same Day / 24 Hours", isCodAvailable: true, courier: "Anil Boutique Express Concierge" },
-  "560025": { city: "Bengaluru", state: "Karnataka", deliveryDays: "Same Day / 24 Hours", isCodAvailable: true, courier: "Anil Boutique Express Concierge" },
-  "560034": { city: "Bengaluru", state: "Karnataka", deliveryDays: "Same Day / 24 Hours", isCodAvailable: true, courier: "Anil Boutique Express Concierge" },
-  "560038": { city: "Bengaluru", state: "Karnataka", deliveryDays: "Same Day / 24 Hours", isCodAvailable: true, courier: "Anil Boutique Express Concierge" },
-  "560095": { city: "Bengaluru", state: "Karnataka", deliveryDays: "Same Day / 24 Hours", isCodAvailable: true, courier: "Anil Boutique Express Concierge" },
+  // Local Pant Nagar / Bagalkot area
+  "591103": { city: "Pant Nagar", state: "Karnataka", deliveryDays: "Same Day / Walk-in Pickup", isCodAvailable: true, courier: "Store Pickup / Local Delivery" },
+  // Nearby Karnataka
+  "560001": { city: "Bengaluru", state: "Karnataka", deliveryDays: "1-2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },
+  "560025": { city: "Bengaluru", state: "Karnataka", deliveryDays: "1-2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },
+  "560034": { city: "Bengaluru", state: "Karnataka", deliveryDays: "1-2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },
+  "560038": { city: "Bengaluru", state: "Karnataka", deliveryDays: "1-2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },
+  "560095": { city: "Bengaluru", state: "Karnataka", deliveryDays: "1-2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },
   // Delhi NCR
   "110001": { city: "New Delhi", state: "Delhi", deliveryDays: "2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },
   "122002": { city: "Gurugram", state: "Haryana", deliveryDays: "2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },

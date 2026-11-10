@@ -49,7 +49,7 @@ function AccountContent() {
     phone: "+91 98450 12345",
     street: "",
     landmark: "",
-    city: "Bengaluru",
+    city: "",
     state: "Karnataka",
     pincode: "",
     type: "home" as "home" | "work" | "other",
@@ -61,7 +61,7 @@ function AccountContent() {
 
   useEffect(() => {
     // Fetch products
-    fetch("/api/products")
+    fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
       .then((d) => setAllProducts(d.products || []));
 
@@ -103,7 +103,7 @@ function AccountContent() {
           phone: "+91 98450 12345",
           street: "",
           landmark: "",
-          city: "Bengaluru",
+          city: "",
           state: "Karnataka",
           pincode: "",
           type: "home",
@@ -189,14 +189,14 @@ function AccountContent() {
   const recentProducts = allProducts.filter((p) => recentlyViewed.includes(p.id));
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#ffeedb]">
+    <div className="flex flex-col min-h-screen bg-[#FFEDDB]">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full">
         {/* Client Welcome Banner */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-[#fffaf5] border border-[#493129]/15 shadow-subtle mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="p-6 sm:p-8 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-[#ffdec7] border border-[#493129]/15 flex items-center justify-center font-serif text-2xl font-bold text-[#493129]">
+            <div className="w-14 h-14 rounded-2xl bg-[#FFDEC7] border border-[#E8D5C5] flex items-center justify-center font-serif text-2xl font-bold text-[#493129]">
               {(user?.name || user?.fullName || "Raghav").charAt(0)}
             </div>
             <div>
@@ -204,26 +204,26 @@ function AccountContent() {
                 <h1 className="font-serif text-2xl sm:text-3xl text-[#493129]">
                   {user?.name || user?.fullName || "Raghav Anil"}
                 </h1>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-[#8b597b] text-white">
-                  Gold Boutique Member
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-[#8B597B] text-white">
+                  Verified Customer
                 </span>
               </div>
-              <p className="text-xs text-[#493129]/70 mt-0.5 font-sans">
-                {user?.email || "raghav@anilcommunications.com"} • Authorized Client Concierge
+              <p className="text-xs text-[#806D63] mt-0.5 font-sans">
+                {user?.email || ""} • Registered Account
               </p>
             </div>
           </div>
         </div>
 
         {actionFeedback && (
-          <div className="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 font-medium flex items-center justify-between">
+          <div className="mb-6 p-4 rounded-2xl bg-[#27845A]/10 border border-[#27845A]/30 text-xs text-[#27845A] font-medium flex items-center justify-between">
             <span>{actionFeedback}</span>
-            <button onClick={() => setActionFeedback(null)} className="text-emerald-700 font-bold ml-4">✕</button>
+            <button onClick={() => setActionFeedback(null)} className="text-[#27845A] font-bold ml-4">✕</button>
           </div>
         )}
 
         {/* Tab Strip */}
-        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 border-b border-[#493129]/10">
+        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 border-b border-[#E8D5C5]">
           {[
             { id: "orders", label: "Consignments & Orders", icon: Package },
             { id: "wishlist", label: `Wishlist (${wishlist.length})`, icon: Heart },
@@ -239,11 +239,11 @@ function AccountContent() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
                   isActive
-                    ? "bg-[#493129] text-[#ffeedb] shadow-xs"
-                    : "bg-[#fffaf5] text-[#493129] hover:bg-[#ffdec7]/60 border border-[#493129]/10"
+                    ? "bg-[#493129] text-[#FFEDDB] shadow-xs"
+                    : "bg-[#FFFAF5] text-[#493129] hover:bg-[#FFDEC7] border border-[#E8D5C5]"
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? "text-[#efa3a0]" : "text-[#8b597b]"}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? "text-[#EFA3A0]" : "text-[#8B597B]"}`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -255,21 +255,21 @@ function AccountContent() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="font-serif text-2xl text-[#493129]">Your Consignments</h2>
-              <Link href="/orders" className="text-xs font-semibold text-[#8b597b] hover:underline flex items-center gap-1">
+              <Link href="/orders" className="text-xs font-semibold text-[#8B597B] hover:underline flex items-center gap-1">
                 <span>Direct AWB Tracking Portal</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </Link>
             </div>
 
             {loadingOrders ? (
-              <div className="p-8 text-center text-xs text-[#493129]/60">Loading your orders...</div>
+              <div className="p-8 text-center text-xs text-[#806D63]">Loading your orders...</div>
             ) : orders.length === 0 ? (
-              <div className="p-12 text-center rounded-3xl bg-[#fffaf5] border border-[#493129]/15">
-                <Package className="w-12 h-12 stroke-1 text-[#493129]/30 mx-auto mb-2" />
+              <div className="p-12 text-center rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5]">
+                <Package className="w-12 h-12 stroke-1 text-[#806D63]/40 mx-auto mb-2" />
                 <h3 className="font-serif text-lg text-[#493129]">No recent orders found</h3>
                 <Link
                   href="/shop"
-                  className="mt-4 inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#efa3a0] text-[#493129] text-xs font-bold shadow-coral"
+                  className="mt-4 inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] text-xs font-bold transition"
                 >
                   <span>Explore The Collection</span>
                 </Link>
@@ -278,21 +278,21 @@ function AccountContent() {
               orders.map((ord) => (
                 <div
                   key={ord.id}
-                  className="p-6 rounded-3xl bg-[#fffaf5] border border-[#493129]/15 shadow-subtle space-y-4 text-xs"
+                  className="p-6 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-4 text-xs"
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#493129]/10 pb-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E8D5C5] pb-4">
                     <div>
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-[#8b597b]">Order Number</span>
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-[#8B597B]">Order Number</span>
                       <div className="font-mono font-bold text-sm text-[#493129]">{ord.orderNumber}</div>
-                      <span className="text-[11px] text-[#493129]/60">Placed on {formatDate(ord.createdAt)}</span>
+                      <span className="text-[11px] text-[#806D63]">Placed on {formatDate(ord.createdAt)}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <span className={`px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
-                        ord.status === "delivered" ? "bg-emerald-100 text-emerald-800" :
-                        ord.status === "cancelled" ? "bg-red-100 text-red-800" :
-                        ord.status === "returned" ? "bg-amber-100 text-amber-800" :
-                        "bg-[#ffdec7] text-[#493129]"
+                        ord.status === "delivered" ? "bg-[#27845A]/10 text-[#27845A] border border-[#27845A]/30" :
+                        ord.status === "cancelled" ? "bg-[#C0393A]/10 text-[#C0393A] border border-[#C0393A]/30" :
+                        ord.status === "returned" ? "bg-[#B7791F]/10 text-[#B7791F] border border-[#B7791F]/30" :
+                        "bg-[#FFDEC7] text-[#493129] border border-[#E8D5C5]"
                       }`}>
                         {ord.status.replace(/_/g, " ")}
                       </span>
@@ -300,18 +300,18 @@ function AccountContent() {
                   </div>
 
                   {/* Items Strip */}
-                  <div className="divide-y divide-[#493129]/10">
+                  <div className="divide-y divide-[#E8D5C5]">
                     {ord.items.map((item) => (
                       <div key={item.id} className="py-3 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                           {item.image && (
-                            <div className="relative w-12 h-12 rounded-xl bg-white border border-[#493129]/10 p-1 overflow-hidden flex-shrink-0">
+                            <div className="relative w-12 h-12 rounded-xl bg-white border border-[#E8D5C5] p-1 overflow-hidden flex-shrink-0">
                               <Image src={item.image} alt={item.productName} fill className="object-contain p-0.5" sizes="48px" />
                             </div>
                           )}
                           <div>
                             <div className="font-serif font-bold text-sm text-[#493129]">{item.productName}</div>
-                            <div className="text-[11px] text-[#493129]/60">{item.variantDetails} • Qty: {item.quantity}</div>
+                            <div className="text-[11px] text-[#806D63]">{item.variantDetails} • Qty: {item.quantity}</div>
                           </div>
                         </div>
                         <div className="font-serif font-bold text-sm text-[#493129]">
@@ -322,17 +322,17 @@ function AccountContent() {
                   </div>
 
                   {/* Summary & Actions */}
-                  <div className="pt-2 border-t border-[#493129]/10 flex flex-wrap items-center justify-between gap-3">
+                  <div className="pt-2 border-t border-[#E8D5C5] flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <span className="text-[#493129]/70">Grand Total: </span>
-                      <strong className="font-serif font-bold text-[#8b597b] text-sm">{formatCurrency(ord.grandTotal)}</strong>
-                      <span className="ml-2 text-[11px] text-[#493129]/50">({ord.paymentMethod.toUpperCase()} • {ord.paymentStatus})</span>
+                      <span className="text-[#806D63]">Grand Total: </span>
+                      <strong className="font-serif font-bold text-[#8B597B] text-sm">{formatCurrency(ord.grandTotal)}</strong>
+                      <span className="ml-2 text-[11px] text-[#806D63]/70">({ord.paymentMethod.toUpperCase()} • {ord.paymentStatus})</span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <Link
                         href={`/orders?query=${ord.orderNumber}`}
-                        className="px-4 py-2 rounded-full bg-[#ffeedb] hover:bg-[#ffdec7] text-[#493129] font-semibold text-xs transition"
+                        className="px-4 py-2 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] text-[#493129] border border-[#E8D5C5] font-semibold text-xs transition"
                       >
                         Live Tracking
                       </Link>
@@ -340,7 +340,7 @@ function AccountContent() {
                       {ord.status === "confirmed" && (
                         <button
                           onClick={() => handleCancelOrder(ord.id)}
-                          className="px-4 py-2 rounded-full border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold transition"
+                          className="px-4 py-2 rounded-full border border-[#C0393A]/30 text-[#C0393A] hover:bg-[#C0393A]/10 text-xs font-semibold transition"
                         >
                           Cancel Order
                         </button>
@@ -349,7 +349,7 @@ function AccountContent() {
                       {ord.status === "delivered" && (
                         <button
                           onClick={() => handleReturnOrder(ord.id)}
-                          className="px-4 py-2 rounded-full border border-[#8b597b]/30 text-[#8b597b] hover:bg-[#ffdec7]/40 text-xs font-semibold transition"
+                          className="px-4 py-2 rounded-full border border-[#8B597B]/30 text-[#8B597B] hover:bg-[#FFDEC7] text-xs font-semibold transition"
                         >
                           Request Return
                         </button>
@@ -367,11 +367,11 @@ function AccountContent() {
           <div className="space-y-4">
             <h2 className="font-serif text-2xl text-[#493129]">Your Saved Wishlist ({wishlistProducts.length})</h2>
             {wishlistProducts.length === 0 ? (
-              <div className="p-12 text-center rounded-3xl bg-[#fffaf5] border border-[#493129]/15">
-                <Heart className="w-12 h-12 stroke-1 text-[#493129]/30 mx-auto mb-2" />
+              <div className="p-12 text-center rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5]">
+                <Heart className="w-12 h-12 stroke-1 text-[#806D63]/40 mx-auto mb-2" />
                 <h3 className="font-serif text-lg text-[#493129]">Your wishlist is clear</h3>
-                <p className="text-xs text-[#493129]/60 mt-1">Tap the heart on any product card to curate your wishlist.</p>
-                <Link href="/shop" className="mt-4 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#efa3a0] text-[#493129] text-xs font-bold shadow-coral">
+                <p className="text-xs text-[#806D63] mt-1">Tap the heart on any product card to curate your wishlist.</p>
+                <Link href="/shop" className="mt-4 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] text-xs font-bold transition">
                   Discover Flagships
                 </Link>
               </div>
@@ -380,25 +380,25 @@ function AccountContent() {
                 {wishlistProducts.map((p) => {
                   const v = p.variants[0];
                   return (
-                    <div key={p.id} className="p-5 rounded-3xl bg-[#fffaf5] border border-[#493129]/15 shadow-subtle space-y-3">
-                      <div className="relative w-full h-44 bg-white rounded-2xl border border-[#493129]/10 p-2 overflow-hidden">
+                    <div key={p.id} className="p-5 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-3">
+                      <div className="relative w-full h-44 bg-white rounded-2xl border border-[#E8D5C5] p-2 overflow-hidden">
                         <Image src={p.images[0]} alt={p.title} fill className="object-contain p-2" sizes="240px" />
                         <button
                           onClick={() => toggleWishlist(p.id)}
-                          className="absolute top-2 right-2 p-1.5 rounded-full bg-[#ffeedb] text-red-600 hover:bg-[#ffdec7]"
+                          className="absolute top-2 right-2 p-1.5 rounded-full bg-[#FFEDDB] text-[#C0393A] hover:bg-[#FFDEC7]"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                       <div>
-                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#8b597b]">{p.brandName}</span>
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-[#8B597B]">{p.brandName}</span>
                         <h3 className="font-serif text-base text-[#493129] font-bold truncate mt-0.5">{p.title}</h3>
-                        <div className="font-serif font-bold text-sm text-[#8b597b] mt-1">{formatCurrency(p.basePrice)}</div>
+                        <div className="font-serif font-bold text-sm text-[#8B597B] mt-1">{formatCurrency(p.basePrice)}</div>
                       </div>
                       <div className="flex gap-2 pt-1">
                         <Link
                           href={`/product/${p.slug}`}
-                          className="flex-1 py-2 rounded-full border border-[#493129]/20 text-center text-xs font-semibold text-[#493129] hover:bg-[#ffeedb]"
+                          className="flex-1 py-2 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] border border-[#E8D5C5] text-center text-xs font-semibold text-[#493129]"
                         >
                           Details
                         </Link>
@@ -422,7 +422,7 @@ function AccountContent() {
                                 gstRate: p.gstRate,
                               })
                             }
-                            className="flex-1 py-2 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-bold flex items-center justify-center gap-1 shadow-xs"
+                            className="flex-1 py-2 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] text-xs font-bold flex items-center justify-center gap-1 shadow-sm transition"
                           >
                             <ShoppingBag className="w-3.5 h-3.5" />
                             <span>Add to Bag</span>
@@ -444,9 +444,9 @@ function AccountContent() {
               <h2 className="font-serif text-2xl text-[#493129]">Saved Delivery Addresses</h2>
               <button
                 onClick={() => setShowAddressModal(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#493129] hover:bg-[#38261f] text-[#ffeedb] text-xs font-semibold shadow-xs"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] text-xs font-semibold shadow-sm transition"
               >
-                <Plus className="w-3.5 h-3.5 text-[#efa3a0]" />
+                <Plus className="w-3.5 h-3.5 text-[#EFA3A0]" />
                 <span>Add New Address</span>
               </button>
             </div>
@@ -455,26 +455,26 @@ function AccountContent() {
               {addresses.map((addr) => (
                 <div
                   key={addr.id}
-                  className={`p-6 rounded-3xl bg-[#fffaf5] border space-y-3 text-xs relative ${
-                    addr.isDefault ? "border-[#8b597b] ring-1 ring-[#8b597b]/30" : "border-[#493129]/15"
+                  className={`p-6 rounded-3xl bg-[#FFFAF5] border space-y-3 text-xs relative ${
+                    addr.isDefault ? "border-[#8B597B] ring-1 ring-[#8B597B]" : "border-[#E8D5C5]"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="font-serif font-bold text-sm text-[#493129]">{addr.name}</span>
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#ffdec7] text-[#493129]">
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#FFDEC7] text-[#493129]">
                         {addr.type}
                       </span>
                     </div>
                     {addr.isDefault && (
-                      <span className="text-[10px] font-bold text-[#8b597b] bg-[#8b597b]/10 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                      <span className="text-[10px] font-bold text-[#8B597B] bg-[#8B597B]/10 px-2.5 py-0.5 rounded-full flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3" />
                         Default Address
                       </span>
                     )}
                   </div>
 
-                  <p className="text-[#493129]/80 font-sans leading-relaxed">
+                  <p className="text-[#30241F] font-sans leading-relaxed">
                     {addr.street}
                     {addr.landmark ? `, Near ${addr.landmark}` : ""}
                     <br />
@@ -483,18 +483,18 @@ function AccountContent() {
                     Phone: {addr.phone}
                   </p>
 
-                  <div className="flex items-center gap-3 pt-2 border-t border-[#493129]/10">
+                  <div className="flex items-center gap-3 pt-2 border-t border-[#E8D5C5]">
                     {!addr.isDefault && (
                       <button
                         onClick={() => handleSetDefaultAddress(addr.id)}
-                        className="text-xs text-[#8b597b] font-semibold hover:underline"
+                        className="text-xs text-[#8B597B] font-semibold hover:underline"
                       >
                         Set as Default
                       </button>
                     )}
                     <button
                       onClick={() => handleDeleteAddress(addr.id)}
-                      className="text-xs text-red-600 hover:underline ml-auto"
+                      className="text-xs text-[#C0393A] hover:underline ml-auto"
                     >
                       Remove
                     </button>
@@ -510,7 +510,7 @@ function AccountContent() {
           <div className="space-y-4">
             <h2 className="font-serif text-2xl text-[#493129]">Recently Viewed Instruments ({recentProducts.length})</h2>
             {recentProducts.length === 0 ? (
-              <div className="p-12 text-center rounded-3xl bg-[#fffaf5] border border-[#493129]/15 text-xs text-[#493129]/60">
+              <div className="p-12 text-center rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] text-xs text-[#806D63]">
                 You have not browsed any products recently.
               </div>
             ) : (
@@ -519,16 +519,16 @@ function AccountContent() {
                   <Link
                     key={p.id}
                     href={`/product/${p.slug}`}
-                    className="p-4 rounded-2xl bg-[#fffaf5] border border-[#493129]/10 hover:border-[#8b597b] transition group"
+                    className="p-4 rounded-2xl bg-[#FFFAF5] border border-[#E8D5C5] hover:border-[#8B597B] transition group"
                   >
-                    <div className="relative w-full h-36 bg-white rounded-xl border border-[#493129]/10 p-2 overflow-hidden mb-2">
+                    <div className="relative w-full h-36 bg-white rounded-xl border border-[#E8D5C5] p-2 overflow-hidden mb-2">
                       <Image src={p.images[0]} alt={p.title} fill className="object-contain p-1" sizes="160px" />
                     </div>
-                    <div className="text-[10px] uppercase font-bold text-[#8b597b]">{p.brandName}</div>
-                    <div className="font-serif font-bold text-xs text-[#493129] group-hover:text-[#8b597b] transition truncate">
+                    <div className="text-[10px] uppercase font-bold text-[#8B597B]">{p.brandName}</div>
+                    <div className="font-serif font-bold text-xs text-[#493129] group-hover:text-[#8B597B] transition truncate">
                       {p.title}
                     </div>
-                    <div className="text-xs font-bold text-[#8b597b] mt-1">{formatCurrency(p.basePrice)}</div>
+                    <div className="text-xs font-bold text-[#8B597B] mt-1">{formatCurrency(p.basePrice)}</div>
                   </Link>
                 ))}
               </div>
@@ -538,37 +538,37 @@ function AccountContent() {
 
         {/* TAB 5: Security & Profile */}
         {activeTab === "security" && (
-          <div className="max-w-2xl p-6 sm:p-8 rounded-3xl bg-[#fffaf5] border border-[#493129]/15 shadow-subtle space-y-6 text-xs text-[#493129]">
+          <div className="max-w-2xl p-6 sm:p-8 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-6 text-xs text-[#30241F]">
             <h2 className="font-serif text-2xl text-[#493129]">Account Credentials & Security</h2>
             <div className="space-y-4">
               <div>
-                <label className="font-semibold block mb-1">Full Legal Name</label>
+                <label className="font-semibold block mb-1 text-[#493129]">Full Legal Name</label>
                 <input
                   type="text"
                   defaultValue={user?.name || user?.fullName || "Raghav Anil"}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                 />
               </div>
               <div>
-                <label className="font-semibold block mb-1">Registered Contact Email</label>
+                <label className="font-semibold block mb-1 text-[#493129]">Registered Contact Email</label>
                 <input
                   type="email"
-                  defaultValue={user?.email || "raghav@anilcommunications.com"}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                  defaultValue={user?.email || ""}
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                 />
               </div>
               <div>
-                <label className="font-semibold block mb-1">Primary Mobile Number (OTP Verified)</label>
+                <label className="font-semibold block mb-1 text-[#493129]">Primary Mobile Number (OTP Verified)</label>
                 <input
                   type="text"
                   defaultValue="+91 98450 12345"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none font-mono"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => alert("Profile credentials updated successfully.")}
-                className="px-6 py-2.5 rounded-full bg-[#493129] text-[#ffeedb] font-semibold text-xs hover:bg-[#38261f] transition"
+                className="px-6 py-2.5 rounded-full bg-[#493129] text-[#FFEDDB] font-semibold text-xs hover:bg-[#8B597B] transition"
               >
                 Save Profile Changes
               </button>
@@ -578,11 +578,11 @@ function AccountContent() {
 
         {/* Add Address Modal */}
         {showAddressModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#493129]/40 backdrop-blur-xs font-sans">
-            <div className="w-full max-w-lg bg-[#fffaf5] border border-[#493129]/20 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-[#493129]/10 pb-3">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#493129]/60 backdrop-blur-xs font-sans">
+            <div className="w-full max-w-lg bg-[#FFFAF5] border border-[#E8D5C5] rounded-3xl p-6 sm:p-8 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-[#E8D5C5] pb-3">
                 <h3 className="font-serif text-xl text-[#493129]">Add New Delivery Address</h3>
-                <button onClick={() => setShowAddressModal(false)} className="text-[#493129]/50 hover:text-[#493129]">
+                <button onClick={() => setShowAddressModal(false)} className="text-[#806D63] hover:text-[#493129]">
                   ✕
                 </button>
               </div>
@@ -596,7 +596,7 @@ function AccountContent() {
                       required
                       value={newAddr.name}
                       onChange={(e) => setNewAddr({ ...newAddr, name: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                      className="w-full px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                     />
                   </div>
                   <div>
@@ -606,7 +606,7 @@ function AccountContent() {
                       required
                       value={newAddr.phone}
                       onChange={(e) => setNewAddr({ ...newAddr, phone: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                      className="w-full px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none font-mono"
                     />
                   </div>
                 </div>
@@ -618,8 +618,8 @@ function AccountContent() {
                     required
                     value={newAddr.street}
                     onChange={(e) => setNewAddr({ ...newAddr, street: e.target.value })}
-                    placeholder="e.g. Flat 402, Prestige Hermitage, MG Road"
-                    className="w-full px-3 py-2 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                    placeholder="e.g. Bagalkot Main Road, Pant Nagar"
+                    className="w-full px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                   />
                 </div>
 
@@ -630,8 +630,8 @@ function AccountContent() {
                       type="text"
                       value={newAddr.landmark}
                       onChange={(e) => setNewAddr({ ...newAddr, landmark: e.target.value })}
-                      placeholder="e.g. Near Metro Station"
-                      className="w-full px-3 py-2 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                      placeholder="e.g. Near Canara Bank"
+                      className="w-full px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                     />
                   </div>
                   <div>
@@ -642,8 +642,8 @@ function AccountContent() {
                       required
                       value={newAddr.pincode}
                       onChange={(e) => setNewAddr({ ...newAddr, pincode: e.target.value })}
-                      placeholder="e.g. 560001"
-                      className="w-full px-3 py-2 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                      placeholder="e.g. 591103"
+                      className="w-full px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none font-mono"
                     />
                   </div>
                 </div>
@@ -656,7 +656,7 @@ function AccountContent() {
                       required
                       value={newAddr.city}
                       onChange={(e) => setNewAddr({ ...newAddr, city: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                      className="w-full px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                     />
                   </div>
                   <div>
@@ -666,7 +666,7 @@ function AccountContent() {
                       required
                       value={newAddr.state}
                       onChange={(e) => setNewAddr({ ...newAddr, state: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl bg-[#ffeedb] border border-[#493129]/15"
+                      className="w-full px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                     />
                   </div>
                 </div>
@@ -674,23 +674,25 @@ function AccountContent() {
                 <div className="flex items-center gap-4 pt-1">
                   <span className="font-semibold text-[#493129]">Address Type:</span>
                   {(["home", "work", "other"] as const).map((t) => (
-                    <label key={t} className="flex items-center gap-1.5 cursor-pointer uppercase text-[11px] font-bold">
+                    <label key={t} className="flex items-center gap-1.5 cursor-pointer uppercase text-[11px] font-bold text-[#30241F]">
                       <input
                         type="radio"
                         name="addrType"
                         checked={newAddr.type === t}
                         onChange={() => setNewAddr({ ...newAddr, type: t })}
+                        className="accent-[#8B597B]"
                       />
                       <span>{t}</span>
                     </label>
                   ))}
                 </div>
 
-                <label className="flex items-center gap-2 cursor-pointer pt-1">
+                <label className="flex items-center gap-2 cursor-pointer pt-1 text-[#30241F]">
                   <input
                     type="checkbox"
                     checked={newAddr.isDefault}
                     onChange={(e) => setNewAddr({ ...newAddr, isDefault: e.target.checked })}
+                    className="accent-[#8B597B]"
                   />
                   <span>Make this my default shipping address</span>
                 </label>
@@ -699,13 +701,13 @@ function AccountContent() {
                   <button
                     type="button"
                     onClick={() => setShowAddressModal(false)}
-                    className="flex-1 py-2.5 rounded-full border border-[#493129]/20 font-semibold"
+                    className="flex-1 py-2.5 rounded-full border border-[#E8D5C5] font-semibold text-[#493129] hover:bg-[#F5E8DC]"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 py-2.5 rounded-full bg-[#efa3a0] text-[#493129] font-bold shadow-coral"
+                    className="flex-1 py-2.5 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] font-bold shadow-sm transition"
                   >
                     Save Address
                   </button>

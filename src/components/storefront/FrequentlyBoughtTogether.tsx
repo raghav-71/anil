@@ -88,13 +88,13 @@ export function FrequentlyBoughtTogether({ productId }: { productId: string }) {
   const allBundleItems = [bundle.mainProduct, ...bundle.bundledProducts];
 
   return (
-    <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-[#fffaf5] border border-[#493129]/15 shadow-subtle">
+    <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <Sparkles className="w-4 h-4 text-[#8b597b]" />
+        <Sparkles className="w-4 h-4 text-[#8B597B]" />
         <h3 className="font-serif text-xl sm:text-2xl text-[#493129]">
           Frequently Bought Together
         </h3>
-        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#ffdec7] text-[#493129] ml-2">
+        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#FFDEC7] text-[#493129] ml-2">
           Save {bundle.bundleDiscountPercent}% on Combo
         </span>
       </div>
@@ -104,19 +104,19 @@ export function FrequentlyBoughtTogether({ productId }: { productId: string }) {
         <div className="lg:col-span-8 flex flex-wrap items-center gap-3 sm:gap-4">
           {allBundleItems.map((item, idx) => (
             <React.Fragment key={item.id}>
-              <div className="flex items-center gap-3 p-3 bg-[#ffeedb]/50 rounded-2xl border border-[#493129]/10 max-w-[220px]">
-                <div className="relative w-14 h-14 bg-white rounded-xl border border-[#493129]/10 p-1 flex-shrink-0 overflow-hidden">
+              <div className="flex items-center gap-3 p-3 bg-[#F5E8DC] rounded-2xl border border-[#E8D5C5] max-w-[220px]">
+                <div className="relative w-14 h-14 bg-white rounded-xl border border-[#E8D5C5] p-1 flex-shrink-0 overflow-hidden">
                   <Image src={item.images[0]} alt={item.title} fill className="object-contain p-1" sizes="56px" />
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs font-serif font-bold text-[#493129] truncate">{item.title}</div>
-                  <div className="text-[11px] font-semibold text-[#8b597b] mt-0.5">
+                  <div className="text-[11px] font-semibold text-[#8B597B] mt-0.5">
                     {formatCurrency(item.basePrice)}
                   </div>
                 </div>
               </div>
               {idx < allBundleItems.length - 1 && (
-                <div className="w-7 h-7 rounded-full bg-[#ffdec7] text-[#493129] flex items-center justify-center flex-shrink-0 font-bold">
+                <div className="w-7 h-7 rounded-full bg-[#FFDEC7] text-[#493129] flex items-center justify-center flex-shrink-0 font-bold">
                   <Plus className="w-3.5 h-3.5" />
                 </div>
               )}
@@ -125,28 +125,28 @@ export function FrequentlyBoughtTogether({ productId }: { productId: string }) {
         </div>
 
         {/* Pricing Summary & 1-Click Bundle Add */}
-        <div className="lg:col-span-4 p-5 rounded-2xl bg-[#ffeedb] border border-[#493129]/15 space-y-3">
-          <div className="text-xs text-[#493129]/70 space-y-1">
+        <div className="lg:col-span-4 p-5 rounded-2xl bg-[#FFEDDB] border border-[#E8D5C5] space-y-3">
+          <div className="text-xs text-[#806D63] space-y-1">
             <div className="flex justify-between">
               <span>Combined Items Value:</span>
               <span className="line-through">{formatCurrency(bundle.originalPrice)}</span>
             </div>
-            <div className="flex justify-between text-emerald-800 font-semibold">
-              <span>Boutique Bundle Savings:</span>
+            <div className="flex justify-between text-[#27845A] font-semibold">
+              <span>Combo Bundle Savings:</span>
               <span>-{formatCurrency(bundle.savings)}</span>
             </div>
-            <div className="flex justify-between text-base font-serif font-bold text-[#493129] pt-1 border-t border-[#493129]/10">
+            <div className="flex justify-between text-base font-serif font-bold text-[#493129] pt-1 border-t border-[#E8D5C5]">
               <span>Bundle Total:</span>
-              <span className="text-[#8b597b]">{formatCurrency(bundle.bundlePrice)}</span>
+              <span className="text-[#8B597B]">{formatCurrency(bundle.bundlePrice)}</span>
             </div>
           </div>
 
           <button
             onClick={handleAddBundleToCart}
-            className={`w-full py-3 px-4 rounded-full text-xs font-bold flex items-center justify-center gap-2 transition shadow-coral ${
+            className={`w-full py-3 px-4 rounded-full text-xs font-bold flex items-center justify-center gap-2 transition ${
               added
-                ? "bg-emerald-700 text-white"
-                : "bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129]"
+                ? "bg-[#27845A] text-white"
+                : "bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB]"
             }`}
           >
             {added ? (

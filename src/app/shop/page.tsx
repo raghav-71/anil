@@ -42,7 +42,7 @@ function ShopContent() {
   const [inStockOnly, setInStockOnly] = useState(false);
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products || []);
@@ -291,20 +291,28 @@ function ShopContent() {
                   return (
                     <div
                       key={product.id}
-                      className="editorial-card rounded-3xl p-6 flex flex-col justify-between group"
+                      className="editorial-card rounded-3xl p-6 flex flex-col justify-between group bg-[#FFFAF5] border border-[#E8D5C5]"
                     >
                       <div>
-                        <div className="relative h-56 rounded-2xl bg-[#ffeedb]/50 flex items-center justify-center p-4 overflow-hidden">
+                        <div className="relative h-56 rounded-2xl bg-[#FFEDDB]/50 flex items-center justify-center p-4 overflow-hidden border border-[#E8D5C5]/50">
                           <Link href={`/product/${product.slug}`} className="w-full h-full flex items-center justify-center">
                             <img
-                              src={product.images[0]}
+                              src={product.images[0] || `/images/products/${product.slug}.svg`}
                               alt={product.title}
+                              onError={(e) => {
+                                const target = e.currentTarget;
+                                if (!target.src.includes(".svg")) {
+                                  target.src = `/images/products/${product.slug}.svg`;
+                                } else if (!target.src.includes("fallback-product.svg")) {
+                                  target.src = "/images/products/fallback-product.svg";
+                                }
+                              }}
                               className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
                             />
                           </Link>
 
                           {/* Brand badge */}
-                          <div className="absolute top-3 left-3 bg-[#ffdec7] text-[#493129] text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                          <div className="absolute top-3 left-3 bg-[#FFDEC7] text-[#493129] text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-[#E8D5C5]">
                             {product.brandName}
                           </div>
 
@@ -317,8 +325,8 @@ function ShopContent() {
                               }}
                               className={`p-1.5 rounded-full border transition ${
                                 isInCompare(product.id)
-                                  ? "bg-[#8b597b] text-white border-[#8b597b]"
-                                  : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
+                                  ? "bg-[#8B597B] text-white border-[#8B597B]"
+                                  : "bg-white text-[#493129] border-[#E8D5C5] hover:bg-[#FFDEC7]"
                               }`}
                               title="Compare Device"
                             >
@@ -331,8 +339,8 @@ function ShopContent() {
                               }}
                               className={`p-1.5 rounded-full border transition ${
                                 isInWishlist(product.id)
-                                  ? "bg-[#efa3a0] text-[#493129] border-[#efa3a0]"
-                                  : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
+                                  ? "bg-[#EFA3A0] text-[#493129] border-[#EFA3A0]"
+                                  : "bg-white text-[#493129] border-[#E8D5C5] hover:bg-[#FFDEC7]"
                               }`}
                               title="Save to Wishlist"
                             >
@@ -342,33 +350,37 @@ function ShopContent() {
                         </div>
 
                         <div className="pt-5 space-y-1">
-                          <div className="flex items-center gap-1 text-[#8b597b] text-xs">
-                            <Star className="w-3.5 h-3.5 fill-[#efa3a0] text-[#efa3a0]" />
+                          <div className="flex items-center gap-1 text-[#8B597B] text-xs">
+                            <Star className="w-3.5 h-3.5 fill-[#EFA3A0] text-[#EFA3A0]" />
                             <span className="font-bold">{product.rating}</span>
-                            <span className="text-[#493129]/40 text-[10px]">({product.reviewCount})</span>
+                            <span className="text-[#806D63] text-[10px]">({product.reviewCount})</span>
                           </div>
 
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B597B] block">
+                            {product.categoryName}
+                          </span>
+
                           <Link href={`/product/${product.slug}`}>
-                            <h3 className="font-serif text-base text-[#493129] hover:text-[#8b597b] transition line-clamp-1">
+                            <h3 className="font-serif text-base text-[#493129] hover:text-[#8B597B] transition line-clamp-1">
                               {product.title}
                             </h3>
                           </Link>
-                          <p className="text-xs text-[#493129]/70 line-clamp-2">{product.shortDescription}</p>
+                          <p className="text-xs text-[#806D63] line-clamp-2">{product.shortDescription}</p>
                         </div>
                       </div>
 
-                      <div className="pt-5 border-t border-[#493129]/10 mt-5 space-y-3">
+                      <div className="pt-5 border-t border-[#E8D5C5] mt-5 space-y-3">
                         <div className="flex items-baseline justify-between">
                           {((variant ? variant.sellingPrice : product.basePrice) || 0) > 0 ? (
                             <span className="font-serif text-lg font-bold text-[#493129]">
                               {formatCurrency(variant ? variant.sellingPrice : product.basePrice)}
                             </span>
                           ) : (
-                            <span className="text-xs font-semibold text-[#8b597b] italic">
+                            <span className="text-xs font-semibold text-[#8B597B] italic">
                               Price coming soon
                             </span>
                           )}
-                          <span className={`text-[10px] uppercase font-bold ${totalStock > 0 ? "text-[#8b597b]" : "text-[#8b597b]"}`}>
+                          <span className="text-[10px] uppercase font-bold text-[#8B597B]">
                             {totalStock > 0 ? "In Stock" : "Check availability"}
                           </span>
                         </div>
@@ -377,25 +389,24 @@ function ShopContent() {
                           <div className="grid grid-cols-2 gap-2">
                             <button
                               onClick={(e) => handleQuickAdd(product, e)}
-                              className="py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffeedb] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
+                              className="py-2.5 px-3 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] text-xs font-semibold flex items-center justify-center gap-1 transition shadow-xs"
                             >
                               <ShoppingBag className="w-3.5 h-3.5" />
                               <span>Add to Bag</span>
                             </button>
-                            <button
-                              onClick={(e) => handleBuyNow(product, e)}
-                              className="py-2.5 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-bold flex items-center justify-center gap-1 shadow-coral transition"
+                            <Link
+                              href={`/product/${product.slug}`}
+                              className="py-2.5 px-3 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition text-center"
                             >
-                              <Zap className="w-3.5 h-3.5" />
-                              <span>Buy Now</span>
-                            </button>
+                              <span>Details</span>
+                            </Link>
                           </div>
                         ) : (
                           <Link
                             href={`/product/${product.slug}`}
-                            className="w-full block py-2.5 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition"
+                            className="w-full block py-2.5 px-3 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] text-[#493129] text-xs font-semibold text-center transition"
                           >
-                            View Details & Enquire
+                            View Details
                           </Link>
                         )}
                       </div>

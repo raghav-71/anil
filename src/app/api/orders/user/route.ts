@@ -1,26 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/database/store";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const phone = searchParams.get("phone");
     const email = searchParams.get("email");
 
-    const allOrders = db.getOrders();
-
+    // Strictly enforce customer identifier: never expose other customers' private data
     if (!phone && !email) {
-      // Return top recent customer orders
-      return NextResponse.json({ success: true, orders: allOrders.slice(0, 10) });
+      return NextResponse.json({ success: true, orders: [] });
     }
 
-    const filtered = allOrders.filter(
-      (o) =>
-        (phone && o.customerPhone.includes(phone.replace(/\D/g, ""))) ||
-        (email && o.customerEmail.toLowerCase() === email.toLowerCase())
-    );
+    const cleanPhone = phone ? phone.replace(/\D/g, "") : "";
+    const cleanEmail = email ? email.trim().toLowerCase() : "";
 
-    return NextResponse.json({ success: true, orders: filtered.length > 0 ? filtered : allOrders.slice(0, 5) });
+    // Require at least a 10-digit phone or valid email format to prevent brute-force guessing
+    if (cleanPhone && cleanPhone.length < 10 && !cleanEmail) {
+      return NextResponse.json({ success: true, orders: [] });
+    }
+
+    const allOrders = db.getOrders();
+    const filtered = allOrders.filter((o) => {
+      const matchPhone = cleanPhone && cleanPhone.length >= 10 && o.customerPhone.includes(cleanPhone);
+      const matchEmail = cleanEmail && o.customerEmail.toLowerCase() === cleanEmail;
+      return Boolean(matchPhone || matchEmail);
+    });
+
+    return NextResponse.json({ success: true, orders: filtered });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || "Failed to fetch orders" }, { status: 500 });
   }

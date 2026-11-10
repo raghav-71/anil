@@ -104,14 +104,14 @@ export function SearchAutocomplete() {
             setIsOpen(true);
           }}
           placeholder="Search phones, brands, accessories..."
-          className="w-full pl-9 pr-8 py-2 rounded-full bg-[#fffaf5] border border-[#493129]/15 text-xs text-[#493129] placeholder-[#493129]/40 focus:outline-none focus:border-[#8b597b] focus:ring-1 focus:ring-[#8b597b] transition shadow-xs"
+          className="w-full pl-9 pr-8 py-2 rounded-full bg-[#FFFAF5] border border-[#E8D5C5] text-xs text-[#30241F] placeholder-[#806D63]/60 focus:outline-none focus:border-[#8B597B] focus:ring-1 focus:ring-[#8B597B] transition shadow-xs"
         />
-        <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#493129]/40 pointer-events-none" />
+        <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#493129] pointer-events-none" />
         {query && (
           <button
             type="button"
             onClick={() => setQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#493129]/40 hover:text-[#493129]"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#493129] hover:text-[#8B597B]"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -120,7 +120,7 @@ export function SearchAutocomplete() {
 
       {/* Dropdown Flyout */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-[#ffeedb] border border-[#493129]/15 rounded-2xl shadow-xl overflow-hidden z-50 text-[#493129]">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-[#FFFAF5] border border-[#E8D5C5] rounded-2xl shadow-xl overflow-hidden z-50 text-[#30241F]">
           {/* Popular searches suggestions if empty or typing */}
           {!query.trim() && (
             <div className="p-4">

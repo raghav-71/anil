@@ -3,40 +3,90 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffeedb;
-  --foreground: #493129;
-  --primary: #493129;
-  --accent-mauve: #8b597b;
-  --accent-coral: #efa3a0;
-  --accent-peach: #ffdec7;
+  /* OFFICIAL BRAND PRIMARY COLOURS */
+  --color-deep-brown: #493129;
+  --color-plum: #8B597B;
+  --color-dusty-rose: #EFA3A0;
+  --color-peach: #FFDEC7;
+  --color-warm-cream: #FFEDDB;
+
+  /* SUPPORTING COLOURS */
+  --color-page-bg: #FFEDDB;
+  --color-card-bg: #FFFAF5;
+  --color-primary-text: #30241F;
+  --color-secondary-text: #806D63;
+  --color-border: #E8D5C5;
+  --color-input-bg: #FFFFFF;
+  --color-muted-bg: #F5E8DC;
+
+  /* STATUS COLOURS */
+  --color-success: #27845A;
+  --color-warning: #B7791F;
+  --color-error: #C0393A;
+  --color-info: #496C8B;
+
+  /* Semantic mappings */
+  --background: var(--color-page-bg);
+  --foreground: var(--color-primary-text);
+  --primary: var(--color-deep-brown);
+  --accent-mauve: var(--color-plum);
+  --accent-coral: var(--color-dusty-rose);
+  --accent-peach: var(--color-peach);
+  --border: var(--color-border);
 }
 
 body {
-  color: var(--foreground);
-  background-color: var(--background);
+  color: var(--color-primary-text);
+  background-color: var(--color-page-bg);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
 }
 
-/* Editorial Serif Headings */
+/* Elegant Serif Headings */
 h1, h2, h3, .font-editorial {
-  font-family: var(--font-serif), Georgia, serif;
+  font-family: var(--font-serif), "Playfair Display", Georgia, serif;
   letter-spacing: -0.015em;
   color: #493129;
 }
 
-/* Luxury Editorial Cards */
+/* Premium Neutral Elegance Product & Admin Cards */
 .editorial-card {
-  background-color: #fffaf5;
-  border: 1px solid rgba(73, 49, 41, 0.1);
-  box-shadow: 0 4px 20px -2px rgba(73, 49, 41, 0.04);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #FFFAF5;
+  border: 1px solid #E8D5C5;
+  box-shadow: 0 2px 10px rgba(73, 49, 41, 0.04);
+  transition: all 0.25s ease;
 }
 
 .editorial-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(139, 89, 123, 0.3);
-  box-shadow: 0 16px 36px -4px rgba(73, 49, 41, 0.09);
+  transform: translateY(-2px);
+  border-color: #8B597B;
+  box-shadow: 0 8px 24px rgba(73, 49, 41, 0.07);
+}
+
+/* Standardized Design System Buttons */
+.btn-primary-cart {
+  background-color: #493129;
+  color: #FFEDDB;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary-cart:hover {
+  background-color: #8B597B;
+  color: #FFFFFF;
+}
+
+.btn-secondary-details {
+  background-color: #FFDEC7;
+  color: #493129;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary-details:hover {
+  background-color: #E8D5C5;
 }
 
 /* Coral Luxury CTA */
@@ -47,13 +97,12 @@ h1, h2, h3, .font-editorial {
   border-radius: 9999px;
   padding: 0.75rem 1.75rem;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 14px rgba(239, 163, 160, 0.35);
+  box-shadow: 0 4px 14px rgba(239, 163, 160, 0.25);
 }
 
 .btn-coral:hover {
   background-color: #e58e8b;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(239, 163, 160, 0.45);
 }
 
 .btn-editorial-dark {
@@ -62,31 +111,44 @@ h1, h2, h3, .font-editorial {
   font-weight: 600;
   border-radius: 9999px;
   padding: 0.75rem 1.75rem;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-editorial-dark:hover {
-  background-color: #35221b;
+  background-color: #8B597B;
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
-/* Custom Scrollbar in Muted Mauve & Peach */
+/* Form input styling */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+  background-color: #FFFFFF;
+  border-color: #E8D5C5;
+}
+
+/* Custom Scrollbar in Plum & Peach */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #ffeedb;
+  background: #FFEDDB;
 }
 ::-webkit-scrollbar-thumb {
-  background: #ffdec7;
+  background: #E8D5C5;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #8b597b;
+  background: #8B597B;
 }
 
-/* PRINT MEDIA QUERIES FOR THERMAL PRINTERS (80mm, 58mm) & A4 INVOICES */
+/* PRINT MEDIA QUERIES FOR A4 GST TAX INVOICES & BILLS */
 @media print {
   body * {
     visibility: hidden;

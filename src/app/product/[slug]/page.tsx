@@ -20,17 +20,18 @@ import {
   MapPin,
   Award,
   Heart,
-  Scale,
   Maximize2,
   X,
   Sparkles,
+  MessageCircle,
 } from "lucide-react";
+import { CustomerEnquiryModal } from "@/components/storefront/CustomerEnquiryModal";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
-  const { addItem, toggleWishlist, isInWishlist, toggleCompare, isInCompare, addRecentlyViewed } = useCart();
+  const { addItem, toggleWishlist, isInWishlist, addRecentlyViewed } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
@@ -47,10 +48,11 @@ export default function ProductDetailPage() {
   } | null>(null);
   const [pincodeChecking, setPincodeChecking] = useState(false);
   const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         const found = (data.products as Product[]).find((p) => p.slug === slug);
@@ -206,26 +208,14 @@ export default function ProductDetailPage() {
                 {product.brandName}
               </div>
 
-              {/* Wishlist & Compare actions */}
+              {/* Wishlist action */}
               <div className="absolute top-5 right-5 flex items-center gap-2">
                 <button
-                  onClick={() => toggleCompare(product.id)}
-                  className={`p-2.5 rounded-full border transition ${
-                    isInCompare(product.id)
-                      ? "bg-[#8b597b] text-white border-[#8b597b]"
-                      : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
-                  }`}
-                  title="Compare Device"
-                >
-                  <Scale className="w-4 h-4" />
-                </button>
-                <button
                   onClick={() => toggleWishlist(product.id)}
-                  className={`p-2.5 rounded-full border transition ${
-                    isInWishlist(product.id)
+                  className={`p-2.5 rounded-full border transition ${isInWishlist(product.id)
                       ? "bg-[#efa3a0] text-[#493129] border-[#efa3a0]"
                       : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
-                  }`}
+                    }`}
                   title="Add to Wishlist"
                 >
                   <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? "fill-[#493129]" : ""}`} />
@@ -246,11 +236,10 @@ export default function ProductDetailPage() {
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(img)}
-                  className={`relative w-20 h-20 rounded-2xl bg-[#fffaf5] border p-1 flex-shrink-0 transition overflow-hidden ${
-                    selectedImage === img
+                  className={`relative w-20 h-20 rounded-2xl bg-[#fffaf5] border p-1 flex-shrink-0 transition overflow-hidden ${selectedImage === img
                       ? "border-[#8b597b] ring-2 ring-[#8b597b]/30"
                       : "border-[#493129]/10 hover:border-[#493129]/30"
-                  }`}
+                    }`}
                 >
                   <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-contain p-1" sizes="80px" />
                 </button>
@@ -283,7 +272,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Price Box */}
-            <div className="p-6 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle flex flex-wrap items-baseline justify-between gap-4">
+            <div className="p-6 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-subtle flex flex-wrap items-baseline justify-between gap-4">
               <div>
                 <div className="flex items-baseline gap-3">
                   {selectedVariant.sellingPrice > 0 ? (
@@ -293,10 +282,10 @@ export default function ProductDetailPage() {
                       </span>
                       {selectedVariant.mrp > selectedVariant.sellingPrice && (
                         <>
-                          <span className="text-sm text-[#493129]/40 line-through">
+                          <span className="text-sm text-[#806D63] line-through">
                             MRP: {formatCurrency(selectedVariant.mrp)}
                           </span>
-                          <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                          <span className="text-xs font-bold text-[#27845A] bg-[#27845A]/10 px-2.5 py-0.5 rounded-full border border-[#27845A]/20">
                             Save {discountPercent}%
                           </span>
                         </>
@@ -307,20 +296,20 @@ export default function ProductDetailPage() {
                       <span className="font-serif text-2xl sm:text-3xl font-bold text-[#493129] block">
                         Price Coming Soon
                       </span>
-                      <span className="text-xs text-[#8b597b] font-medium block mt-1">
-                        Contact our Belagavi store concierge for live billing & offer price.
+                      <span className="text-xs text-[#8B597B] font-medium block mt-1">
+                        Contact our sales team for current offer price.
                       </span>
                     </div>
                   )}
                 </div>
-                <p className="text-[11px] text-[#8b597b] font-medium mt-1">
-                  100% Genuine with GST Invoice & Official Manufacturer Warranty
+                <p className="text-[11px] text-[#8B597B] font-medium mt-1">
+                  100% Genuine with GST Invoice &amp; Official Manufacturer Warranty
                 </p>
               </div>
 
               <div>
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#ffdec7] text-[#493129] text-xs font-bold">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#8b597b]" />
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FFDEC7] text-[#493129] text-xs font-bold border border-[#E8D5C5]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#8B597B]" />
                   <span>{selectedVariant.stockQuantity > 0 ? `${selectedVariant.stockQuantity} In Stock` : "Check Availability"}</span>
                 </span>
               </div>
@@ -328,9 +317,9 @@ export default function ProductDetailPage() {
 
             {/* Variant Selector */}
             {product.variants.length > 1 && (
-              <div className="space-y-3 p-6 rounded-3xl bg-[#fffaf5] border border-[#493129]/10">
-                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b] block">
-                  Select Specifications & Color
+              <div className="space-y-3 p-6 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5]">
+                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8B597B] block">
+                  Select Specifications &amp; Color
                 </span>
                 <div className="grid grid-cols-2 gap-3">
                   {product.variants.map((v) => (
@@ -339,8 +328,8 @@ export default function ProductDetailPage() {
                       onClick={() => setSelectedVariant(v)}
                       className={`p-3.5 rounded-2xl border text-left transition ${
                         selectedVariant.id === v.id
-                          ? "border-[#8b597b] bg-[#ffeedb] ring-1 ring-[#8b597b]"
-                          : "border-[#493129]/10 hover:border-[#493129]/30"
+                          ? "border-[#8B597B] bg-[#FFDEC7] ring-1 ring-[#8B597B]"
+                          : "border-[#E8D5C5] bg-[#FFFFFF] hover:border-[#8B597B]"
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -354,8 +343,8 @@ export default function ProductDetailPage() {
                           />
                         )}
                       </div>
-                      <p className="text-[11px] text-[#493129]/60 mt-0.5">{v.color || "Standard Edition"}</p>
-                      <p className="text-xs font-bold text-[#8b597b] mt-1.5">{formatCurrency(v.sellingPrice)}</p>
+                      <p className="text-[11px] text-[#806D63] mt-0.5">{v.color || "Standard Edition"}</p>
+                      <p className="text-xs font-bold text-[#8B597B] mt-1.5">{formatCurrency(v.sellingPrice)}</p>
                     </button>
                   ))}
                 </div>
@@ -364,46 +353,73 @@ export default function ProductDetailPage() {
 
             {/* Action Buttons: Add to Bag & Buy Now or Enquire */}
             {selectedVariant.sellingPrice > 0 && selectedVariant.stockQuantity > 0 ? (
-              <div className="flex gap-4">
-                <button
-                  onClick={handleAddToCart}
-                  className="flex-1 py-4 px-6 rounded-full bg-[#493129] hover:bg-[#35221b] text-[#ffeedb] font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>Add to Shopping Bag</span>
-                </button>
-                <button
-                  onClick={handleBuyNow}
-                  className="flex-1 py-4 px-6 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] font-bold text-xs flex items-center justify-center gap-2 shadow-coral transition"
-                >
-                  <span>Buy Now (Instant Checkout)</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+              <div className="space-y-3">
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleAddToCart}
+                    className="flex-1 py-4 px-6 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>Add to Shopping Bag</span>
+                  </button>
+                  <button
+                    onClick={handleBuyNow}
+                    className="flex-1 py-4 px-6 rounded-full bg-[#FFDEC7] hover:bg-[#8B597B] hover:text-[#FFEDDB] text-[#493129] font-bold text-xs flex items-center justify-center gap-2 border border-[#E8D5C5] transition"
+                  >
+                    <span>Buy Now (Instant Checkout)</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* WhatsApp Product Enquiry Option */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                  <a
+                    href={`https://wa.me/919380124254?text=${encodeURIComponent(
+                      `Hello ANIL COMMUNICATION & ZEROX, I have an enquiry regarding "${product.title}" (${typeof window !== "undefined" ? window.location.href : `https://anilcommunications.com/product/${product.slug}`}). Please share live availability and current best store price.`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-3 px-5 rounded-full bg-[#27845A] hover:bg-[#206f4c] text-[#FFFFFF] font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition"
+                  >
+                    <MessageCircle className="w-4 h-4 fill-current" />
+                    <span>Enquire on WhatsApp (+91 9380124254)</span>
+                  </a>
+                  <button
+                    onClick={() => setIsEnquiryModalOpen(true)}
+                    type="button"
+                    className="py-3 px-5 rounded-full bg-[#FFFAF5] hover:bg-[#FFDEC7] text-[#493129] border border-[#E8D5C5] font-semibold text-xs flex items-center justify-center gap-2 transition"
+                  >
+                    <span>Request Callback</span>
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   href="/contact"
-                  className="flex-1 py-4 px-6 rounded-full bg-[#493129] hover:bg-[#35221b] text-[#ffeedb] font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition text-center"
+                  className="flex-1 py-4 px-6 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition text-center"
                 >
                   <span>Enquire Store Pricing & Live Stock</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
-                  href={`https://wa.me/919876543210?text=Hi%20Anil%20Communications,%20I%20am%20inquiring%20about%20the%20price%20and%20availability%20of%20${encodeURIComponent(product.title)}`}
+                  href={`https://wa.me/919380124254?text=${encodeURIComponent(
+                    `Hello ANIL COMMUNICATION & ZEROX, I am inquiring about the price and availability of "${product.title}" (${typeof window !== "undefined" ? window.location.href : `https://anilcommunications.com/product/${product.slug}`}).`
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-4 px-6 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs flex items-center justify-center gap-2 transition"
+                  className="py-4 px-6 rounded-full bg-[#27845A] hover:bg-[#206f4c] text-[#FFFFFF] font-bold text-xs flex items-center justify-center gap-2 transition"
                 >
-                  <span>WhatsApp Concierge</span>
+                  <MessageCircle className="w-4 h-4 fill-current" />
+                  <span>Chat on WhatsApp</span>
                 </a>
               </div>
             )}
 
             {/* Real-time Indian Pincode Serviceability Checker */}
-            <form onSubmit={checkPincode} className="p-5 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 space-y-2">
+            <form onSubmit={checkPincode} className="p-5 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] space-y-2">
               <label className="text-xs font-bold text-[#493129] flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#8b597b]" />
+                <MapPin className="w-3.5 h-3.5 text-[#8B597B]" />
                 <span>Check Delivery Date & Cash on Delivery</span>
               </label>
               <div className="flex gap-2">
@@ -412,13 +428,13 @@ export default function ProductDetailPage() {
                   maxLength={6}
                   value={pincode}
                   onChange={(e) => setPincode(e.target.value)}
-                  placeholder="Enter 6-digit Indian PIN code (e.g. 560001)"
-                  className="flex-1 px-4 py-2 text-xs rounded-full bg-[#ffeedb] border border-[#493129]/15 text-[#493129] focus:outline-none focus:border-[#8b597b]"
+                  placeholder="Enter 6-digit Indian PIN code (e.g. 591103)"
+                  className="flex-1 px-4 py-2 text-xs rounded-full bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] placeholder-[#806D63]/60 focus:outline-none focus:border-[#8B597B]"
                 />
                 <button
                   type="submit"
                   disabled={pincodeChecking}
-                  className="px-5 py-2 bg-[#ffdec7] hover:bg-[#f2caa9] text-[#493129] text-xs font-semibold rounded-full transition disabled:opacity-50"
+                  className="px-5 py-2 bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] text-xs font-semibold rounded-full transition disabled:opacity-50"
                 >
                   {pincodeChecking ? "Checking..." : "Verify PIN"}
                 </button>
@@ -427,20 +443,20 @@ export default function ProductDetailPage() {
               {pincodeResult && (
                 <div className="pt-2 text-xs">
                   {pincodeResult.valid ? (
-                    <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl space-y-1 text-emerald-900">
+                    <div className="p-3 bg-[#27845A]/10 border border-[#27845A]/30 rounded-xl space-y-1 text-[#27845A]">
                       <div className="font-semibold flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                        <CheckCircle2 className="w-4 h-4 text-[#27845A]" />
                         <span>Serviceable in {pincodeResult.city}, {pincodeResult.state}</span>
                       </div>
-                      <div className="text-[11px] text-emerald-800">
+                      <div className="text-[11px] text-[#30241F]">
                         • Estimated Delivery: <strong>{pincodeResult.deliveryDays}</strong> via {pincodeResult.courier}
                       </div>
-                      <div className="text-[11px] text-emerald-800">
+                      <div className="text-[11px] text-[#30241F]">
                         • Cash on Delivery (COD): <strong>{pincodeResult.isCodAvailable ? "Available" : "Prepaid Only"}</strong>
                       </div>
                     </div>
                   ) : (
-                    <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-red-800 text-[11px]">
+                    <div className="p-2.5 bg-[#C0393A]/10 border border-[#C0393A]/30 rounded-xl text-[#C0393A] text-[11px]">
                       {pincodeResult.error || "PIN code not serviceable."}
                     </div>
                   )}
@@ -449,13 +465,13 @@ export default function ProductDetailPage() {
             </form>
 
             {/* Warranty & Guarantee */}
-            <div className="grid grid-cols-2 gap-3 text-xs text-[#493129]/80">
-              <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-[#fffaf5] border border-[#493129]/10">
-                <Award className="w-4 h-4 text-[#8b597b] flex-shrink-0" />
+            <div className="grid grid-cols-2 gap-3 text-xs text-[#30241F]">
+              <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-[#FFFAF5] border border-[#E8D5C5]">
+                <Award className="w-4 h-4 text-[#8B597B] flex-shrink-0" />
                 <span>{product.warrantySummary}</span>
               </div>
-              <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-[#fffaf5] border border-[#493129]/10">
-                <Truck className="w-4 h-4 text-[#8b597b] flex-shrink-0" />
+              <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-[#FFFAF5] border border-[#E8D5C5]">
+                <Truck className="w-4 h-4 text-[#8B597B] flex-shrink-0" />
                 <span>Insured White-Glove Shipping</span>
               </div>
             </div>
@@ -467,23 +483,27 @@ export default function ProductDetailPage() {
 
         {/* Technical Specifications Matrix */}
         <div className="mt-16 space-y-6">
-          <div className="border-b border-[#493129]/10 pb-4">
+          <div className="border-b border-[#E8D5C5] pb-4">
             <h2 className="font-serif text-2xl text-[#493129]">Technical Specifications & Provenance</h2>
           </div>
 
-          <div className="bg-[#fffaf5] rounded-3xl p-8 border border-[#493129]/10 shadow-subtle">
+          <div className="bg-[#FFFAF5] rounded-3xl p-8 border border-[#E8D5C5] shadow-sm">
             <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
-              <div className="p-4 bg-[#ffeedb]/50 rounded-2xl">
-                <dt className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Model Designation</dt>
-                <dd className="font-serif text-sm text-[#493129] mt-1">{product.brandName} - {product.title}</dd>
+              <div className="p-4 bg-[#F5E8DC] rounded-2xl border border-[#E8D5C5]">
+                <dt className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8B597B]">Model Designation</dt>
+                <dd className="font-serif text-sm text-[#493129] mt-1">
+                  {product.title.toLowerCase().startsWith(product.brandName.toLowerCase())
+                    ? product.title
+                    : `${product.brandName} - ${product.title}`}
+                </dd>
               </div>
-              <div className="p-4 bg-[#ffeedb]/50 rounded-2xl">
-                <dt className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Tax Classification & HSN</dt>
+              <div className="p-4 bg-[#F5E8DC] rounded-2xl border border-[#E8D5C5]">
+                <dt className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8B597B]">Tax Classification & HSN</dt>
                 <dd className="font-mono text-xs text-[#493129] mt-1">HSN {product.hsnCode} (GST {product.gstRate}%)</dd>
               </div>
-              <div className="p-4 bg-[#ffeedb]/50 rounded-2xl sm:col-span-2">
-                <dt className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Editorial Synopsis</dt>
-                <dd className="text-xs text-[#493129]/80 mt-1 leading-relaxed">{product.description}</dd>
+              <div className="p-4 bg-[#F5E8DC] rounded-2xl sm:col-span-2 border border-[#E8D5C5]">
+                <dt className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8B597B]">Editorial Synopsis</dt>
+                <dd className="text-xs text-[#30241F] mt-1 leading-relaxed">{product.description}</dd>
               </div>
             </dl>
           </div>
@@ -509,6 +529,13 @@ export default function ProductDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Customer Enquiry Modal */}
+      <CustomerEnquiryModal
+        isOpen={isEnquiryModalOpen}
+        onClose={() => setIsEnquiryModalOpen(false)}
+        defaultProduct={product.title}
+      />
 
       <Footer />
     </div>

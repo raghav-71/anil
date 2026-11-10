@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { MapPin, Phone, Mail, ShieldCheck, Clock, Award } from "lucide-react";
+import { MapPin, Phone, ShieldCheck, Clock, Award, MessageCircle } from "lucide-react";
+import { BUSINESS } from "@/lib/business-config";
 
 export function Footer() {
   return (
@@ -43,8 +44,8 @@ export function Footer() {
               <MapPin className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs font-semibold text-[#ffeedb] uppercase tracking-wider">Flagship Experience</h4>
-              <p className="text-[11px] text-[#ffdec7]/70">In-person consultations at our boutique salon</p>
+              <h4 className="text-xs font-semibold text-[#ffeedb] uppercase tracking-wider">Retail Storefront</h4>
+              <p className="text-[11px] text-[#ffdec7]/70">In-person assistance at our {BUSINESS.address.line2} store</p>
             </div>
           </div>
         </div>
@@ -54,63 +55,73 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
         <div className="lg:col-span-2 space-y-4">
           <span className="font-serif text-2xl font-normal text-[#ffeedb] block tracking-tight">
-            Anil Communications
+            {BUSINESS.name}
           </span>
           <p className="text-xs leading-relaxed text-[#ffdec7]/80 max-w-sm">
-            Curators of extraordinary mobile engineering and acoustic accoutrements. Sourcing the world&apos;s finest titanium smartphones, GaN power units, and studio-grade audio hardware.
+            Your trusted store for genuine smartphones, keypad phones, earbuds, neckbands, and headphones with 100% official brand warranty. Also offering mobile repairing, colour printing &amp; lamination services.
           </p>
-          <div className="pt-2 text-[11px] text-[#ffdec7]/60 space-y-1 font-mono">
-            <p>GSTIN: 29AAAAA0000A1Z5</p>
-            <p>Boutique Registration: BLR-KA-2014-9982</p>
-          </div>
         </div>
 
         {/* Collections */}
         <div>
-          <h4 className="text-xs font-semibold text-[#ffeedb] uppercase tracking-[0.2em] mb-4">The Collections</h4>
-          <ul className="space-y-2.5 text-xs text-[#ffdec7]/80">
-            <li><Link href="/shop" className="hover:text-[#efa3a0] transition">Complete Catalog</Link></li>
-            <li><Link href="/mobiles" className="hover:text-[#efa3a0] transition">Flagship Smartphones</Link></li>
-            <li><Link href="/accessories" className="hover:text-[#efa3a0] transition">GaN Fast Chargers</Link></li>
-            <li><Link href="/accessories" className="hover:text-[#efa3a0] transition">Acoustic Audio & TWS</Link></li>
-            <li><Link href="/accessories" className="hover:text-[#efa3a0] transition">Cases & Armored Glass</Link></li>
+          <h4 className="text-xs font-semibold text-[#FFEDDB] uppercase tracking-[0.2em] mb-4">Categories</h4>
+          <ul className="space-y-2.5 text-xs text-[#FFDEC7]">
+            <li><Link href="/shop" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">All Products</Link></li>
+            <li><Link href="/shop?category=Smartphones" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">Smartphones</Link></li>
+            <li><Link href="/shop?category=Keypad+Phones" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">Keypad Phones</Link></li>
+            <li><Link href="/shop?category=Earbuds" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">Wireless Earbuds</Link></li>
+            <li><Link href="/shop?category=Neckbands" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">Neckbands</Link></li>
+            <li><Link href="/shop?category=Headphones" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">Headphones</Link></li>
           </ul>
         </div>
 
         {/* Client Services */}
         <div>
-          <h4 className="text-xs font-semibold text-[#ffeedb] uppercase tracking-[0.2em] mb-4">Client Services</h4>
-          <ul className="space-y-2.5 text-xs text-[#ffdec7]/80">
-            <li><Link href="/orders" className="hover:text-[#efa3a0] transition">Track Your Consignment</Link></li>
-            <li><Link href="/about" className="hover:text-[#efa3a0] transition">The Maison Heritage</Link></li>
-            <li><Link href="/contact" className="hover:text-[#efa3a0] transition">Concierge Desk</Link></li>
-            <li><Link href="/login" className="hover:text-[#efa3a0] transition">Customer Portal</Link></li>
+          <h4 className="text-xs font-semibold text-[#FFEDDB] uppercase tracking-[0.2em] mb-4">Customer Support</h4>
+          <ul className="space-y-2.5 text-xs text-[#FFDEC7]">
+            <li><Link href="/orders" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">Track Your Order</Link></li>
+            <li><Link href="/contact" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">Contact &amp; Support</Link></li>
+            <li><Link href="/account" className="text-[#EFA3A0] hover:text-[#FFFFFF] transition-colors">Customer Account</Link></li>
           </ul>
         </div>
 
-        {/* Boutique Location */}
+        {/* Store Location */}
         <div>
-          <h4 className="text-xs font-semibold text-[#ffeedb] uppercase tracking-[0.2em] mb-4">Visit The Salon</h4>
-          <ul className="space-y-3 text-xs text-[#ffdec7]/80">
-            <li className="flex items-start gap-2.5">
-              <MapPin className="w-3.5 h-3.5 text-[#efa3a0] flex-shrink-0 mt-0.5" />
-              <span>Shop No. 14, Main Electronics Market, MG Road, Bengaluru, Karnataka - 560001</span>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <Phone className="w-3.5 h-3.5 text-[#efa3a0] flex-shrink-0" />
-              <span className="font-mono">+91 98765 43210</span>
-            </li>
-            <li className="flex items-center gap-2.5">
-              <Mail className="w-3.5 h-3.5 text-[#efa3a0] flex-shrink-0" />
-              <span>concierge@anilcommunications.com</span>
-            </li>
-          </ul>
+          <h4 className="text-xs font-semibold text-[#FFEDDB] uppercase tracking-[0.2em] mb-4">Store Location</h4>
+          <div className="space-y-3 text-xs text-[#FFDEC7]">
+            <div className="flex items-start gap-2.5">
+              <MapPin className="w-3.5 h-3.5 text-[#EFA3A0] flex-shrink-0 mt-0.5" />
+              <address className="not-italic leading-relaxed">
+                Bagalkot Main Road, Pant Nagar,<br />
+                Near Canara Bank,<br />
+                591103, Karnataka, India.
+              </address>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <Phone className="w-3.5 h-3.5 text-[#EFA3A0] flex-shrink-0" />
+              <div className="font-mono space-y-0.5">
+                <div>+91 9380124254 <span className="text-[10px] text-[#FFEDDB] uppercase">(WhatsApp)</span></div>
+                <div className="text-[11px] text-[#FFDEC7]/80">+91 8884055867 • +91 9538865867</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5 pt-1">
+              <MessageCircle className="w-3.5 h-3.5 text-[#EFA3A0] flex-shrink-0" />
+              <a
+                href="https://wa.me/919380124254"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#EFA3A0] hover:text-[#FFFFFF] font-semibold transition-colors"
+              >
+                Chat on WhatsApp (+91 9380124254)
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Copyright */}
       <div className="border-t border-[#ffdec7]/10 py-6 text-center text-[11px] text-[#ffdec7]/50 font-serif">
-        <p>© 2026 Anil Communications. Sunset Editorial Retail Experience. All rights reserved.</p>
+        <p>{BUSINESS.copyright()}</p>
       </div>
     </footer>
   );

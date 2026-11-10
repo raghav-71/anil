@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/database/store";
+import { verifyAdminSession } from "@/lib/admin-auth";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const movements = db.getInventoryMovements();
@@ -20,19 +23,30 @@ export async function GET() {
       lowStockThreshold: v.lowStockThreshold,
       sellingPrice: v.sellingPrice,
       costPrice: v.costPrice,
-      stockValue: v.stockQuantity * v.costPrice,
+      stockValue: v.stockQuantity * (v.costPrice || v.sellingPrice * 0.8),
       isLowStock: v.stockQuantity <= v.lowStockThreshold && v.stockQuantity > 0,
       isOutOfStock: v.stockQuantity === 0,
     }))
   );
 
-  return NextResponse.json({
-    inventoryList,
-    movements,
-  });
+  return NextResponse.json(
+    {
+      inventoryList,
+      movements,
+    },
+    {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+      },
+    }
+  );
 }
 
 export async function POST(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     const { variantId, quantityChange, type, notes, performedBy } = body;
@@ -46,12 +60,21 @@ export async function POST(req: NextRequest) {
     );
 
     if (!success) {
-      return NextResponse.json({ error: "Stock adjustment failed. Insufficient stock or invalid variant ID." }, { status: 400 });
+      return NextResponse.json(
+        { error: "Stock adjustment failed. Insufficient stock or invalid variant ID." },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json(
+      { success: true },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        },
+      }
+    );
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
-

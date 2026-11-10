@@ -19,9 +19,9 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Anil Communications | Luxury Mobile & Technology Boutique",
+  title: "ANIL COMMUNICATION & ZEROX | Mobile Phones & Accessories Store",
   description:
-    "Curated flagship smartphones, precision acoustic equipment, and high-speed adapters crafted for connoisseurs of fine technology.",
+    "Shop authentic smartphones, keypad phones, wireless earbuds, neckbands, and headphones with 100% manufacturer warranty and fast delivery. Pant Nagar, Near Canara Bank, Karnataka.",
 };
 
 export default function RootLayout({

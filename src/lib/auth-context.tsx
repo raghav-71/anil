@@ -23,82 +23,89 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Preset demo accounts for quick role-switching and security testing
-export const PRESET_ACCOUNTS: Record<UserRole, CurrentUser & { pin: string }> = {
-  super_admin: {
-    id: "usr-admin-1",
-    name: "Anil Kumar (Owner)",
-    email: "admin@anilcommunications.com",
-    role: "super_admin",
-    pin: "admin123",
-  },
-  manager: {
-    id: "usr-mgr-1",
-    name: "Vikrant Singh (Store Manager)",
-    email: "manager@anilcommunications.com",
-    role: "manager",
-    pin: "manager123",
-  },
-  cashier: {
-    id: "usr-csh-1",
-    name: "Deepak Sharma (POS Cashier)",
-    email: "cashier@anilcommunications.com",
-    role: "cashier",
-    pin: "cashier123",
-  },
-  customer: {
-    id: "usr-cust-1",
-    name: "Ramesh Sharma",
-    email: "ramesh@example.com",
-    role: "customer",
-    pin: "customer123",
-  },
+export const OWNER_ACCOUNT: CurrentUser = {
+  id: "usr-admin-1",
+  name: "Shop Owner",
+  email: "admin@anilcommunications.com",
+  role: "super_admin",
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("anil_staff_session");
-      if (stored) {
-        setUser(JSON.parse(stored));
-      } else {
-        // Default to super admin session for easy initial access
-        setUser(PRESET_ACCOUNTS.super_admin);
-        localStorage.setItem("anil_staff_session", JSON.stringify(PRESET_ACCOUNTS.super_admin));
-      }
-    } catch {
-      // ignore
-    }
+    // Check server-side session cookie first
+    fetch("/api/admin/auth")
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return null;
+      })
+      .then((data) => {
+        if (data?.authenticated && data?.user) {
+          setUser(data.user);
+          localStorage.setItem("anil_staff_session", JSON.stringify(data.user));
+        } else {
+          // If server session invalid, check if we had a stored session to verify or clear
+          const stored = localStorage.getItem("anil_staff_session");
+          if (stored) {
+            try {
+              const parsed = JSON.parse(stored);
+              // Only keep if server validated; otherwise clear
+              setUser(null);
+              localStorage.removeItem("anil_staff_session");
+            } catch {
+              localStorage.removeItem("anil_staff_session");
+            }
+          }
+        }
+      })
+      .catch(() => {
+        setUser(null);
+      });
   }, []);
 
   const loginAs = (role: UserRole) => {
-    const acc = PRESET_ACCOUNTS[role];
-    setUser(acc);
-    localStorage.setItem("anil_staff_session", JSON.stringify(acc));
+    if (role === "super_admin") {
+      setUser(OWNER_ACCOUNT);
+      localStorage.setItem("anil_staff_session", JSON.stringify(OWNER_ACCOUNT));
+    }
   };
 
   const loginWithCredentials = async (email: string, pass: string) => {
-    const found = Object.values(PRESET_ACCOUNTS).find(
-      (a) => a.email.toLowerCase() === email.trim().toLowerCase() && a.pin === pass.trim()
-    );
-    if (found) {
-      setUser(found);
-      localStorage.setItem("anil_staff_session", JSON.stringify(found));
-      return { success: true };
+    try {
+      const res = await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: pass }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setUser(data.user);
+        localStorage.setItem("anil_staff_session", JSON.stringify(data.user));
+        return { success: true };
+      }
+      return { success: false, error: data.error || "Invalid owner email or PIN." };
+    } catch (err: any) {
+      return { success: false, error: err.message || "Failed to reach authentication server." };
     }
-    return { success: false, error: "Invalid email or PIN. Try admin@anilcommunications.com / admin123" };
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await fetch("/api/admin/auth", { method: "DELETE" });
+    } catch {
+      // ignore
+    }
     setUser(null);
     localStorage.removeItem("anil_staff_session");
   };
 
   const hasRole = (roles: UserRole[]) => {
     if (!user) return false;
-    if (user.role === "super_admin") return true; // Super admin has access to everything
+    if (user.role === "super_admin") return true;
     return roles.includes(user.role);
   };
 
@@ -123,4 +130,3 @@ export function useAuth() {
   if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 }
-

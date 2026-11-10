@@ -1,4 +1,4 @@
-export type UserRole = "super_admin" | "manager" | "cashier" | "customer";
+export type UserRole = "super_admin" | "manager" | "customer";
 
 export interface Profile {
   id: string;
@@ -35,6 +35,8 @@ export interface ProductVariant {
   productId: string;
   sku: string;
   barcode: string;
+  title?: string;
+  status?: string;
   color?: string;
   colorCode?: string;
   ram?: string;
@@ -68,7 +70,16 @@ export interface Product {
   rating: number;
   reviewCount: number;
   variants: ProductVariant[];
+  totalStock?: number;
+  modelNumber?: string;
+  promotionalPrice?: number;
+  highlights?: string[];
+  specifications?: Record<string, string>;
+  returnPolicy?: string;
+  seoTitle?: string;
+  seoDescription?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface Customer {
@@ -133,7 +144,7 @@ export interface InventoryMovement {
   variantId: string;
   productName: string;
   variantTitle: string;
-  movementType: "pos_sale" | "online_order" | "purchase_inward" | "adjustment_add" | "adjustment_reduce" | "damage" | "return_restock";
+  movementType: "online_sale" | "online_order" | "purchase_inward" | "adjustment_add" | "adjustment_reduce" | "damage" | "return_restock";
   quantityChange: number;
   previousQuantity: number;
   newQuantity: number;
@@ -197,6 +208,13 @@ export interface Order {
     pincode: string;
     landmark?: string;
   };
+  fulfillmentType?: "delivery" | "pickup";
+  pickupDetails?: {
+    storeName: string;
+    storeAddress: string;
+    storePhone: string;
+    estimatedReady: string;
+  };
   items: OrderItem[];
   subtotal: number;
   discountAmount: number;
@@ -208,15 +226,9 @@ export interface Order {
   status: OrderStatus;
   trackingNumber?: string;
   notes?: string;
+  idempotencyKey?: string;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface POSCartItem {
-  variant: ProductVariant;
-  product: Product;
-  quantity: number;
-  customDiscountPercent: number; // Item-level discount
 }
 
 export interface InvoiceItemBreakdown {
@@ -244,9 +256,8 @@ export interface Invoice {
   customerPhone: string;
   customerGstin?: string;
   customerAddress?: string;
-  source: "pos" | "online";
+  source: "online";
   orderId?: string;
-  posTransactionId?: string;
   items: InvoiceItemBreakdown[];
   subtotal: number;
   discountAmount: number;
@@ -254,10 +265,10 @@ export interface Invoice {
   sgstAmount: number;
   igstAmount: number;
   grandTotal: number;
-  paymentMethod: "cash" | "upi" | "card" | "split";
+  paymentMethod: "cash" | "upi" | "card" | "split" | "razorpay" | "cod";
   amountReceived: number;
   changeReturned: number;
-  cashierName: string;
+  cashierName?: string;
   createdAt: string;
 }
 
@@ -273,11 +284,15 @@ export interface ShopSettings {
   gstin: string;
   invoicePrefix: string;
   nextInvoiceSequence: number;
-  thermalPrinterType: "80mm" | "58mm";
+  thermalPrinterType?: "80mm" | "58mm";
   footerTerms: string;
   codEnabled: boolean;
   freeShippingThreshold: number;
   standardShippingFee: number;
+  ownerNotificationEmail?: string;
+  ownerWhatsAppNumber?: string;
+  whatsappOrderAlertsEnabled?: boolean;
+  emailOrderAlertsEnabled?: boolean;
 }
 
 export interface Review {

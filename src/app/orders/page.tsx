@@ -21,13 +21,14 @@ import {
   ShieldCheck,
   RotateCcw,
   XCircle,
+  MessageCircle,
 } from "lucide-react";
 
 const EIGHT_STAGE_LIFECYCLE: { key: OrderStatus; label: string; desc: string }[] = [
   { key: "pending", label: "1. Order Placed", desc: "Digital consignment intent logged" },
   { key: "confirmed", label: "2. Payment Confirmed", desc: "Payment verified & inventory reserved" },
   { key: "processing", label: "3. Quality Inspected", desc: "IMEI verified & hardware inspected" },
-  { key: "packed", label: "4. Boutique Packed", desc: "Sealed in tamper-evident boutique box" },
+  { key: "packed", label: "4. Quality Packed", desc: "Sealed in tamper-evident secure box" },
   { key: "shipped", label: "5. In Transit", desc: "Dispatched via air courier partner" },
   { key: "out_for_delivery", label: "6. Out for Delivery", desc: "Designated logistics associate en route" },
   { key: "delivered", label: "7. Delivered", desc: "Safely received with client verification" },
@@ -244,7 +245,7 @@ function OrdersContent() {
                 <Truck className="w-5 h-5 text-[#8b597b]" />
                 <div>
                   <div className="font-bold text-[#493129]">
-                    Carrier Partner: {order.trackingNumber ? "BlueDart Express Logistics" : "Anil Boutique Express"}
+                    Carrier Partner: {order.trackingNumber ? "BlueDart Express Logistics" : "Express Courier Logistics"}
                   </div>
                   <div className="text-[11px] text-[#493129]/70 font-mono">
                     AWB Tracking Code: {order.trackingNumber || "BLUEDART-AIR-7729103"}
@@ -252,7 +253,18 @@ function OrdersContent() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href={`https://wa.me/919380124254?text=${encodeURIComponent(
+                    `Hello ANIL COMMUNICATION & ZEROX, I am inquiring regarding my order #${order.orderNumber}. Could you please update me on delivery status?`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold transition flex items-center gap-1 shadow-xs"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 fill-current" />
+                  <span>WhatsApp Updates</span>
+                </a>
                 {(order.status === "confirmed" || order.status === "pending") && (
                   <button
                     onClick={handleCancelOrder}

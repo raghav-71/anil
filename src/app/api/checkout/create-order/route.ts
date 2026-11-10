@@ -1,20 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/database/store";
+import { dispatchWhatsAppNotification } from "@/lib/whatsapp";
+import { dispatchOrderEmailNotification } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { customerName, customerPhone, customerEmail, shippingAddress, items, paymentMethod, discountAmount, couponCode } = body;
+    const {
+      customerName,
+      customerPhone,
+      customerEmail,
+      shippingAddress,
+      fulfillmentType,
+      items,
+      paymentMethod,
+      discountAmount,
+      couponCode,
+      idempotencyKey,
+    } = body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+      return NextResponse.json({ error: "Shopping bag cannot be empty" }, { status: 400 });
     }
 
     // Pre-flight check stock
     for (const item of items) {
       const v = db.getVariantById(item.variantId);
       if (!v) {
-        return NextResponse.json({ error: "Product variant not found" }, { status: 400 });
+        return NextResponse.json({ error: "Product variant not found in store database" }, { status: 400 });
+      }
+      if (item.quantity <= 0) {
+        return NextResponse.json({ error: "Invalid item quantity" }, { status: 400 });
       }
       if (v.variant.stockQuantity < item.quantity) {
         return NextResponse.json(
@@ -33,35 +49,81 @@ export async function POST(req: NextRequest) {
         customerPhone,
         customerEmail,
         shippingAddress,
+        fulfillmentType: fulfillmentType || "delivery",
         items,
         paymentMethod: "cod",
+        paymentStatus: "pending", // Unpaid until collected at doorstep
         discountAmount: discountAmount || 0,
         couponCode,
+        idempotencyKey,
       });
 
-      if (!result.success) {
-        return NextResponse.json({ error: result.error }, { status: 400 });
+      if (!result.success || !result.order) {
+        return NextResponse.json({ error: result.error || "Failed to process COD order" }, { status: 400 });
+      }
+
+      const order = result.order;
+
+      // Trigger asynchronous owner notification via WhatsApp (non-blocking)
+      dispatchWhatsAppNotification({
+        eventType: "order_created",
+        dedupKey: `order_created_${order.orderNumber}`,
+        title: "New Cash on Delivery Order Received",
+        details: {
+          orderNumber: order.orderNumber,
+          customer: order.customerName,
+          phone: `+91 ${order.customerPhone}`,
+          fulfillment: order.fulfillmentType === "pickup" ? "In-Store Pickup (Pant Nagar)" : "Doorstep Delivery",
+          itemsCount: `${order.items.length} item(s)`,
+          totalAmount: `₹${order.grandTotal.toLocaleString("en-IN")}`,
+          paymentMode: "Cash on Delivery (Pending Collection)",
+          deliveryPincode: order.fulfillmentType === "pickup" ? "In-Store Pickup" : (shippingAddress?.pincode || "591103"),
+        },
+      }).catch((e) => console.error("WhatsApp notification dispatch failed:", e));
+
+      // Trigger asynchronous owner email notification (non-blocking)
+      dispatchOrderEmailNotification(order).catch((e) => console.error("Email notification dispatch failed:", e));
+
+      // Check for low stock alerts on purchased items
+      for (const item of items) {
+        const v = db.getVariantById(item.variantId);
+        if (v && v.variant.stockQuantity <= 3) {
+          dispatchWhatsAppNotification({
+            eventType: "low_stock_alert",
+            dedupKey: `low_stock_${v.variant.id}_${v.variant.stockQuantity}`,
+            title: "Low Inventory Warning",
+            details: {
+              productName: v.product.title,
+              variant: `${v.variant.color || ""} ${v.variant.storage || ""}`.trim() || "Standard",
+              remainingStock: `${v.variant.stockQuantity} units left`,
+              sku: v.variant.sku,
+            },
+          }).catch((e) => console.error("Low stock WhatsApp alert failed:", e));
+        }
       }
 
       return NextResponse.json({
         success: true,
-        order: result.order,
+        order,
       });
     }
 
-    // For Razorpay online payments, calculate grand total and return credentials
+    // For Razorpay online payments, calculate grand total server-side
     let subtotal = 0;
     for (const item of items) {
       const v = db.getVariantById(item.variantId)!;
       subtotal += v.variant.sellingPrice * item.quantity;
     }
-    const appliedDiscount = discountAmount || 0;
+    const appliedDiscount = Math.max(0, discountAmount || 0);
     const taxableBasis = Math.max(0, subtotal - appliedDiscount);
     const settings = db.getShopSettings();
-    const shippingFee = taxableBasis >= settings.freeShippingThreshold ? 0 : settings.standardShippingFee;
+    const isPickup = fulfillmentType === "pickup";
+    const shippingFee = isPickup
+      ? 0
+      : (taxableBasis >= settings.freeShippingThreshold ? 0 : settings.standardShippingFee);
     const grandTotal = taxableBasis + shippingFee;
 
-    // Simulated Razorpay Order ID for standard test integration
+    // Razorpay Order ID for checkout session
     const razorpayOrderId = `order_${Math.random().toString(36).substring(2, 12)}`;
 
     return NextResponse.json({

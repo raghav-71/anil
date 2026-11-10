@@ -24,7 +24,7 @@ export default function CatalogPage() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products || []);
@@ -58,7 +58,7 @@ export default function CatalogPage() {
         {/* Header */}
         <header className="text-center max-w-3xl mx-auto mb-10 space-y-3">
           <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#8b597b]">
-            ANIL COMMUNICATIONS · BELAGAVI
+            ANIL COMMUNICATION &amp; ZEROX · PANT NAGAR
           </p>
           <h1 className="font-serif text-4xl sm:text-6xl text-[#493129] font-medium leading-tight">
             Find your next favourite.
@@ -116,36 +116,44 @@ export default function CatalogPage() {
               return (
                 <article
                   key={product.id}
-                  className="bg-white rounded-2xl border border-[#493129]/10 overflow-hidden hover:shadow-md transition-all flex flex-col justify-between group"
+                  className="editorial-card rounded-3xl border border-[#E8D5C5] bg-[#FFFAF5] overflow-hidden flex flex-col justify-between group"
                 >
-                  <div className="p-5 flex items-center justify-center bg-[#fffaf5] relative h-56">
+                  <div className="p-5 flex items-center justify-center bg-[#FFEDDB]/50 relative h-56 border-b border-[#E8D5C5]/50">
                     <img
-                      src={product.images[0]}
+                      src={product.images[0] || `/images/products/${product.slug}.svg`}
                       alt={product.title}
                       loading="lazy"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (!target.src.includes(".svg")) {
+                          target.src = `/images/products/${product.slug}.svg`;
+                        } else if (!target.src.includes("fallback-product.svg")) {
+                          target.src = "/images/products/fallback-product.svg";
+                        }
+                      }}
                       className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
                     />
-                    <span className="absolute top-3 left-3 bg-[#ffdec7] text-[#493129] text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                    <span className="absolute top-3 left-3 bg-[#FFDEC7] text-[#493129] text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-[#E8D5C5]">
                       {product.brandName}
                     </span>
                   </div>
 
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b597b]">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-[#8B597B]">
                         {product.categoryName}
                       </p>
                       <h2 className="font-serif text-lg font-semibold text-[#493129] mt-0.5 line-clamp-1">
                         {product.title}
                       </h2>
                       {variantStrings.length > 0 && (
-                        <p className="text-[11px] text-[#493129]/70 mt-1 line-clamp-1">
+                        <p className="text-[11px] text-[#806D63] mt-1 line-clamp-1">
                           {variantStrings.join(" · ")}
                         </p>
                       )}
                     </div>
 
-                    <div className="pt-2 border-t border-[#493129]/10 space-y-2">
+                    <div className="pt-2 border-t border-[#E8D5C5] space-y-2">
                       <div className="flex items-baseline justify-between">
                         {product.basePrice > 0 ? (
                           <div className="font-mono">
@@ -153,19 +161,19 @@ export default function CatalogPage() {
                               {formatCurrency(product.basePrice)}
                             </span>
                             {product.mrp > product.basePrice && (
-                              <span className="text-xs text-slate-400 line-through ml-2">
+                              <span className="text-xs text-[#806D63] line-through ml-2">
                                 {formatCurrency(product.mrp)}
                               </span>
                             )}
                           </div>
                         ) : (
-                          <span className="text-xs font-semibold text-[#8b597b] italic">
+                          <span className="text-xs font-semibold text-[#8B597B] italic">
                             Price available in store
                           </span>
                         )}
                         <span
                           className={`text-[10px] font-semibold ${
-                            totalStock > 0 ? "text-emerald-700" : "text-[#8b597b]"
+                            totalStock > 0 ? "text-[#27845A]" : "text-[#8B597B]"
                           }`}
                         >
                           {totalStock > 0 ? "In stock" : "Enquire in store"}
@@ -174,7 +182,7 @@ export default function CatalogPage() {
 
                       <Link
                         href={`/product/${product.slug}`}
-                        className="w-full py-2.5 rounded-xl bg-[#ffeedb] hover:bg-[#ffdec7] text-[#493129] text-xs font-bold flex items-center justify-center gap-1.5 transition"
+                        className="w-full py-2.5 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] text-[#493129] text-xs font-bold flex items-center justify-center gap-1.5 transition"
                       >
                         <span>View Details</span>
                         <ArrowRight className="w-3.5 h-3.5" />

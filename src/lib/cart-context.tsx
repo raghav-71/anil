@@ -170,21 +170,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const toggleCompare = (productId: string): boolean => {
-    if (compareList.includes(productId)) {
-      setCompareList((prev) => prev.filter((id) => id !== productId));
-      return false;
-    }
-    if (compareList.length >= 4) {
-      alert("You can compare up to 4 devices simultaneously.");
-      return false;
-    }
-    setCompareList((prev) => [...prev, productId]);
-    return true;
-  };
-
-  const isInCompare = (productId: string) => compareList.includes(productId);
-  const clearCompare = () => setCompareList([]);
+  const toggleCompare = (_productId: string): boolean => false;
+  const isInCompare = (_productId: string) => false;
+  const clearCompare = () => {};
 
   const subtotal = items.reduce((acc, i) => acc + i.price * i.quantity, 0);
 

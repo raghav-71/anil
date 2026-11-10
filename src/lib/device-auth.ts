@@ -26,19 +26,19 @@ class DeviceAuthManager {
   private devices: TrustedDevice[] = [
     {
       id: "dev-shop-counter-primary",
-      token: "tok_anil_shop_primary_pos_counter_2026_xyz982",
-      deviceName: "Anil Shop Counter Terminal (Dell All-in-One)",
-      fingerprint: "fp_dell_pos_counter_station_01",
+      token: "tok_anil_shop_primary_admin_terminal_2026_xyz982",
+      deviceName: "Anil Shop Primary Admin Workstation (Dell All-in-One)",
+      fingerprint: "fp_dell_admin_workstation_01",
       enrolledAt: "2026-01-10T09:00:00Z",
       lastUsedAt: new Date().toISOString(),
       isRevoked: false,
-      enrolledBy: "Anil Kumar (Owner)",
+      enrolledBy: "Shop Owner",
       ipAddress: "192.168.1.100",
     },
   ];
 
   private accessLogs: AccessAttemptLog[] = [];
-  private ownerMasterPasskey = "ANIL-OWNER-SECURE-KEY-2026-POS";
+  private ownerMasterPasskey = "ANIL-OWNER-SECURE-KEY-2026-ADMIN";
 
   public isDeviceAuthorized(token?: string | null): { authorized: boolean; device?: TrustedDevice; reason?: string } {
     if (!token) {

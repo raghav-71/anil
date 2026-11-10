@@ -16,7 +16,7 @@ export default function MobilesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         setAllProducts(data.products || []);
@@ -109,73 +109,92 @@ export default function MobilesPage() {
               const totalStock = product.variants.reduce((acc, v) => acc + v.stockQuantity, 0);
 
               return (
-                <div key={product.id} className="editorial-card rounded-3xl p-7 flex flex-col justify-between">
+                <div key={product.id} className="editorial-card rounded-3xl p-7 flex flex-col justify-between bg-[#FFFAF5] border border-[#E8D5C5]">
                   <div>
-                    <div className="relative h-64 rounded-2xl bg-[#ffeedb]/60 flex items-center justify-center p-6">
+                    <div className="relative h-64 rounded-2xl bg-[#FFEDDB]/50 flex items-center justify-center p-6 border border-[#E8D5C5]/50">
                       <Link href={`/product/${product.slug}`} className="w-full h-full flex items-center justify-center">
                         <img
-                          src={product.images[0]}
+                          src={product.images[0] || `/images/products/${product.slug}.svg`}
                           alt={product.title}
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (!target.src.includes(".svg")) {
+                              target.src = `/images/products/${product.slug}.svg`;
+                            } else if (!target.src.includes("fallback-product.svg")) {
+                              target.src = "/images/products/fallback-product.svg";
+                            }
+                          }}
                           className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-500"
                         />
                       </Link>
-                      <div className="absolute top-3 left-3 bg-[#ffdec7] text-[#493129] text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
+                      <div className="absolute top-3 left-3 bg-[#FFDEC7] text-[#493129] text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-[#E8D5C5]">
                         {product.brandName}
                       </div>
                     </div>
 
                     <div className="pt-6 space-y-2">
-                      <div className="flex items-center gap-1 text-[#8b597b] text-xs">
-                        <Star className="w-3.5 h-3.5 fill-[#efa3a0] text-[#efa3a0]" />
+                      <div className="flex items-center gap-1 text-[#8B597B] text-xs">
+                        <Star className="w-3.5 h-3.5 fill-[#EFA3A0] text-[#EFA3A0]" />
                         <span>{product.rating}</span>
-                        <span className="text-[#493129]/40">({product.reviewCount} connoisseurs)</span>
+                        <span className="text-[#806D63]">({product.reviewCount} customer reviews)</span>
                       </div>
 
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B597B] block">
+                        {product.categoryName}
+                      </span>
+
                       <Link href={`/product/${product.slug}`}>
-                        <h3 className="font-serif text-xl text-[#493129] hover:text-[#8b597b] transition line-clamp-1">
+                        <h3 className="font-serif text-xl text-[#493129] hover:text-[#8B597B] transition line-clamp-1">
                           {product.title}
                         </h3>
                       </Link>
 
-                      <p className="text-xs text-[#493129]/70 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-[#806D63] line-clamp-2 leading-relaxed">
                         {product.shortDescription}
                       </p>
                     </div>
                   </div>
 
-                  <div className="pt-6 border-t border-[#493129]/10 mt-6 space-y-3">
+                  <div className="pt-6 border-t border-[#E8D5C5] mt-6 space-y-3">
                     <div className="flex items-baseline justify-between">
                       {price > 0 ? (
                         <span className="font-serif text-2xl font-bold text-[#493129]">
                           {formatCurrency(price)}
                         </span>
                       ) : (
-                        <span className="text-xs font-semibold text-[#8b597b] italic">
+                        <span className="text-xs font-semibold text-[#8B597B] italic">
                           Price coming soon
                         </span>
                       )}
-                      <span className="text-[10px] uppercase font-bold text-[#8b597b]">
+                      <span className="text-[10px] uppercase font-bold text-[#8B597B]">
                         {totalStock > 0 ? "In Stock" : "Check availability"}
                       </span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
-                      <Link
-                        href={`/product/${product.slug}`}
-                        className={`py-3 px-4 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition ${
-                          price <= 0 || totalStock <= 0 ? "col-span-2" : ""
-                        }`}
-                      >
-                        View Details
-                      </Link>
-                      {price > 0 && totalStock > 0 && (
-                        <button
-                          onClick={(e) => handleQuickAdd(product, e)}
-                          className="py-3 px-4 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+                      {price > 0 && totalStock > 0 ? (
+                        <>
+                          <button
+                            onClick={(e) => handleQuickAdd(product, e)}
+                            className="py-3 px-4 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-xs"
+                          >
+                            <ShoppingBag className="w-3.5 h-3.5" />
+                            <span>Add to Bag</span>
+                          </button>
+                          <Link
+                            href={`/product/${product.slug}`}
+                            className="py-3 px-4 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] text-[#493129] text-xs font-semibold text-center transition flex items-center justify-center"
+                          >
+                            Details
+                          </Link>
+                        </>
+                      ) : (
+                        <Link
+                          href={`/product/${product.slug}`}
+                          className="col-span-2 py-3 px-4 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] text-[#493129] text-xs font-semibold text-center transition"
                         >
-                          <ShoppingBag className="w-3.5 h-3.5" />
-                          <span>Add</span>
-                        </button>
+                          View Details
+                        </Link>
                       )}
                     </div>
                   </div>

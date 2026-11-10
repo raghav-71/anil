@@ -4,80 +4,143 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/storefront/Navbar";
 import { Footer } from "@/components/storefront/Footer";
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, MessageCircle, ChevronDown, HelpCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, MessageCircle, ChevronDown, HelpCircle, Headphones } from "lucide-react";
 
 const FAQ_ITEMS = [
   {
-    q: "Are the smartphones factory-sealed with official manufacturer warranty?",
-    a: "Every handset curated by Anil Communications is 100% brand new, Indian retail edition with untouched factory seals. Each consignment carries a genuine GST tax invoice enabling 1-year pan-India authorized brand service center warranty (Apple Care, Samsung Service, OnePlus Care).",
+    q: "Are all phones and accessories brand new with official brand warranty?",
+    a: "Yes. Every smartphone, keypad phone, earbud, neckband, and headphone sold by ANIL COMMUNICATION & ZEROX is 100% brand new, authentic Indian retail edition in factory-sealed packaging. Each order carries an official GST tax invoice supporting full authorized manufacturer warranty across India.",
   },
   {
-    q: "How does same-day Bengaluru concierge delivery operate?",
-    a: "Orders placed before 4:00 PM for Bengaluru PIN codes (560001 through 560100) are hand-dispatched via our private boutique courier within 3-6 hours. You receive direct phone coordinates of your delivery associate.",
+    q: "How does doorstep delivery operate and how fast is it?",
+    a: "Orders placed before 4:00 PM are dispatched for express delivery. Local deliveries within Karnataka receive priority shipping. All other regions across India receive express air shipping (BlueDart / Delhivery) within 2-4 business days with real-time tracking.",
   },
   {
-    q: "Can I claim GST input tax credit for my business?",
-    a: "Yes. During checkout or in-store POS billing, simply provide your 15-character GSTIN. We issue an official B2B Tax Invoice under HSN 85171300 with 18% GST (CGST 9% + SGST 9% or IGST 18%) allowing your business to claim 100% input tax credit.",
+    q: "Can I claim GST input tax credit (ITC) for my business?",
+    a: "Yes. During checkout, simply provide your 15-character GSTIN. We issue an official B2B Tax Invoice under HSN 85171300 with 18% GST (CGST 9% + SGST 9% or IGST 18%) allowing your business to claim 100% input tax credit.",
   },
   {
     q: "What is your return and replacement policy?",
-    a: "We offer a 7-day doorstep replacement for any technical or transit-related defects verified by authorized brand diagnostics. Returns can be initiated with one click from your Customer Account or Consignment Tracking portal.",
+    a: "We offer a 7-day doorstep replacement for any technical or transit-related defects verified by authorized brand diagnostics. Returns can be initiated with one click from your Customer Account or Order Tracking portal.",
   },
 ];
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [ticketId, setTicketId] = useState("");
-  const [form, setForm] = useState({ name: "", phone: "", email: "", query: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    productOfInterest: "",
+    query: "",
+    isCallbackRequested: false,
+  });
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const id = `TCK-${Math.floor(100000 + Math.random() * 900000)}`;
-    setTicketId(id);
-    setSubmitted(true);
+    setError(null);
+    setSubmitting(true);
+
+    try {
+      const res = await fetch("/api/enquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          productOfInterest: form.productOfInterest,
+          message: form.query,
+          isCallbackRequested: form.isCallbackRequested,
+          source: "contact_page",
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to submit message");
+      }
+
+      setTicketId(data.ticketNumber);
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please connect via WhatsApp directly.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#ffeedb]">
+    <div className="flex flex-col min-h-screen bg-[#FFEDDB]">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 w-full">
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
-          <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8b597b]">
-            Personal Concierge Desk
+          <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8B597B]">
+            Customer Support & Assistance
           </span>
           <h1 className="font-serif text-3xl sm:text-5xl text-[#493129]">
-            Connect with Our Specialists
+            We're Here to Help
           </h1>
-          <p className="text-xs sm:text-sm text-[#493129]/75 font-sans leading-relaxed">
-            Visit our flagship boutique salon on MG Road Bengaluru for in-person evaluations, trade-in appraisals, or private consultations.
+          <p className="text-xs sm:text-sm text-[#806D63] font-sans leading-relaxed">
+            Have questions about product specifications, pricing, order status, or bulk orders? Reach out to our customer care team.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Boutique Details & Direct WhatsApp */}
+          {/* Store Details & Direct WhatsApp */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="p-8 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle space-y-4">
-              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Boutique Location</span>
-              <div className="flex items-start gap-3 text-xs text-[#493129]/80 font-sans">
-                <MapPin className="w-5 h-5 text-[#8b597b] flex-shrink-0 mt-0.5" />
+            <div className="p-8 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-4">
+              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8B597B]">Retail Store Location</span>
+              <div className="flex items-start gap-3 text-xs text-[#30241F] font-sans">
+                <MapPin className="w-5 h-5 text-[#8B597B] flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-serif font-bold text-base text-[#493129]">Flagship Salon Bengaluru</p>
-                  <p className="mt-1 leading-relaxed">Shop No. 14, Main Electronics Market, MG Road, Bengaluru, Karnataka - 560001</p>
-                  <p className="text-[#8b597b] mt-1 font-medium">Adjacent to Trinity Metro Station Exit B</p>
+                  <p className="font-serif font-bold text-base text-[#493129]">ANIL COMMUNICATION &amp; ZEROX</p>
+                  <p className="mt-1 leading-relaxed">Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka, India</p>
+                  <p className="text-[#8B597B] mt-1 font-medium">Near Canara Bank</p>
                 </div>
               </div>
             </div>
 
-            <div className="p-8 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle space-y-4">
-              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Salon Hours</span>
+            <div className="p-8 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-4">
+              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8B597B]">Contact Numbers</span>
+              <div className="space-y-3 text-xs font-sans">
+                <div className="flex items-center gap-3 text-[#493129]">
+                  <Phone className="w-4 h-4 text-[#8B597B] flex-shrink-0" />
+                  <div>
+                    <span className="font-bold font-mono">+91 9380124254</span>
+                    <span className="text-[10px] ml-2 px-2 py-0.5 rounded-full bg-[#27845A]/10 text-[#27845A] font-bold border border-[#27845A]/30">WhatsApp</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 text-[#806D63]">
+                  <Phone className="w-4 h-4 text-[#8B597B] flex-shrink-0" />
+                  <div>
+                    <span className="font-mono text-[#493129]">+91 8884055867</span>
+                    <span className="text-[10px] ml-2 text-[#806D63]">Telephone</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 text-[#806D63]">
+                  <Phone className="w-4 h-4 text-[#8B597B] flex-shrink-0" />
+                  <div>
+                    <span className="font-mono text-[#493129]">+91 9538865867</span>
+                    <span className="text-[10px] ml-2 text-[#806D63]">Telephone</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-4">
+              <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8B597B]">Store & Support Hours</span>
               <div className="space-y-2 text-xs font-sans">
-                <div className="flex justify-between text-[#493129]/80">
+                <div className="flex justify-between text-[#806D63]">
                   <span>Monday through Saturday:</span>
                   <span className="font-bold text-[#493129]">10:00 AM – 09:30 PM</span>
                 </div>
-                <div className="flex justify-between text-[#493129]/80">
+                <div className="flex justify-between text-[#806D63]">
                   <span>Sunday:</span>
                   <span className="font-bold text-[#493129]">11:00 AM – 08:00 PM</span>
                 </div>
@@ -85,48 +148,69 @@ export default function ContactPage() {
             </div>
 
             {/* Direct WhatsApp Callout */}
-            <div className="p-8 rounded-3xl bg-[#ffeedb] border border-[#493129]/15 shadow-subtle space-y-3">
+            <div className="p-8 rounded-3xl bg-[#FFDEC7]/60 border border-[#E8D5C5] shadow-sm space-y-3">
               <div className="flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-emerald-700" />
-                <span className="font-serif font-bold text-base text-[#493129]">Instant WhatsApp Concierge</span>
+                <MessageCircle className="w-5 h-5 text-[#27845A]" />
+                <span className="font-serif font-bold text-base text-[#493129]">Instant WhatsApp Support</span>
               </div>
-              <p className="text-xs text-[#493129]/80 leading-relaxed font-sans">
-                Prefer messaging? Speak directly with our in-store client representative for real-time stock confirmations, device photos, or reserved pickup.
+              <p className="text-xs text-[#30241F] leading-relaxed font-sans">
+                Need immediate answers? Chat with our customer support on WhatsApp for stock verification, order updates, or product queries.
               </p>
               <a
-                href="https://wa.me/919876543210?text=Hello%20Anil%20Communications,%20I%20would%20like%20to%20inquire%20about%20a%20smartphone%20procurement."
+                href="https://wa.me/919380124254?text=Hello%20ANIL%20COMMUNICATION%20%26%20ZEROX,%20I%20have%20an%20inquiry%20regarding%20products%20on%20your%20website."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#25D366] text-white font-bold text-xs hover:bg-[#20ba59] transition shadow-xs"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#27845A] text-white font-bold text-xs hover:bg-[#206f4c] transition shadow-xs"
               >
-                <span>Launch WhatsApp Chat</span>
+                <span>Chat on WhatsApp</span>
               </a>
             </div>
           </div>
 
-          {/* Consultation Form */}
+          {/* Contact Support Form */}
           <div className="lg:col-span-7">
-            <div className="p-8 sm:p-12 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle space-y-6">
-              <div className="border-b border-[#493129]/10 pb-4">
-                <h2 className="font-serif text-2xl text-[#493129]">Direct Consultation Request</h2>
-                <p className="text-xs text-[#493129]/70 font-sans mt-0.5">
-                  Our specialists respond within two hours during salon operating times.
+            <div className="p-8 sm:p-12 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-6">
+              <div className="border-b border-[#E8D5C5] pb-4">
+                <h2 className="font-serif text-2xl text-[#493129]">Send Us a Message</h2>
+                <p className="text-xs text-[#806D63] font-sans mt-0.5">
+                  Our customer service team responds within 2 hours during store hours.
                 </p>
               </div>
 
               {submitted ? (
-                <div className="p-8 rounded-3xl bg-[#ffdec7]/60 border border-[#ffdec7] text-center space-y-3">
-                  <CheckCircle2 className="w-10 h-10 text-[#8b597b] mx-auto" />
-                  <span className="text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-white text-[#493129]">
+                <div className="p-8 rounded-3xl bg-[#FFDEC7] border border-[#E8D5C5] text-center space-y-4">
+                  <CheckCircle2 className="w-12 h-12 text-[#8B597B] mx-auto" />
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-white text-[#493129] border border-[#E8D5C5]">
                     Ticket ID: {ticketId}
                   </span>
-                  <h3 className="font-serif text-xl text-[#493129]">Inquiry Successfully Recorded</h3>
-                  <p className="text-xs text-[#493129]/80 font-sans max-w-sm mx-auto leading-relaxed">
-                    Thank you, {form.name}. A senior client consultant will reach out via {form.phone} shortly.
+                  <h3 className="font-serif text-2xl text-[#493129]">Enquiry Recorded Successfully</h3>
+                  <p className="text-xs text-[#30241F] font-sans max-w-sm mx-auto leading-relaxed">
+                    Thank you, <strong>{form.name}</strong>. Your enquiry has been received and saved. Our support team will reach you via <strong>{form.phone}</strong> shortly.
                   </p>
+
+                  <div className="pt-3 border-t border-[#E8D5C5]">
+                    <p className="text-[11px] text-[#806D63] mb-2">Need immediate assistance right away?</p>
+                    <a
+                      href={`https://wa.me/919380124254?text=${encodeURIComponent(
+                        `Hello ANIL COMMUNICATION & ZEROX, I submitted enquiry Ticket ${ticketId} regarding "${form.productOfInterest || "Products"}". Name: ${form.name}.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#27845A] text-white font-bold text-xs hover:bg-[#206f4c] transition shadow-xs"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-current" />
+                      <span>Follow-up on WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
+                  {error && (
+                    <div className="p-3 bg-[#C0393A]/10 border border-[#C0393A]/30 text-[#C0393A] rounded-xl text-xs">
+                      {error}
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="font-semibold text-[#493129] block mb-1">Your Full Name *</label>
@@ -136,7 +220,7 @@ export default function ContactPage() {
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
                         placeholder="e.g. Ramesh Sharma"
-                        className="w-full px-4 py-2.5 rounded-full bg-[#ffeedb] border border-[#493129]/15 text-[#493129] focus:outline-none focus:border-[#8b597b]"
+                        className="w-full px-4 py-2.5 rounded-full bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:outline-none focus:border-[#8B597B]"
                       />
                     </div>
                     <div>
@@ -147,55 +231,94 @@ export default function ContactPage() {
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
                         placeholder="+91 98450 12345"
-                        className="w-full px-4 py-2.5 rounded-full bg-[#ffeedb] border border-[#493129]/15 text-[#493129] focus:outline-none focus:border-[#8b597b] font-mono"
+                        className="w-full px-4 py-2.5 rounded-full bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:outline-none focus:border-[#8B597B] font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="font-semibold text-[#493129] block mb-1">Product of Interest</label>
+                      <input
+                        type="text"
+                        value={form.productOfInterest}
+                        onChange={(e) => setForm({ ...form, productOfInterest: e.target.value })}
+                        placeholder="e.g. Moto G37 Power or Earbuds"
+                        className="w-full px-4 py-2.5 rounded-full bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:outline-none focus:border-[#8B597B]"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-semibold text-[#493129] block mb-1">Email Address</label>
+                      <input
+                        type="email"
+                        value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        placeholder="ramesh@example.com"
+                        className="w-full px-4 py-2.5 rounded-full bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:outline-none focus:border-[#8B597B]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="font-semibold text-[#493129] block mb-1">Email Address</label>
-                    <input
-                      type="email"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      placeholder="ramesh@example.com"
-                      className="w-full px-4 py-2.5 rounded-full bg-[#ffeedb] border border-[#493129]/15 text-[#493129] focus:outline-none focus:border-[#8b597b]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-semibold text-[#493129] block mb-1">Inquiry / Procurement Specifications *</label>
+                    <label className="font-semibold text-[#493129] block mb-1">Your Message or Query *</label>
                     <textarea
                       rows={4}
                       required
                       value={form.query}
                       onChange={(e) => setForm({ ...form, query: e.target.value })}
-                      placeholder="Detail the device, edition, trade-in device, or corporate procurement query..."
-                      className="w-full px-4 py-3 rounded-2xl bg-[#ffeedb] border border-[#493129]/15 text-[#493129] focus:outline-none focus:border-[#8b597b] leading-relaxed"
+                      placeholder="Ask about live store discounts, warranty, color variants, bulk pricing..."
+                      className="w-full px-4 py-3 rounded-2xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:outline-none focus:border-[#8B597B] leading-relaxed"
                     />
                   </div>
 
-                  <button
-                    type="submit"
-                    className="w-full py-4 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] font-bold text-xs flex items-center justify-center gap-2 shadow-coral transition"
-                  >
-                    <Send className="w-4 h-4" />
-                    <span>Transmit Message to Boutique</span>
-                  </button>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.isCallbackRequested}
+                      onChange={(e) => setForm({ ...form, isCallbackRequested: e.target.checked })}
+                      className="w-4 h-4 rounded text-[#8B597B] focus:ring-[#8B597B] border-[#E8D5C5] accent-[#8B597B]"
+                    />
+                    <span className="text-[11px] text-[#493129] font-medium">
+                      Request a phone callback from our store team
+                    </span>
+                  </label>
+
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="flex-1 py-4 rounded-full bg-[#493129] hover:bg-[#8B597B] disabled:opacity-50 text-[#FFEDDB] font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition"
+                    >
+                      <Send className="w-4 h-4" />
+                      <span>{submitting ? "Sending..." : "Send Message to Support"}</span>
+                    </button>
+
+                    <a
+                      href={`https://wa.me/919380124254?text=${encodeURIComponent(
+                        `Hello ANIL COMMUNICATION & ZEROX, I want to inquire regarding ${form.productOfInterest || "products on your website"}. My name is ${form.name || "Customer"}.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-4 px-6 rounded-full bg-[#27845A] hover:bg-[#206f4c] text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-xs text-center"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-current" />
+                      <span>WhatsApp Directly</span>
+                    </a>
+                  </div>
                 </form>
               )}
             </div>
           </div>
         </div>
 
-        {/* Amazon-Level FAQ Accordion */}
-        <div className="mt-16 p-8 sm:p-12 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle space-y-6">
-          <div className="flex items-center gap-2 border-b border-[#493129]/10 pb-4">
-            <HelpCircle className="w-5 h-5 text-[#8b597b]" />
-            <h2 className="font-serif text-2xl text-[#493129]">Frequently Inquired Protocols</h2>
+        {/* Customer FAQ Accordion */}
+        <div className="mt-16 p-8 sm:p-12 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-6">
+          <div className="flex items-center gap-2 border-b border-[#E8D5C5] pb-4">
+            <HelpCircle className="w-5 h-5 text-[#8B597B]" />
+            <h2 className="font-serif text-2xl text-[#493129]">Frequently Asked Questions</h2>
           </div>
 
-          <div className="divide-y divide-[#493129]/10">
+          <div className="divide-y divide-[#E8D5C5]">
             {FAQ_ITEMS.map((item, idx) => {
               const isOpen = openFaq === idx;
               return (
@@ -206,10 +329,10 @@ export default function ContactPage() {
                     className="w-full flex items-center justify-between text-left font-serif text-base text-[#493129] font-bold"
                   >
                     <span>{item.q}</span>
-                    <ChevronDown className={`w-4 h-4 text-[#8b597b] transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown className={`w-4 h-4 text-[#8B597B] transition-transform ${isOpen ? "rotate-180" : ""}`} />
                   </button>
                   {isOpen && (
-                    <p className="text-xs sm:text-sm text-[#493129]/80 font-sans mt-2 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#30241F] font-sans mt-2 leading-relaxed">
                       {item.a}
                     </p>
                   )}

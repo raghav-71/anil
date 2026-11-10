@@ -1,0 +1,129 @@
+[
+  {
+    "id": "ord-1794295818209",
+    "orderNumber": "ORD-261110-G6MPY",
+    "customerName": "Pooja Reddy",
+    "customerPhone": "9880098765",
+    "customerEmail": "pooja.reddy@example.com",
+    "shippingAddress": {
+      "street": "12/A, 4th Cross, Pant Nagar",
+      "state": "Karnataka",
+      "pincode": "591103",
+      "city": "Pant Nagar"
+    },
+    "fulfillmentType": "pickup",
+    "pickupDetails": {
+      "storeName": "ANIL COMMUNICATION & ZEROX",
+      "storeAddress": "Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka, India",
+      "storePhone": "+91 9380124254",
+      "estimatedReady": "Within 2 business hours (10:00 AM - 8:30 PM)"
+    },
+    "items": [
+      {
+        "id": "oi-1794295818209-hqimxo",
+        "variantId": "var-boat-airdopes-156-nirvana-01",
+        "productName": "boAt Airdopes 156 Nirvana",
+        "variantDetails": "Standard",
+        "quantity": 1,
+        "unitPrice": 1499,
+        "taxRate": 18,
+        "taxAmount": 228.66,
+        "totalPrice": 1499,
+        "image": "/images/products/photos/boat-airdopes-156-nirvana.webp"
+      }
+    ],
+    "subtotal": 1499,
+    "discountAmount": 0,
+    "shippingFee": 0,
+    "taxAmount": 228.66,
+    "grandTotal": 1499,
+    "paymentMethod": "razorpay",
+    "paymentStatus": "paid",
+    "status": "confirmed",
+    "notes": "In-Store Pickup order placed",
+    "idempotencyKey": "test_pay_pooja_002",
+    "createdAt": "2026-11-10T07:30:18.209Z",
+    "updatedAt": "2026-11-10T07:30:18.209Z"
+  },
+  {
+    "id": "ord-1794295734206",
+    "orderNumber": "ORD-261110-G7EII",
+    "customerName": "Anand Kulkarni",
+    "customerPhone": "9845112233",
+    "customerEmail": "anand.kulkarni@example.com",
+    "shippingAddress": {
+      "street": "Pant Nagar Main Street, Near Canara Bank",
+      "city": "Pant Nagar",
+      "pincode": "591103",
+      "state": "Karnataka",
+      "landmark": "Near Canara Bank"
+    },
+    "fulfillmentType": "delivery",
+    "items": [
+      {
+        "id": "oi-1794295734206-qqrccl",
+        "variantId": "var-moto-g37-power-01",
+        "productName": "Moto G37 Power",
+        "variantDetails": "Standard 128GB",
+        "quantity": 1,
+        "unitPrice": 14000,
+        "taxRate": 18,
+        "taxAmount": 2135.59,
+        "totalPrice": 14000,
+        "image": "/images/products/photos/moto-g37-power.png"
+      }
+    ],
+    "subtotal": 14000,
+    "discountAmount": 0,
+    "shippingFee": 0,
+    "taxAmount": 2135.59,
+    "grandTotal": 14000,
+    "paymentMethod": "cod",
+    "paymentStatus": "pending",
+    "status": "shipped",
+    "notes": "Website order placed",
+    "idempotencyKey": "test_cod_anand_001",
+    "createdAt": "2026-11-10T07:28:54.206Z",
+    "updatedAt": "2026-11-10T07:30:52.068Z",
+    "trackingNumber": "DEL-591103-8821"
+  },
+  {
+    "id": "ord-1",
+    "orderNumber": "ORD-2026-94812",
+    "customerName": "Ramesh Sharma",
+    "customerPhone": "9845012345",
+    "customerEmail": "ramesh.sharma@example.com",
+    "shippingAddress": {
+      "street": "Flat 402, Prestige Palms, Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "pincode": "560038"
+    },
+    "items": [
+      {
+        "id": "oi-1",
+        "variantId": "var-iph16pm-256-nat",
+        "productName": "Realme 16 Pro (8GB/256GB, Titanium Gold)",
+        "variantDetails": "Natural Titanium / 256GB",
+        "quantity": 1,
+        "unitPrice": 24999,
+        "taxRate": 18,
+        "taxAmount": 22103.39,
+        "totalPrice": 24999,
+        "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=400&q=80"
+      }
+    ],
+    "subtotal": 24999,
+    "discountAmount": 0,
+    "shippingFee": 0,
+    "taxAmount": 22103.39,
+    "grandTotal": 24999,
+    "paymentMethod": "razorpay",
+    "paymentStatus": "paid",
+    "status": "delivered",
+    "trackingNumber": "DEL-BGLR-88392",
+    "notes": "Customer requested morning delivery",
+    "createdAt": "2026-11-05T11:20:00Z",
+    "updatedAt": "2026-11-06T17:40:00Z"
+  }
+]

@@ -16,7 +16,6 @@ import {
   Award,
   Shield,
   Heart,
-  Scale,
   Tag,
   Copy,
   Clock,
@@ -24,16 +23,17 @@ import {
   Headphones,
   Radio,
   Zap,
+  MessageCircle,
 } from "lucide-react";
 
 export default function HomePage() {
-  const { addItem, toggleWishlist, isInWishlist, toggleCompare, isInCompare, recentlyViewed } = useCart();
+  const { addItem, toggleWishlist, isInWishlist, recentlyViewed } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [copiedCoupon, setCopiedCoupon] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/products")
+    fetch("/api/products", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products || []);
@@ -92,7 +92,7 @@ export default function HomePage() {
               <div className="lg:col-span-7 space-y-6 text-left">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ffdec7] text-[#493129] text-xs font-semibold uppercase tracking-[0.2em]">
                   <Sparkles className="w-3.5 h-3.5 text-[#8b597b]" />
-                  <span>Anil Communications · Belagavi</span>
+                  <span>ANIL COMMUNICATION &amp; ZEROX · Pant Nagar</span>
                 </div>
 
                 <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-[#493129] tracking-tight leading-[1.08]">
@@ -101,7 +101,7 @@ export default function HomePage() {
                 </h1>
 
                 <p className="text-base sm:text-lg text-[#493129]/80 max-w-xl font-sans leading-relaxed">
-                  Belagavi’s premier retail destination for 5G smartphones, reliable feature phones, and certified acoustic accessories. 100% genuine sealed boxes with official manufacturer GST warranty.
+                  Pant Nagar's trusted retail destination for 5G smartphones, reliable feature phones, and certified acoustic accessories. 100% genuine sealed boxes with official manufacturer GST warranty.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -179,7 +179,7 @@ export default function HomePage() {
                         Price available in store
                       </span>
                       <span className="text-[10px] font-bold text-[#493129] uppercase tracking-wider bg-[#ffdec7] px-2.5 py-0.5 rounded-full">
-                        In Stock Belagavi
+                        In Stock Pant Nagar
                       </span>
                     </div>
 
@@ -295,13 +295,14 @@ export default function HomePage() {
                 "OPPO",
                 "Redmi",
                 "POCO",
+                "itel",
                 "boAt",
                 "KDM",
                 "Lava",
                 "Jio",
                 "Cellecor",
-                "Apple",
-                "Samsung",
+                "Morbi",
+                "Zebronics",
               ].map((brandName) => (
                 <span
                   key={brandName}
@@ -348,38 +349,32 @@ export default function HomePage() {
                 return (
                   <div
                     key={product.id}
-                    className="editorial-card rounded-3xl p-5 flex flex-col justify-between"
+                    className="editorial-card rounded-3xl p-5 flex flex-col justify-between bg-[#FFFAF5] border border-[#E8D5C5]"
                   >
                     <div>
                       {/* Product Visual */}
-                      <div className="relative h-56 rounded-2xl bg-[#ffeedb]/50 flex items-center justify-center p-4 overflow-hidden">
+                      <div className="relative h-56 rounded-2xl bg-[#FFEDDB]/50 flex items-center justify-center p-4 overflow-hidden border border-[#E8D5C5]/50">
                         <Link href={`/product/${product.slug}`} className="w-full h-full flex items-center justify-center">
                           <img
-                            src={product.images[0]}
+                            src={product.images[0] || `/images/products/${product.slug}.svg`}
                             alt={product.title}
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (!target.src.includes(".svg")) {
+                                target.src = `/images/products/${product.slug}.svg`;
+                              } else if (!target.src.includes("fallback-product.svg")) {
+                                target.src = "/images/products/fallback-product.svg";
+                              }
+                            }}
                             className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-500"
                           />
                         </Link>
-                        <div className="absolute top-3 left-3 bg-[#ffdec7] text-[#493129] text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
+                        <div className="absolute top-3 left-3 bg-[#FFDEC7] text-[#493129] text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-[#E8D5C5]">
                           {product.brandName}
                         </div>
 
-                        {/* Card Actions: Wishlist & Compare */}
+                        {/* Card Actions: Wishlist */}
                         <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              toggleCompare(product.id);
-                            }}
-                            className={`p-1.5 rounded-full border transition ${
-                              isInCompare(product.id)
-                                ? "bg-[#8b597b] text-white border-[#8b597b]"
-                                : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
-                            }`}
-                            title="Compare"
-                          >
-                            <Scale className="w-3.5 h-3.5" />
-                          </button>
                           <button
                             onClick={(e) => {
                               e.preventDefault();
@@ -387,8 +382,8 @@ export default function HomePage() {
                             }}
                             className={`p-1.5 rounded-full border transition ${
                               isInWishlist(product.id)
-                                ? "bg-[#efa3a0] text-[#493129] border-[#efa3a0]"
-                                : "bg-white/80 text-[#493129] border-[#493129]/15 hover:bg-white"
+                                ? "bg-[#EFA3A0] text-[#493129] border-[#EFA3A0]"
+                                : "bg-white text-[#493129] border-[#E8D5C5] hover:bg-[#FFDEC7]"
                             }`}
                             title="Save"
                           >
@@ -399,57 +394,68 @@ export default function HomePage() {
 
                       {/* Content */}
                       <div className="pt-4 space-y-1">
-                        <div className="flex items-center gap-1 text-[#8b597b] text-xs font-medium">
-                          <Star className="w-3.5 h-3.5 fill-[#efa3a0] text-[#efa3a0]" />
-                          <span>{product.rating}</span>
-                          <span className="text-[#493129]/40">({product.reviewCount})</span>
+                        <div className="flex items-center gap-1 text-[#8B597B] text-xs font-medium">
+                          <Star className="w-3.5 h-3.5 fill-[#EFA3A0] text-[#EFA3A0]" />
+                          <span className="font-bold">{product.rating}</span>
+                          <span className="text-[#806D63]">({product.reviewCount})</span>
                         </div>
 
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#8B597B] block">
+                          {product.categoryName}
+                        </span>
+
                         <Link href={`/product/${product.slug}`}>
-                          <h3 className="font-serif text-base text-[#493129] hover:text-[#8b597b] transition line-clamp-1">
+                          <h3 className="font-serif text-base text-[#493129] hover:text-[#8B597B] transition line-clamp-1">
                             {product.title}
                           </h3>
                         </Link>
 
-                        <p className="text-xs text-[#493129]/70 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-[#806D63] line-clamp-2 leading-relaxed">
                           {product.shortDescription}
                         </p>
                       </div>
                     </div>
 
-                    <div className="pt-5 border-t border-[#493129]/10 mt-5 space-y-3">
+                    <div className="pt-5 border-t border-[#E8D5C5] mt-5 space-y-3">
                       <div className="flex items-baseline justify-between">
                         {price > 0 ? (
                           <span className="font-serif text-xl font-bold text-[#493129]">
                             {formatCurrency(price)}
                           </span>
                         ) : (
-                          <span className="text-xs font-semibold text-[#8b597b] italic">
+                          <span className="text-xs font-semibold text-[#8B597B] italic">
                             Price coming soon
                           </span>
                         )}
-                        <span className="text-[10px] uppercase font-bold text-[#8b597b]">
+                        <span className="text-[10px] uppercase font-bold text-[#8B597B]">
                           {totalStock > 0 ? "In Stock" : "Check availability"}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2">
-                        <Link
-                          href={`/product/${product.slug}`}
-                          className={`py-2 px-3 rounded-full border border-[#493129]/20 hover:bg-[#ffdec7]/40 text-[#493129] text-xs font-semibold text-center transition ${
-                            price <= 0 || totalStock <= 0 ? "col-span-2" : ""
-                          }`}
-                        >
-                          View Details
-                        </Link>
-                        {price > 0 && totalStock > 0 && (
-                          <button
-                            onClick={(e) => handleQuickAdd(product, e)}
-                            className="py-2 px-3 rounded-full bg-[#efa3a0] hover:bg-[#e58e8b] text-[#493129] text-xs font-semibold flex items-center justify-center gap-1 transition"
+                        {price > 0 && totalStock > 0 ? (
+                          <>
+                            <button
+                              onClick={(e) => handleQuickAdd(product, e)}
+                              className="py-2.5 px-3 rounded-full bg-[#493129] hover:bg-[#8B597B] text-[#FFEDDB] text-xs font-semibold flex items-center justify-center gap-1 transition shadow-xs"
+                            >
+                              <ShoppingBag className="w-3.5 h-3.5" />
+                              <span>Add to Bag</span>
+                            </button>
+                            <Link
+                              href={`/product/${product.slug}`}
+                              className="py-2.5 px-3 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] text-[#493129] text-xs font-semibold text-center transition flex items-center justify-center"
+                            >
+                              Details
+                            </Link>
+                          </>
+                        ) : (
+                          <Link
+                            href={`/product/${product.slug}`}
+                            className="col-span-2 py-2.5 px-3 rounded-full bg-[#FFDEC7] hover:bg-[#E8D5C5] text-[#493129] text-xs font-semibold text-center transition"
                           >
-                            <ShoppingBag className="w-3.5 h-3.5" />
-                            <span>Bag</span>
-                          </button>
+                            View Details
+                          </Link>
                         )}
                       </div>
                     </div>
@@ -494,8 +500,16 @@ export default function HomePage() {
                   <div>
                     <div className="h-36 bg-[#ffeedb]/40 rounded-xl p-3 flex items-center justify-center overflow-hidden">
                       <img
-                        src={item.images[0]}
+                        src={item.images[0] || `/images/products/${item.slug}.svg`}
                         alt={item.title}
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (!target.src.includes(".svg")) {
+                            target.src = `/images/products/${item.slug}.svg`;
+                          } else if (!target.src.includes("fallback-product.svg")) {
+                            target.src = "/images/products/fallback-product.svg";
+                          }
+                        }}
                         className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
                       />
                     </div>
@@ -559,8 +573,16 @@ export default function HomePage() {
                     <div>
                       <div className="h-48 rounded-2xl bg-[#ffeedb]/50 flex items-center justify-center p-4">
                         <img
-                          src={item.images[0]}
+                          src={item.images[0] || `/images/products/${item.slug}.svg`}
                           alt={item.title}
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (!target.src.includes(".svg")) {
+                              target.src = `/images/products/${item.slug}.svg`;
+                            } else if (!target.src.includes("fallback-product.svg")) {
+                              target.src = "/images/products/fallback-product.svg";
+                            }
+                          }}
                           className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
                         />
                       </div>
@@ -602,11 +624,11 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8b597b]">Exclusive Privileges</span>
-                <h3 className="font-serif text-2xl sm:text-3xl text-[#493129]">Boutique Promotional Codes</h3>
+                <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8b597b]">Exclusive Offers</span>
+                <h3 className="font-serif text-2xl sm:text-3xl text-[#493129]">Special Promotional Coupons</h3>
               </div>
               <p className="text-xs text-[#493129]/70 font-sans max-w-sm">
-                Apply during checkout for immediate discount on insured consignments.
+                Apply coupon code during checkout for instant discount on your order.
               </p>
             </div>
 
@@ -645,8 +667,8 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Your Session</span>
-                  <h3 className="font-serif text-2xl text-[#493129]">Recently Perused Instruments</h3>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Your Browsing History</span>
+                  <h3 className="font-serif text-2xl text-[#493129]">Recently Viewed Products</h3>
                 </div>
                 <Link href="/account?tab=recent" className="text-xs font-semibold text-[#8b597b] hover:underline">
                   View All History
@@ -661,7 +683,19 @@ export default function HomePage() {
                     className="p-4 rounded-2xl bg-[#ffeedb]/40 border border-[#493129]/10 hover:border-[#8b597b] transition group"
                   >
                     <div className="relative h-36 bg-white rounded-xl p-2 mb-2 flex items-center justify-center overflow-hidden">
-                      <img src={p.images[0]} alt={p.title} className="max-h-full max-w-full object-contain group-hover:scale-105 transition" />
+                      <img
+                        src={p.images[0] || `/images/products/${p.slug}.svg`}
+                        alt={p.title}
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (!target.src.includes(".svg")) {
+                            target.src = `/images/products/${p.slug}.svg`;
+                          } else if (!target.src.includes("fallback-product.svg")) {
+                            target.src = "/images/products/fallback-product.svg";
+                          }
+                        }}
+                        className="max-h-full max-w-full object-contain group-hover:scale-105 transition"
+                      />
                     </div>
                     <span className="text-[10px] font-bold uppercase text-[#8b597b]">{p.brandName}</span>
                     <h4 className="font-serif font-bold text-xs text-[#493129] truncate">{p.title}</h4>
@@ -679,22 +713,68 @@ export default function HomePage() {
         <section className="py-20 bg-[#fffaf5]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-[#8b597b]">
-              The Anil Communications Promise
+              The ANIL COMMUNICATION &amp; ZEROX Promise
             </span>
             <h2 className="font-serif text-3xl sm:text-5xl text-[#493129] leading-snug">
               &ldquo;Technology elevated into an art form, backed by authentic personal service.&rdquo;
             </h2>
             <p className="text-xs sm:text-sm text-[#493129]/75 font-sans max-w-2xl mx-auto leading-relaxed">
-              Serving our valued patrons in Belagavi, Karnataka. Every mobile device, earbud, and accessory is 100% genuine, factory sealed, and backed by authentic manufacturer service and GST invoices.
+              Serving our valued patrons in Pant Nagar, Karnataka. Every mobile device, earbud, and accessory is 100% genuine, factory sealed, and backed by authentic manufacturer service and GST invoices.
             </p>
             <div className="pt-2">
               <Link
-                href="/about"
+                href="/shop"
                 className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#8b597b] hover:text-[#493129] pb-1 border-b border-[#8b597b]"
               >
-                <span>Read Store Heritage</span>
+                <span>Explore Full Collection</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
+            </div>
+          </div>
+        </section>
+        {/* WHATSAPP CUSTOMER SUPPORT CTA BANNER */}
+        <section className="py-12 bg-[#ffdec7]/40 border-t border-b border-[#493129]/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-8 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-[#25D366] text-white flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-950/10">
+                  <MessageCircle className="w-7 h-7 fill-current" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">
+                      Direct WhatsApp Assistance
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                      Online Support
+                    </span>
+                  </div>
+                  <h3 className="font-serif text-xl sm:text-2xl text-[#493129] mt-0.5">
+                    Have Questions on Models, Pricing or Availability?
+                  </h3>
+                  <p className="text-xs text-[#493129]/75 font-sans mt-1">
+                    Connect directly with our Pant Nagar store team for live stock verification, customized deals, and order updates.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                <a
+                  href="https://wa.me/919380124254?text=Hello%20ANIL%20COMMUNICATION%20%26%20ZEROX,%20I%20have%20an%20enquiry%20regarding%20mobile%20phones%20and%20accessories%20on%20your%20website."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition whitespace-nowrap"
+                >
+                  <MessageCircle className="w-4 h-4 fill-current" />
+                  <span>Chat on WhatsApp (+91 9380124254)</span>
+                </a>
+                <Link
+                  href="/contact"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-full border border-[#493129]/20 hover:bg-[#ffeedb] text-[#493129] font-semibold text-xs flex items-center justify-center transition whitespace-nowrap"
+                >
+                  <span>Submit Web Enquiry</span>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
