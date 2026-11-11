@@ -21,7 +21,7 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "ANIL COMMUNICATION & ZEROX | Mobile Phones & Accessories Store",
   description:
-    "Shop authentic smartphones, keypad phones, wireless earbuds, neckbands, and headphones with 100% manufacturer warranty and fast delivery. Pant Nagar, Near Canara Bank, Karnataka.",
+    "Shop authentic smartphones, keypad phones, wireless earbuds, neckbands, and headphones with 100% manufacturer warranty and fast delivery. Near Canara Bank, Belagavi, Karnataka.",
 };
 
 export default function RootLayout({

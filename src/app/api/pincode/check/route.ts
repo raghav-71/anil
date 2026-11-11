@@ -9,8 +9,8 @@ interface PincodeDetail {
 }
 
 const PINCODE_DATABASE: Record<string, PincodeDetail> = {
-  // Local Pant Nagar / Bagalkot area
-  "591103": { city: "Pant Nagar", state: "Karnataka", deliveryDays: "Same Day / Walk-in Pickup", isCodAvailable: true, courier: "Store Pickup / Local Delivery" },
+  // Local Belagavi area
+  "591103": { city: "Belagavi", state: "Karnataka", deliveryDays: "Same Day / Walk-in Pickup", isCodAvailable: true, courier: "Store Pickup / Local Delivery" },
   // Nearby Karnataka
   "560001": { city: "Bengaluru", state: "Karnataka", deliveryDays: "1-2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },
   "560025": { city: "Bengaluru", state: "Karnataka", deliveryDays: "1-2 Business Days", isCodAvailable: true, courier: "BlueDart Air Express" },

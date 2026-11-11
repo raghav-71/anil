@@ -507,8 +507,8 @@ export default function OrdersManagerPage() {
                         </span>
                         <span className="text-[10px] text-[#806D63] block truncate max-w-[140px] mt-0.5">
                           {ord.fulfillmentType === "pickup"
-                            ? "Pant Nagar Store"
-                            : `${ord.shippingAddress?.city || "Pant Nagar"} - ${ord.shippingAddress?.pincode || "591103"}`}
+                            ? "Belagavi Store"
+                            : `${ord.shippingAddress?.city || "Belagavi"} - ${ord.shippingAddress?.pincode || "591103"}`}
                         </span>
                       </td>
 
@@ -701,7 +701,7 @@ export default function OrdersManagerPage() {
                   <div className="space-y-1">
                     <p className="font-bold text-[#493129]">ANIL COMMUNICATION &amp; ZEROX</p>
                     <p className="text-[#806D63] text-[11px]">
-                      Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka
+                      Near Canara Bank, Belagavi, Karnataka - 591103
                     </p>
                     <p className="text-[11px] text-[#27845A] font-bold pt-1">
                       Ready for pickup within 2 hours of store opening

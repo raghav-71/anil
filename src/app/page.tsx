@@ -92,7 +92,7 @@ export default function HomePage() {
               <div className="lg:col-span-7 space-y-6 text-left">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ffdec7] text-[#493129] text-xs font-semibold uppercase tracking-[0.2em]">
                   <Sparkles className="w-3.5 h-3.5 text-[#8b597b]" />
-                  <span>ANIL COMMUNICATION &amp; ZEROX · Pant Nagar</span>
+                  <span>ANIL COMMUNICATION &amp; ZEROX · Belagavi</span>
                 </div>
 
                 <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-[#493129] tracking-tight leading-[1.08]">
@@ -101,7 +101,7 @@ export default function HomePage() {
                 </h1>
 
                 <p className="text-base sm:text-lg text-[#493129]/80 max-w-xl font-sans leading-relaxed">
-                  Pant Nagar's trusted retail destination for 5G smartphones, reliable feature phones, and certified acoustic accessories. 100% genuine sealed boxes with official manufacturer GST warranty.
+                  Belagavi's trusted retail destination for 5G smartphones, reliable feature phones, and certified acoustic accessories. 100% genuine sealed boxes with official manufacturer GST warranty.
                 </p>
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -179,7 +179,7 @@ export default function HomePage() {
                         Price available in store
                       </span>
                       <span className="text-[10px] font-bold text-[#493129] uppercase tracking-wider bg-[#ffdec7] px-2.5 py-0.5 rounded-full">
-                        In Stock Pant Nagar
+                        In Stock Belagavi
                       </span>
                     </div>
 
@@ -719,7 +719,7 @@ export default function HomePage() {
               &ldquo;Technology elevated into an art form, backed by authentic personal service.&rdquo;
             </h2>
             <p className="text-xs sm:text-sm text-[#493129]/75 font-sans max-w-2xl mx-auto leading-relaxed">
-              Serving our valued patrons in Pant Nagar, Karnataka. Every mobile device, earbud, and accessory is 100% genuine, factory sealed, and backed by authentic manufacturer service and GST invoices.
+              Serving our valued patrons in Belagavi, Karnataka. Every mobile device, earbud, and accessory is 100% genuine, factory sealed, and backed by authentic manufacturer service and GST invoices.
             </p>
             <div className="pt-2">
               <Link
@@ -753,7 +753,7 @@ export default function HomePage() {
                     Have Questions on Models, Pricing or Availability?
                   </h3>
                   <p className="text-xs text-[#493129]/75 font-sans mt-1">
-                    Connect directly with our Pant Nagar store team for live stock verification, customized deals, and order updates.
+                    Connect directly with our Belagavi store team for live stock verification, customized deals, and order updates.
                   </p>
                 </div>
               </div>

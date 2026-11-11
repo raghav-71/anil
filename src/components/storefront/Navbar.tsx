@@ -44,7 +44,7 @@ export function Navbar() {
                 ANIL COMMUNICATION &amp; ZEROX
               </span>
               <span className="text-[10px] uppercase font-sans tracking-[0.25em] text-[#8B597B] font-medium block mt-1">
-                Mobile Phones &amp; Accessories • Pant Nagar
+                Mobile Phones &amp; Accessories • Belagavi
               </span>
             </div>
           </Link>

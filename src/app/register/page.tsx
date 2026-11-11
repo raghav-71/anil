@@ -64,6 +64,22 @@ export default function CustomerRegisterPage() {
         throw new Error(signUpError.message);
       }
 
+      // Synchronize customer profile into Supabase PostgreSQL profiles table
+      try {
+        await fetch("/api/auth/sync-profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            authUserId: data?.user?.id,
+            email: form.email.trim(),
+            fullName: form.fullName.trim(),
+            phone: cleanPhone,
+          }),
+        });
+      } catch (syncErr) {
+        console.warn("Profile sync warning:", syncErr);
+      }
+
       if (data?.session) {
         // Immediate session created (auto-confirm enabled)
         router.push("/account");

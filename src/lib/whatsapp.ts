@@ -32,7 +32,7 @@ export interface WhatsAppLogRecord {
   createdAt: string;
 }
 
-// In-memory fallback log for local development or when Supabase is in mock mode
+// In-memory fallback log for local development or when Supabase log table is unavailable
 const inMemoryLogs: WhatsAppLogRecord[] = [];
 
 /**

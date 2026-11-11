@@ -181,8 +181,8 @@ export default function ProductDetailPage() {
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 w-full">
         {/* Breadcrumb */}
         <nav className="text-[11px] uppercase tracking-[0.2em] text-[#8b597b] mb-8 font-medium">
-          <Link href="/">Maison</Link> /{" "}
-          <Link href="/shop">The Collection</Link> /{" "}
+          <Link href="/">Home</Link> /{" "}
+          <Link href="/shop">Shop</Link> /{" "}
           <Link href={`/shop?category=${product.categoryId}`}>{product.categoryName}</Link> /{" "}
           <span className="text-[#493129] font-bold">{product.title}</span>
         </nav>

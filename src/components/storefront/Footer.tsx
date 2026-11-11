@@ -92,16 +92,15 @@ export function Footer() {
             <div className="flex items-start gap-2.5">
               <MapPin className="w-3.5 h-3.5 text-[#EFA3A0] flex-shrink-0 mt-0.5" />
               <address className="not-italic leading-relaxed">
-                Bagalkot Main Road, Pant Nagar,<br />
-                Near Canara Bank,<br />
-                591103, Karnataka, India.
+                Near Canara Bank, Belagavi,<br />
+                Karnataka - 591103, India.
               </address>
             </div>
             <div className="flex items-center gap-2.5">
               <Phone className="w-3.5 h-3.5 text-[#EFA3A0] flex-shrink-0" />
               <div className="font-mono space-y-0.5">
                 <div>+91 9380124254 <span className="text-[10px] text-[#FFEDDB] uppercase">(WhatsApp)</span></div>
-                <div className="text-[11px] text-[#FFDEC7]/80">+91 8884055867 • +91 9538865867</div>
+                <div className="text-[11px] text-[#FFDEC7]/80">+91 8095908042</div>
               </div>
             </div>
             <div className="flex items-center gap-2.5 pt-1">

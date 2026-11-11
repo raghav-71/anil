@@ -84,7 +84,7 @@ export function CustomerEnquiryModal({
               </span>
               <h3 className="font-serif text-2xl font-bold text-[#493129] pt-2">Enquiry Successfully Recorded</h3>
               <p className="text-xs text-[#806D63] font-sans leading-relaxed max-w-sm mx-auto">
-                Thank you, <strong>{name}</strong>! Your enquiry has been routed to our Pant Nagar store team. We will call you on <strong>{phone}</strong> shortly.
+                Thank you, <strong>{name}</strong>! Your enquiry has been routed to our Belagavi store team. We will call you on <strong>{phone}</strong> shortly.
               </p>
             </div>
 

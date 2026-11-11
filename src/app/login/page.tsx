@@ -36,6 +36,24 @@ export default function CustomerLoginPage() {
         throw new Error(signInError.message);
       }
 
+      // Sync customer profile into PostgreSQL
+      if (data?.user) {
+        try {
+          await fetch("/api/auth/sync-profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              authUserId: data.user.id,
+              email: data.user.email,
+              fullName: data.user.user_metadata?.full_name || data.user.email?.split("@")[0],
+              phone: data.user.user_metadata?.phone || "",
+            }),
+          });
+        } catch (syncErr) {
+          console.warn("Profile sync warning:", syncErr);
+        }
+      }
+
       if (data?.session) {
         router.push("/account");
       } else {

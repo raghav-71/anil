@@ -22,7 +22,7 @@ import {
 const STATUS_STEPS: { key: OrderStatus; label: string; desc: string }[] = [
   { key: "confirmed", label: "Order Confirmed", desc: "Payment received & stock reserved" },
   { key: "processing", label: "Packed & Invoiced", desc: "GST tax invoice generated at warehouse" },
-  { key: "shipped", label: "Handed to Courier", desc: "Dispatched from Pant Nagar Hub" },
+  { key: "shipped", label: "Handed to Courier", desc: "Dispatched from Belagavi Store" },
   { key: "out_for_delivery", label: "Out for Delivery", desc: "Courier partner is on the way" },
   { key: "delivered", label: "Delivered", desc: "Delivered safely with OTP verification" },
 ];

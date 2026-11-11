@@ -16,22 +16,19 @@ import {
   Clock,
   MapPin,
   AlertCircle,
-  FileText,
   Printer,
-  ShieldCheck,
   RotateCcw,
   XCircle,
   MessageCircle,
+  Store,
 } from "lucide-react";
 
-const EIGHT_STAGE_LIFECYCLE: { key: OrderStatus; label: string; desc: string }[] = [
-  { key: "pending", label: "1. Order Placed", desc: "Digital consignment intent logged" },
-  { key: "confirmed", label: "2. Payment Confirmed", desc: "Payment verified & inventory reserved" },
-  { key: "processing", label: "3. Quality Inspected", desc: "IMEI verified & hardware inspected" },
-  { key: "packed", label: "4. Quality Packed", desc: "Sealed in tamper-evident secure box" },
-  { key: "shipped", label: "5. In Transit", desc: "Dispatched via air courier partner" },
-  { key: "out_for_delivery", label: "6. Out for Delivery", desc: "Designated logistics associate en route" },
-  { key: "delivered", label: "7. Delivered", desc: "Safely received with client verification" },
+const REAL_ORDER_STAGES: { key: OrderStatus; label: string; desc: string }[] = [
+  { key: "pending", label: "1. Order Received", desc: "Order details received in store database" },
+  { key: "confirmed", label: "2. Confirmed", desc: "Payment/Order verified and stock reserved" },
+  { key: "packed", label: "3. Packed & Ready", desc: "Item inspected and securely packed at Belagavi store" },
+  { key: "shipped", label: "4. Out for Delivery / Shipped", desc: "Handed over to delivery associate or courier" },
+  { key: "delivered", label: "5. Delivered", desc: "Safely delivered to customer" },
 ];
 
 function OrdersContent() {
@@ -53,7 +50,9 @@ function OrdersContent() {
     try {
       const cleanQ = query.trim();
       const isPhone = cleanQ.replace(/\D/g, "").length >= 10;
-      const param = isPhone ? `phone=${encodeURIComponent(cleanQ.replace(/\D/g, ""))}` : `orderNumber=${encodeURIComponent(cleanQ)}`;
+      const param = isPhone
+        ? `phone=${encodeURIComponent(cleanQ.replace(/\D/g, ""))}`
+        : `orderNumber=${encodeURIComponent(cleanQ)}`;
 
       const res = await fetch(`/api/orders/user?${param}`);
       const data = await res.json();
@@ -63,10 +62,10 @@ function OrdersContent() {
         setOrder(foundOrders[0]);
       } else {
         setOrder(null);
-        setError(`No consignment found matching "${query}". Please verify your Order Number or Phone Number.`);
+        setError(`No order found matching "${query}". Please check your Order Number or 10-digit Mobile Number.`);
       }
     } catch {
-      setError("Unable to retrieve order details. Please check connection.");
+      setError("Unable to retrieve order details. Please check your network connection.");
     } finally {
       setLoading(false);
     }
@@ -102,10 +101,10 @@ function OrdersContent() {
       });
       const data = await res.json();
       if (data.success) {
-        setActionMessage(data.message);
+        setActionMessage(data.message || "Order cancellation requested.");
         setOrder({ ...order, status: "cancelled" });
       } else {
-        alert(data.error);
+        alert(data.error || "Failed to cancel order.");
       }
     } catch {
       alert("Cancellation request failed.");
@@ -131,10 +130,10 @@ function OrdersContent() {
       });
       const data = await res.json();
       if (data.success) {
-        setActionMessage(data.message);
+        setActionMessage(data.message || "Return request submitted.");
         setOrder({ ...order, status: "returned" });
       } else {
-        alert(data.error);
+        alert(data.error || "Failed to submit return request.");
       }
     } catch {
       alert("Return request failed.");
@@ -146,16 +145,16 @@ function OrdersContent() {
       pending: 0,
       confirmed: 1,
       processing: 2,
-      packed: 3,
-      shipped: 4,
-      out_for_delivery: 5,
-      delivered: 6,
+      packed: 2,
+      shipped: 3,
+      out_for_delivery: 3,
+      delivered: 4,
       cancelled: -1,
       returned: -1,
     };
 
     const currentRank = rankMap[currentStatus] ?? 1;
-    const stepRank = rankMap[stepKey];
+    const stepRank = rankMap[stepKey] ?? 0;
 
     if (currentRank > stepRank) return "completed";
     if (currentRank === stepRank) return "active";
@@ -167,17 +166,17 @@ function OrdersContent() {
       <Navbar />
 
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 w-full">
-        {/* Search Consignment Box */}
+        {/* Search Order Box */}
         <div className="bg-[#fffaf5] rounded-3xl p-8 sm:p-12 border border-[#493129]/10 shadow-subtle space-y-6">
           <div className="text-center space-y-2 max-w-md mx-auto">
             <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-[#8b597b]">
-              Maison Logistics
+              ANIL COMMUNICATION &amp; ZEROX
             </span>
             <h1 className="font-serif text-3xl sm:text-4xl text-[#493129]">
-              Consignment Tracking
+              Track Your Order
             </h1>
             <p className="text-xs text-[#493129]/70 leading-relaxed font-sans">
-              Enter your Order Number (e.g. <strong className="font-mono text-[#493129]">ORD-2026-94812</strong>) or registered phone number.
+              Enter your Order Number (e.g. <strong className="font-mono text-[#493129]">ORD-261110-G6MPY</strong>) or registered 10-digit mobile number.
             </p>
           </div>
 
@@ -216,14 +215,14 @@ function OrdersContent() {
           </div>
         )}
 
-        {/* Consignment Live Details */}
+        {/* Live Order Details */}
         {order && (
           <div className="mt-10 space-y-8">
             <div className="p-6 sm:p-8 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8b597b]">Consignment Reference</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8b597b]">Order Reference</span>
                 <h2 className="font-serif text-2xl text-[#493129] mt-0.5">#{order.orderNumber}</h2>
-                <p className="text-xs text-[#493129]/60 mt-1">Confirmed on {formatDate(order.createdAt)}</p>
+                <p className="text-xs text-[#493129]/60 mt-1">Placed on {formatDate(order.createdAt)}</p>
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
@@ -242,21 +241,29 @@ function OrdersContent() {
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#493129]/20 hover:bg-[#ffeedb] text-xs font-semibold text-[#493129] transition"
                 >
                   <Printer className="w-3.5 h-3.5 text-[#8b597b]" />
-                  <span>Print GST Invoice</span>
+                  <span>Print Receipt</span>
                 </button>
               </div>
             </div>
 
-            {/* Airway Bill & Carrier Info */}
+            {/* Delivery & Status Bar */}
             <div className="p-5 rounded-2xl bg-[#ffeedb]/60 border border-[#493129]/10 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-3">
-                <Truck className="w-5 h-5 text-[#8b597b]" />
+                {order.fulfillmentType === "pickup" ? (
+                  <Store className="w-5 h-5 text-[#8b597b]" />
+                ) : (
+                  <Truck className="w-5 h-5 text-[#8b597b]" />
+                )}
                 <div>
                   <div className="font-bold text-[#493129]">
-                    Carrier Partner: {order.trackingNumber ? "BlueDart Express Logistics" : "Express Courier Logistics"}
+                    {order.fulfillmentType === "pickup"
+                      ? "In-Store Pickup • Belagavi Outlet"
+                      : "Doorstep Delivery • Belagavi & Nearby"}
                   </div>
-                  <div className="text-[11px] text-[#493129]/70 font-mono">
-                    AWB Tracking Code: {order.trackingNumber || "BLUEDART-AIR-7729103"}
+                  <div className="text-[11px] text-[#493129]/70">
+                    {order.trackingNumber
+                      ? `Tracking / Dispatch ID: ${order.trackingNumber}`
+                      : "Being processed at ANIL COMMUNICATION & ZEROX, Belagavi"}
                   </div>
                 </div>
               </div>
@@ -264,43 +271,45 @@ function OrdersContent() {
               <div className="flex flex-wrap items-center gap-2">
                 <a
                   href={`https://wa.me/919380124254?text=${encodeURIComponent(
-                    `Hello ANIL COMMUNICATION & ZEROX, I am inquiring regarding my order #${order.orderNumber}. Could you please update me on delivery status?`
+                    `Hello ANIL COMMUNICATION & ZEROX, I am inquiring about my order #${order.orderNumber}. Could you please update me on its status?`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-4 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold transition flex items-center gap-1 shadow-xs"
                 >
                   <MessageCircle className="w-3.5 h-3.5 fill-current" />
-                  <span>WhatsApp Updates</span>
+                  <span>WhatsApp Store (+91 9380124254)</span>
                 </a>
+
                 {(order.status === "confirmed" || order.status === "pending") && (
                   <button
                     onClick={handleCancelOrder}
                     className="px-4 py-1.5 rounded-full border border-red-200 text-red-700 hover:bg-red-50 text-xs font-semibold transition flex items-center gap-1"
                   >
                     <XCircle className="w-3.5 h-3.5" />
-                    <span>Cancel Consignment</span>
+                    <span>Cancel Order</span>
                   </button>
                 )}
+
                 {order.status === "delivered" && (
                   <button
                     onClick={handleReturnOrder}
                     className="px-4 py-1.5 rounded-full border border-[#8b597b]/30 text-[#8b597b] hover:bg-[#ffdec7] text-xs font-semibold transition flex items-center gap-1"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Request Return / Replacement</span>
+                    <span>Return / Replacement</span>
                   </button>
                 )}
               </div>
             </div>
 
-            {/* Amazon-Level 8-Stage Milestone Stepper */}
+            {/* Clean Real Progression Stepper */}
             {order.status !== "cancelled" && order.status !== "returned" && (
               <div className="p-8 sm:p-10 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 shadow-subtle space-y-6">
-                <h3 className="font-serif text-xl text-[#493129]">Consignment Lifecycle</h3>
+                <h3 className="font-serif text-xl text-[#493129]">Order Progression</h3>
 
                 <div className="relative pl-8 sm:pl-10 space-y-7 border-l-2 border-[#ffdec7] ml-4">
-                  {EIGHT_STAGE_LIFECYCLE.map((step, idx) => {
+                  {REAL_ORDER_STAGES.map((step, idx) => {
                     const state = getStepState(step.key, order.status);
                     const isCompleted = state === "completed";
                     const isActive = state === "active";
@@ -339,7 +348,7 @@ function OrdersContent() {
             {/* Items & Shipping Destination */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="p-6 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 space-y-4">
-                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Ordered Pieces</span>
+                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Items Ordered</span>
                 <div className="space-y-3">
                   {order.items.map((item) => (
                     <div key={item.id} className="flex items-center gap-3 text-xs border-b border-[#493129]/10 pb-3">
@@ -350,36 +359,79 @@ function OrdersContent() {
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="font-serif font-bold text-[#493129] truncate">{item.productName}</p>
-                        <p className="text-[11px] text-[#493129]/60">{item.variantDetails} • Qty: {item.quantity}</p>
+                        <p className="text-[10px] text-[#493129]/60">{item.variantDetails || "Standard"}</p>
+                        <p className="text-[10px] text-[#493129]/80 font-mono mt-0.5">
+                          Qty: {item.quantity} × {formatCurrency(item.unitPrice)}
+                        </p>
                       </div>
-                      <span className="font-serif font-bold text-[#493129]">{formatCurrency(item.totalPrice)}</span>
+                      <div className="text-right font-mono font-bold text-[#493129]">
+                        {formatCurrency(item.totalPrice)}
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="pt-2 space-y-1 text-xs">
+                <div className="pt-2 text-xs space-y-1.5 border-t border-[#493129]/10">
+                  <div className="flex justify-between text-[#493129]/70">
+                    <span>Subtotal</span>
+                    <span className="font-mono">{formatCurrency(order.subtotal)}</span>
+                  </div>
                   {order.discountAmount > 0 && (
-                    <div className="flex justify-between text-emerald-800 font-semibold">
-                      <span>Voucher Discount</span>
-                      <span>-{formatCurrency(order.discountAmount)}</span>
+                    <div className="flex justify-between text-emerald-700">
+                      <span>Discount</span>
+                      <span className="font-mono">-{formatCurrency(order.discountAmount)}</span>
                     </div>
                   )}
-                  <div className="flex justify-between font-bold text-[#493129] pt-1 border-t border-[#493129]/10">
-                    <span>Total Amount Paid</span>
-                    <span className="font-serif text-base text-[#8b597b]">{formatCurrency(order.grandTotal)}</span>
+                  <div className="flex justify-between text-[#493129]/70">
+                    <span>Delivery</span>
+                    <span className="font-mono">{order.shippingFee === 0 ? "FREE" : formatCurrency(order.shippingFee)}</span>
+                  </div>
+                  <div className="flex justify-between font-bold text-[#493129] text-sm pt-1 border-t border-[#493129]/10">
+                    <span>Total Paid</span>
+                    <span className="font-mono text-[#8b597b]">{formatCurrency(order.grandTotal)}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 space-y-3 text-xs">
-                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">Delivery Destination</span>
-                <div className="space-y-1 text-[#493129]/80 font-sans">
-                  <p className="font-serif text-base font-bold text-[#493129]">{order.customerName}</p>
-                  <p>{order.shippingAddress.street}</p>
-                  {order.shippingAddress.landmark && <p>Landmark: {order.shippingAddress.landmark}</p>}
-                  <p>{order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}</p>
-                  <p className="pt-2 text-[#8b597b] font-mono">Mobile: +91 {order.customerPhone}</p>
-                  <p className="text-[#493129]/60">Email: {order.customerEmail}</p>
+              {/* Delivery / Store Details */}
+              <div className="p-6 rounded-3xl bg-[#fffaf5] border border-[#493129]/10 space-y-4">
+                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8b597b]">
+                  {order.fulfillmentType === "pickup" ? "Store Pickup Information" : "Delivery Destination"}
+                </span>
+
+                <div className="text-xs space-y-3">
+                  <div>
+                    <span className="text-[10px] text-[#493129]/60 uppercase font-bold block">Customer Contact</span>
+                    <p className="font-bold text-[#493129]">{order.customerName}</p>
+                    <p className="text-[#493129]/80 font-mono">{order.customerPhone}</p>
+                    {order.customerEmail && <p className="text-[#493129]/80">{order.customerEmail}</p>}
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] text-[#493129]/60 uppercase font-bold block">Address</span>
+                    {order.fulfillmentType === "pickup" ? (
+                      <p className="text-[#493129] leading-relaxed">
+                        <strong>ANIL COMMUNICATION &amp; ZEROX</strong><br />
+                        Near Canara Bank, Belagavi, Karnataka - 591103
+                      </p>
+                    ) : (
+                      <p className="text-[#493129] leading-relaxed">
+                        {order.shippingAddress.street}<br />
+                        {order.shippingAddress.landmark && `${order.shippingAddress.landmark}, `}
+                        {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.pincode}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] text-[#493129]/60 uppercase font-bold block">Payment Status</span>
+                    <p className="font-bold text-[#8b597b] uppercase">
+                      {order.paymentStatus} • {order.paymentMethod.toUpperCase()}
+                    </p>
+                    {order.notes && (
+                      <p className="text-[10px] text-[#493129]/70 italic mt-0.5">{order.notes}</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -394,7 +446,7 @@ function OrdersContent() {
 
 export default function OrdersPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#ffeedb] flex items-center justify-center text-[#8b597b]">Loading orders...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#ffeedb] flex items-center justify-center text-xs font-serif text-[#493129]">Loading...</div>}>
       <OrdersContent />
     </Suspense>
   );

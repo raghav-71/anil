@@ -107,7 +107,7 @@ export function ProductForm({ initialProduct, isEdit = false }: ProductFormProps
     initialProduct?.highlights || [
       "100% Genuine Brand New Retail Unit",
       "Official Manufacturer Warranty with GST Invoice",
-      "Express Secure Delivery in Pant Nagar & Across India",
+      "Express Secure Delivery in Belagavi & Across India",
     ]
   );
   const [newHighlight, setNewHighlight] = useState("");
@@ -390,7 +390,7 @@ export function ProductForm({ initialProduct, isEdit = false }: ProductFormProps
         returnPolicy,
         highlights,
         specifications: specObj,
-        seoTitle: seoTitle.trim() || `${title} - ANIL COMMUNICATION & ZEROX Pant Nagar`,
+        seoTitle: seoTitle.trim() || `${title} - ANIL COMMUNICATION & ZEROX Belagavi`,
         seoDescription: seoDescription.trim() || shortDescription,
         rating: initialProduct?.rating || 4.8,
         reviewCount: initialProduct?.reviewCount || 1,

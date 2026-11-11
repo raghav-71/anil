@@ -461,11 +461,11 @@ class StoreDatabase {
     tagline: "Premium Smartphones & High-Speed Accessories",
     phone: "+91 9380124254",
     email: "",
-    address: "Bagalkot Main Road, Pant Nagar, Near Canara Bank",
-    city: "Pant Nagar",
+    address: "Near Canara Bank, Belagavi, Karnataka - 591103",
+    city: "Belagavi",
     state: "Karnataka",
     pincode: "591103",
-    gstin: "",
+    gstin: "29CQWPK2582Q1ZC",
     invoicePrefix: "AC-2026",
     nextInvoiceSequence: 2,
     footerTerms: "Thank you for shopping with ANIL COMMUNICATION & ZEROX!\nGoods once sold carry manufacturer warranty.\nPlease preserve this invoice for warranty and claim services.",
@@ -984,7 +984,7 @@ class StoreDatabase {
     const pickupDetails = isPickup
       ? {
           storeName: "ANIL COMMUNICATION & ZEROX",
-          storeAddress: "Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka, India",
+          storeAddress: "Near Canara Bank, Belagavi, Karnataka - 591103, India",
           storePhone: "+91 9380124254",
           estimatedReady: "Within 2 business hours (10:00 AM - 8:30 PM)",
         }

@@ -58,7 +58,7 @@ export default function CatalogPage() {
         {/* Header */}
         <header className="text-center max-w-3xl mx-auto mb-10 space-y-3">
           <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#8b597b]">
-            ANIL COMMUNICATION &amp; ZEROX · PANT NAGAR
+            ANIL COMMUNICATION &amp; ZEROX · BELAGAVI
           </p>
           <h1 className="font-serif text-4xl sm:text-6xl text-[#493129] font-medium leading-tight">
             Find your next favourite.

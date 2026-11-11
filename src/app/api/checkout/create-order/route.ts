@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
       discountAmount,
       couponCode,
       idempotencyKey,
+      utrNumber,
     } = body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -43,104 +44,83 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (paymentMethod === "cod") {
-      // Process Cash on Delivery immediately
-      const result = db.completeOnlineOrder({
-        customerName,
-        customerPhone,
-        customerEmail,
-        shippingAddress,
-        fulfillmentType: fulfillmentType || "delivery",
-        items,
-        paymentMethod: "cod",
-        paymentStatus: "pending", // Unpaid until collected at doorstep
-        discountAmount: discountAmount || 0,
-        couponCode,
-        idempotencyKey,
-      });
+    const isOnlinePayment = paymentMethod === "razorpay" || paymentMethod === "razorpay_link" || paymentMethod === "online";
+    const initialPaymentStatus = isOnlinePayment ? (utrNumber ? "paid" : "pending") : "pending";
+    const paymentId = utrNumber ? String(utrNumber).trim() : (isOnlinePayment ? "razorpay_link_unconfirmed" : undefined);
 
-      if (!result.success || !result.order) {
-        return NextResponse.json({ error: result.error || "Failed to process COD order" }, { status: 400 });
-      }
+    // Process Order directly
+    const result = db.completeOnlineOrder({
+      customerName,
+      customerPhone,
+      customerEmail,
+      shippingAddress,
+      fulfillmentType: fulfillmentType || "delivery",
+      items,
+      paymentMethod: isOnlinePayment ? "razorpay" : "cod",
+      paymentStatus: initialPaymentStatus,
+      paymentId,
+      discountAmount: discountAmount || 0,
+      couponCode,
+      idempotencyKey,
+    });
 
-      const order = result.order;
-
-      // Sync order to Supabase PostgreSQL (Single Source of Truth)
-      syncOrderToSupabase(order).catch((e) => console.error("Supabase order sync error:", e));
-
-      // Trigger asynchronous owner notification via WhatsApp (non-blocking)
-      dispatchWhatsAppNotification({
-        eventType: "order_created",
-        dedupKey: `order_created_${order.orderNumber}`,
-        title: "New Cash on Delivery Order Received",
-        details: {
-          orderNumber: order.orderNumber,
-          customer: order.customerName,
-          phone: `+91 ${order.customerPhone}`,
-          fulfillment: order.fulfillmentType === "pickup" ? "In-Store Pickup (Pant Nagar)" : "Doorstep Delivery",
-          itemsCount: `${order.items.length} item(s)`,
-          totalAmount: `₹${order.grandTotal.toLocaleString("en-IN")}`,
-          paymentMode: "Cash on Delivery (Pending Collection)",
-          deliveryPincode: order.fulfillmentType === "pickup" ? "In-Store Pickup" : (shippingAddress?.pincode || "591103"),
-        },
-      }).catch((e) => console.error("WhatsApp notification dispatch failed:", e));
-
-      // Trigger asynchronous owner email notification (non-blocking)
-      dispatchOrderEmailNotification(order).catch((e) => console.error("Email notification dispatch failed:", e));
-
-      // Check for low stock alerts on purchased items
-      for (const item of items) {
-        const v = db.getVariantById(item.variantId);
-        if (v && v.variant.stockQuantity <= 3) {
-          dispatchWhatsAppNotification({
-            eventType: "low_stock_alert",
-            dedupKey: `low_stock_${v.variant.id}_${v.variant.stockQuantity}`,
-            title: "Low Inventory Warning",
-            details: {
-              productName: v.product.title,
-              variant: `${v.variant.color || ""} ${v.variant.storage || ""}`.trim() || "Standard",
-              remainingStock: `${v.variant.stockQuantity} units left`,
-              sku: v.variant.sku,
-            },
-          }).catch((e) => console.error("Low stock WhatsApp alert failed:", e));
-        }
-      }
-
-      return NextResponse.json({
-        success: true,
-        order,
-      });
+    if (!result.success || !result.order) {
+      return NextResponse.json({ error: result.error || "Failed to process order" }, { status: 400 });
     }
 
-    // For Razorpay online payments, calculate grand total server-side
-    let subtotal = 0;
+    const order = result.order;
+    if (utrNumber) {
+      order.notes = `Paid via Razorpay Link (https://razorpay.me/@raghavendra4969). UTR/Ref: ${utrNumber}`;
+    }
+
+    // Sync order to Supabase PostgreSQL (Single Source of Truth)
+    syncOrderToSupabase(order).catch((e) => console.error("Supabase order sync error:", e));
+
+    // Trigger asynchronous owner notification via WhatsApp (non-blocking)
+    dispatchWhatsAppNotification({
+      eventType: isOnlinePayment ? "payment_verified" : "order_created",
+      dedupKey: `order_${order.orderNumber}`,
+      title: isOnlinePayment ? "Online Payment Order Received (Razorpay Link)" : "New Cash on Delivery Order Received",
+      details: {
+        orderNumber: order.orderNumber,
+        customer: order.customerName,
+        phone: `+91 ${order.customerPhone}`,
+        fulfillment: order.fulfillmentType === "pickup" ? "In-Store Pickup (Belagavi)" : "Doorstep Delivery",
+        itemsCount: `${order.items.length} item(s)`,
+        totalAmount: `₹${order.grandTotal.toLocaleString("en-IN")}`,
+        paymentMode: isOnlinePayment
+          ? `Razorpay Link (${utrNumber ? `UTR: ${utrNumber}` : "Pending Verification"})`
+          : "Cash on Delivery (Pending Collection)",
+        deliveryPincode: order.fulfillmentType === "pickup" ? "In-Store Pickup" : (shippingAddress?.pincode || "591103"),
+      },
+    }).catch((e) => console.error("WhatsApp notification dispatch failed:", e));
+
+    // Trigger asynchronous owner email notification (non-blocking)
+    dispatchOrderEmailNotification(order).catch((e) => console.error("Email notification dispatch failed:", e));
+
+    // Check for low stock alerts on purchased items
     for (const item of items) {
-      const v = db.getVariantById(item.variantId)!;
-      subtotal += v.variant.sellingPrice * item.quantity;
+      const v = db.getVariantById(item.variantId);
+      if (v && v.variant.stockQuantity <= 3) {
+        dispatchWhatsAppNotification({
+          eventType: "low_stock_alert",
+          dedupKey: `low_stock_${v.variant.id}_${v.variant.stockQuantity}`,
+          title: "Low Inventory Warning",
+          details: {
+            productName: v.product.title,
+            variant: `${v.variant.color || ""} ${v.variant.storage || ""}`.trim() || "Standard",
+            remainingStock: `${v.variant.stockQuantity} units left`,
+            sku: v.variant.sku,
+          },
+        }).catch((e) => console.error("Low stock WhatsApp alert failed:", e));
+      }
     }
-    const appliedDiscount = Math.max(0, discountAmount || 0);
-    const taxableBasis = Math.max(0, subtotal - appliedDiscount);
-    const settings = db.getShopSettings();
-    const isPickup = fulfillmentType === "pickup";
-    const shippingFee = isPickup
-      ? 0
-      : (taxableBasis >= settings.freeShippingThreshold ? 0 : settings.standardShippingFee);
-    const grandTotal = taxableBasis + shippingFee;
-
-    // Razorpay Order ID for checkout session
-    const razorpayOrderId = `order_${Math.random().toString(36).substring(2, 12)}`;
 
     return NextResponse.json({
       success: true,
-      requiresPayment: true,
-      razorpayOrderId,
-      amount: grandTotal * 100, // In Paise
-      currency: "INR",
-      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_mobile_store_key",
-      customerDetails: { customerName, customerPhone, customerEmail },
+      order,
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || "Failed to initiate order" }, { status: 500 });
   }
 }
-

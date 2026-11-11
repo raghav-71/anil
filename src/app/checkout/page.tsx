@@ -19,6 +19,7 @@ import {
   MessageCircle,
   Truck,
   Store,
+  ExternalLink,
 } from "lucide-react";
 
 export default function CheckoutPage() {
@@ -41,6 +42,7 @@ export default function CheckoutPage() {
     paymentMethod: "razorpay" as "razorpay" | "cod",
   });
 
+  const [utrNumber, setUtrNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orderSuccess, setOrderSuccess] = useState<any | null>(null);
@@ -117,9 +119,9 @@ export default function CheckoutPage() {
       const shippingAddress =
         fulfillmentType === "pickup"
           ? {
-              street: "Bagalkot Main Road, Pant Nagar, Near Canara Bank",
+              street: "Near Canara Bank, Belagavi",
               landmark: "Near Canara Bank",
-              city: "Pant Nagar",
+              city: "Belagavi",
               state: "Karnataka",
               pincode: "591103",
             }
@@ -130,6 +132,10 @@ export default function CheckoutPage() {
               state: formData.state,
               pincode: formData.pincode,
             };
+
+      if (formData.paymentMethod === "razorpay" && !utrNumber.trim()) {
+        throw new Error("Please complete payment on the Razorpay link and enter your 12-digit UTR/UPI reference number.");
+      }
 
       const payload = {
         customerName: formData.fullName,
@@ -142,6 +148,7 @@ export default function CheckoutPage() {
         discountAmount: discountAmount || 0,
         couponCode: appliedCoupon?.code,
         idempotencyKey,
+        utrNumber: utrNumber.trim() || undefined,
       };
 
       const res = await fetch("/api/checkout/create-order", {
@@ -151,34 +158,11 @@ export default function CheckoutPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Order initialization failed.");
+      if (!res.ok) throw new Error(data.error || "Order placement failed.");
 
-      if (formData.paymentMethod === "cod") {
-        setOrderSuccess(data.order);
-        clearCart();
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      } else {
-        const mockPaymentId = `pay_${Math.random().toString(36).substring(2, 12)}`;
-        const mockSignature = `sig_${Math.random().toString(36).substring(2, 16)}`;
-
-        const verifyRes = await fetch("/api/checkout/verify-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            razorpay_order_id: data.razorpayOrderId,
-            razorpay_payment_id: mockPaymentId,
-            razorpay_signature: mockSignature,
-            orderDetails: payload,
-          }),
-        });
-
-        const verifyData = await verifyRes.json();
-        if (!verifyRes.ok) throw new Error(verifyData.error || "Payment verification declined.");
-
-        setOrderSuccess(verifyData.order);
-        clearCart();
-        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-      }
+      setOrderSuccess(data.order);
+      clearCart();
+      confetti({ particleCount: 120, spread: 75, origin: { y: 0.6 } });
     } catch (err: any) {
       setError(err.message || "An error occurred while confirming checkout.");
     } finally {
@@ -224,7 +208,7 @@ export default function CheckoutPage() {
                 </span>
                 <span className="font-medium text-[#493129] text-right">
                   {orderSuccess.fulfillmentType === "pickup"
-                    ? "Bagalkot Main Road, Pant Nagar, Near Canara Bank (Ready in 2 hrs)"
+                    ? "Near Canara Bank, Belagavi, Karnataka - 591103 (Ready in 2 hrs)"
                     : `${orderSuccess.customerName}, ${orderSuccess.shippingAddress.street}, ${orderSuccess.shippingAddress.city} - ${orderSuccess.shippingAddress.pincode}`}
                 </span>
               </div>
@@ -369,7 +353,7 @@ export default function CheckoutPage() {
                     <span>Doorstep Delivery</span>
                   </span>
                   <span className="text-[10px] text-[#806D63]">
-                    Dispatched from Pant Nagar store to your address
+                    Dispatched from our Belagavi store to your address
                   </span>
                 </button>
 
@@ -399,7 +383,7 @@ export default function CheckoutPage() {
                     <span>Store Pickup Hub: ANIL COMMUNICATION &amp; ZEROX</span>
                   </div>
                   <p className="text-[11px] text-[#806D63] leading-relaxed">
-                    Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka, India
+                    Near Canara Bank, Belagavi, Karnataka - 591103, India
                   </p>
                   <p className="text-[10px] text-[#493129] font-medium pt-1">
                     📞 Helpline: +91 9380124254 • Timing: 10:00 AM - 8:30 PM (Mon-Sat)
@@ -524,6 +508,54 @@ export default function CheckoutPage() {
                   </div>
                   <CreditCard className="w-5 h-5 text-[#8B597B]" />
                 </label>
+
+                {formData.paymentMethod === "razorpay" && (
+                  <div className="p-5 rounded-2xl bg-[#FFF5EC] border border-[#8B597B]/30 space-y-3.5 animate-fadeIn">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-[#493129]">
+                            Official Store Razorpay Payment Link
+                          </span>
+                          <span className="text-[10px] bg-[#27845A]/15 text-[#27845A] font-bold px-2 py-0.5 rounded-full">
+                            Verified
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#806D63] mt-0.5">
+                          Total to pay: <strong className="text-[#8B597B] font-mono text-sm">{formatCurrency(grandTotal)}</strong>
+                        </p>
+                      </div>
+
+                      <a
+                        href="https://razorpay.me/@raghavendra4969"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2.5 rounded-full bg-[#8B597B] hover:bg-[#493129] text-[#FFEDDB] text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs whitespace-nowrap"
+                      >
+                        <span>Open Razorpay Link</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+
+                    <div className="pt-3 border-t border-[#E8D5C5] space-y-1.5">
+                      <label className="text-xs font-bold text-[#493129] block">
+                        Payment Reference / 12-Digit UTR Number *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={utrNumber}
+                        onChange={(e) => setUtrNumber(e.target.value)}
+                        placeholder="e.g. 429381920192 or UPI Ref ID"
+                        className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-xs font-mono text-[#30241F] focus:outline-none focus:border-[#8B597B]"
+                      />
+                      <p className="text-[10px] text-[#806D63] leading-relaxed">
+                        1. Click the button above to pay on the verified Razorpay page. <br />
+                        2. Copy your 12-digit UTR/UPI reference and paste it here to confirm your order.
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <label
                   className={`p-5 rounded-2xl border flex items-center justify-between cursor-pointer transition ${formData.paymentMethod === "cod"

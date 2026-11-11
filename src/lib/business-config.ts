@@ -27,7 +27,7 @@ export const BUSINESS = {
     primary: "+91 9380124254",
     primaryRaw: "919380124254",
     /** Alternative telephone contacts (NOT WhatsApp) */
-    alt1: "+91 8884055867",
+    alt1: "+91 8095908042",
     alt2: "+91 9538865867",
   },
 
@@ -42,16 +42,16 @@ export const BUSINESS = {
 
   /** Official shop address */
   address: {
-    line1: "Bagalkot Main Road",
-    line2: "Pant Nagar",
+    line1: "Near Canara Bank",
+    line2: "Belagavi",
     landmark: "Near Canara Bank",
     pincode: "591103",
     state: "Karnataka",
     country: "India",
     /** Full formatted address */
-    full: "Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka, India",
+    full: "Near Canara Bank, Belagavi, Karnataka - 591103, India",
     /** Short one-line address */
-    short: "Pant Nagar, Near Canara Bank, Karnataka - 591103",
+    short: "Near Canara Bank, Belagavi, Karnataka - 591103",
   },
 
   /** Official business services offered at the physical shop */
@@ -78,16 +78,16 @@ export const BUSINESS = {
   seo: {
     title: "ANIL COMMUNICATION & ZEROX | Mobile Phones & Accessories Store",
     description:
-      "Shop authentic smartphones, keypad phones, wireless earbuds, neckbands, and headphones with 100% manufacturer warranty and fast delivery. Pant Nagar, Karnataka.",
+      "Shop authentic smartphones, keypad phones, wireless earbuds, neckbands, and headphones with 100% manufacturer warranty and fast delivery. Belagavi, Karnataka.",
     ogTitle: "ANIL COMMUNICATION & ZEROX – Mobile Phones & Accessories",
     ogDescription:
       "Your trusted destination for 5G smartphones, feature phones, and certified audio accessories. 100% genuine, factory sealed with manufacturer warranty.",
   },
 
-  /** GST — not registered unless the owner confirms otherwise */
+  /** GST Registration */
   gst: {
-    registered: false,
-    gstin: "",
+    registered: true,
+    gstin: "29CQWPK2582Q1ZC",
   },
 
   /** Invoice / order footer text */

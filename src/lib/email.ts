@@ -93,7 +93,7 @@ Email: ${order.customerEmail}
 
 ${order.fulfillmentType === "pickup" ? `
 STORE PICKUP LOCATION:
-Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka
+Near Canara Bank, Belagavi, Karnataka - 591103
 ` : `
 SHIPPING ADDRESS:
 ${order.shippingAddress.street}

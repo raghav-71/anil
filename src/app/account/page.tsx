@@ -649,6 +649,18 @@ function AccountContent() {
                   const { error: updErr } = await supabase.auth.updateUser(updatePayload);
                   if (updErr) throw new Error(updErr.message);
 
+                  // Sync to PostgreSQL profiles table
+                  await fetch("/api/auth/sync-profile", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      authUserId: customerUser?.id,
+                      email: customerUser?.email,
+                      fullName: profileName.trim(),
+                      phone: profilePhone.trim(),
+                    }),
+                  });
+
                   setProfileStatus("Profile details updated successfully.");
                   setNewPassword("");
                   setCustomerUser((prev) =>
@@ -771,7 +783,7 @@ function AccountContent() {
                     required
                     value={newAddr.street}
                     onChange={(e) => setNewAddr({ ...newAddr, street: e.target.value })}
-                    placeholder="e.g. Bagalkot Main Road, Pant Nagar"
+                    placeholder="e.g. Near Canara Bank, Belagavi"
                     className="w-full px-3 py-2 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                   />
                 </div>

@@ -142,7 +142,7 @@ function ShopContent() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-[#493129]/10">
           <div>
             <nav className="text-[11px] uppercase tracking-[0.2em] text-[#8b597b] mb-1 font-semibold">
-              <Link href="/">Maison</Link> / <span>The Full Collection</span>
+              <Link href="/">Home</Link> / <span>The Full Collection</span>
             </nav>
             <h1 className="font-serif text-3xl sm:text-5xl text-[#493129]">
               The Complete Collection

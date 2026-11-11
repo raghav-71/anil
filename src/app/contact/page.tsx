@@ -100,7 +100,7 @@ export default function ContactPage() {
                 <MapPin className="w-5 h-5 text-[#8B597B] flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-serif font-bold text-base text-[#493129]">ANIL COMMUNICATION &amp; ZEROX</p>
-                  <p className="mt-1 leading-relaxed">Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka, India</p>
+                  <p className="mt-1 leading-relaxed">Near Canara Bank, Belagavi, Karnataka - 591103, India</p>
                   <p className="text-[#8B597B] mt-1 font-medium">Near Canara Bank</p>
                 </div>
               </div>

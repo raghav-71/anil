@@ -189,9 +189,9 @@ export default function AdminInvoicesPage() {
                 <div className="flex justify-between items-start border-b-2 border-slate-800 pb-4">
                   <div>
                     <h2 className="text-xl font-black text-slate-900 tracking-tight">ANIL COMMUNICATION &amp; ZEROX</h2>
-                    <p className="text-xs text-slate-600">Bagalkot Main Road, Pant Nagar, Near Canara Bank, 591103, Karnataka</p>
-                    <p className="text-xs text-slate-600">Ph: +91 9380124254 • Alt: +91 8884055867, +91 9538865867</p>
-                    <p className="font-bold mt-1">GSTIN: Not Registered</p>
+                    <p className="text-xs text-slate-600">Near Canara Bank, Belagavi, Karnataka - 591103</p>
+                    <p className="text-xs text-slate-600">Ph: +91 9380124254 • Alt: +91 8095908042</p>
+                    <p className="font-bold mt-1">GSTIN: 29CQWPK2582Q1ZC</p>
                   </div>
                   <div className="text-right">
                     <span className="inline-block px-3 py-1 bg-slate-900 text-white font-bold text-xs uppercase tracking-wider rounded">
