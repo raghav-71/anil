@@ -38,7 +38,9 @@ class DeviceAuthManager {
   ];
 
   private accessLogs: AccessAttemptLog[] = [];
-  private ownerMasterPasskey = "ANIL-OWNER-SECURE-KEY-2026-ADMIN";
+  private getOwnerMasterPasskey(): string {
+    return process.env.ADMIN_PIN || process.env.ADMIN_SESSION_SECRET || "";
+  }
 
   public isDeviceAuthorized(token?: string | null): { authorized: boolean; device?: TrustedDevice; reason?: string } {
     if (!token) {
@@ -64,7 +66,8 @@ class DeviceAuthManager {
     enrolledBy: string;
     ipAddress?: string;
   }): { success: boolean; token?: string; device?: TrustedDevice; error?: string } {
-    if (params.masterPasskey.trim() !== this.ownerMasterPasskey && params.masterPasskey.trim() !== "admin123") {
+    const validKey = this.getOwnerMasterPasskey();
+    if (!validKey || params.masterPasskey.trim() !== validKey) {
       return { success: false, error: "Invalid Owner Master Passkey. Device enrollment refused." };
     }
 

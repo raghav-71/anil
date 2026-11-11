@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import { getServiceSupabase } from "@/lib/supabase/client";
+import { verifyAdminSession } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +10,12 @@ const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/jpg"
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
 
 export async function POST(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json(
+      { error: "Unauthorized. Owner credentials required for asset upload." },
+      { status: 401 }
+    );
+  }
   try {
     const formData = await req.formData();
     const files = formData.getAll("files") as File[];

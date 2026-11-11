@@ -6,12 +6,14 @@ import { useAuth } from "@/lib/auth-context";
 import { Smartphone, Lock, Mail, ArrowRight, KeyRound } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default function AdminLoginPage() {
   const router = useRouter();
   const { loginWithCredentials } = useAuth();
 
-  const [email, setEmail] = useState("admin@anilcommunications.com");
-  const [password, setPassword] = useState("admin123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +26,7 @@ export default function AdminLoginPage() {
     setLoading(false);
 
     if (res.success) {
-      router.push("/admin/dashboard");
+      window.location.href = "/admin";
     } else {
       setError(res.error || "Authentication failed.");
     }

@@ -119,9 +119,17 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Copyright */}
-      <div className="border-t border-[#ffdec7]/10 py-6 text-center text-[11px] text-[#ffdec7]/50 font-serif">
+      {/* Copyright & Discreet Owner Access */}
+      <div className="border-t border-[#ffdec7]/10 py-6 text-center text-[11px] text-[#ffdec7]/50 font-serif flex flex-col sm:flex-row items-center justify-center gap-2">
         <p>{BUSINESS.copyright()}</p>
+        <span className="hidden sm:inline text-[#ffdec7]/20">•</span>
+        <Link
+          href="/admin/login"
+          className="text-[#ffdec7]/30 hover:text-[#ffeedb] text-[10px] font-sans tracking-wider transition-colors"
+          title="Owner Administration Terminal"
+        >
+          Owner Terminal
+        </Link>
       </div>
     </footer>
   );

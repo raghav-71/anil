@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deviceAuth } from "@/lib/device-auth";
+import { verifyAdminSession } from "@/lib/admin-auth";
 
 export async function POST(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { masterPasskey, deviceName, enrolledBy } = await req.json();
 
     const result = deviceAuth.enrollDevice({
       masterPasskey,
       deviceName: deviceName || "Shop Primary Computer",
-      enrolledBy: enrolledBy || "Owner (Super Admin)",
+      enrolledBy: enrolledBy || "Shop Owner",
       ipAddress: req.ip || "127.0.0.1",
     });
 

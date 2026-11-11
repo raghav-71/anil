@@ -24,18 +24,18 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const OWNER_ACCOUNT: CurrentUser = {
-  id: "usr-admin-1",
+  id: "usr-owner-primary",
   name: "Shop Owner",
   email: "admin@anilcommunications.com",
-  role: "super_admin",
+  role: "owner",
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
-    // Check server-side session cookie first
-    fetch("/api/admin/auth")
+    // Check server-side session cookie on mount
+    fetch("/api/admin/auth", { cache: "no-store" })
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -45,20 +45,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .then((data) => {
         if (data?.authenticated && data?.user) {
           setUser(data.user);
-          localStorage.setItem("anil_staff_session", JSON.stringify(data.user));
         } else {
-          // If server session invalid, check if we had a stored session to verify or clear
-          const stored = localStorage.getItem("anil_staff_session");
-          if (stored) {
-            try {
-              const parsed = JSON.parse(stored);
-              // Only keep if server validated; otherwise clear
-              setUser(null);
-              localStorage.removeItem("anil_staff_session");
-            } catch {
-              localStorage.removeItem("anil_staff_session");
-            }
-          }
+          setUser(null);
         }
       })
       .catch(() => {
@@ -66,11 +54,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
   }, []);
 
-  const loginAs = (role: UserRole) => {
-    if (role === "super_admin") {
-      setUser(OWNER_ACCOUNT);
-      localStorage.setItem("anil_staff_session", JSON.stringify(OWNER_ACCOUNT));
-    }
+  const loginAs = (_role: UserRole) => {
+    // Prohibit client-side role elevation
+    console.warn("[Auth] Client-side role elevation prohibited. Server authentication required.");
   };
 
   const loginWithCredentials = async (email: string, pass: string) => {
@@ -84,10 +70,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (res.ok && data.success) {
         setUser(data.user);
-        localStorage.setItem("anil_staff_session", JSON.stringify(data.user));
         return { success: true };
       }
-      return { success: false, error: data.error || "Invalid owner email or PIN." };
+      return { success: false, error: data.error || "Authentication failed." };
     } catch (err: any) {
       return { success: false, error: err.message || "Failed to reach authentication server." };
     }
@@ -100,12 +85,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // ignore
     }
     setUser(null);
-    localStorage.removeItem("anil_staff_session");
   };
 
   const hasRole = (roles: UserRole[]) => {
     if (!user) return false;
-    if (user.role === "super_admin") return true;
+    if (user.role === "owner") return true;
     return roles.includes(user.role);
   };
 
@@ -127,6 +111,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
   return context;
 }

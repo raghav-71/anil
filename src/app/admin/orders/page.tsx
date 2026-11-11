@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+
+export const dynamic = "force-dynamic";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Order, OrderStatus } from "@/types";
 import {

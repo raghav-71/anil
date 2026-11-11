@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+
+export const dynamic = "force-dynamic";
 import { formatCurrency, formatCurrencyExact, formatDate } from "@/lib/utils";
 import { numberToWordsIndian } from "@/lib/invoice-generator";
 import { Invoice } from "@/types";

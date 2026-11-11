@@ -1,18 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/database/store";
 import { deviceAuth } from "@/lib/device-auth";
+import { verifyAdminSession } from "@/lib/admin-auth";
 
 export async function GET(req: NextRequest) {
-  // Device verification for private invoice audit
+  const isAdmin = verifyAdminSession(req);
+
+  // Fallback to device verification for private invoice audit
   const deviceToken =
     req.headers.get("x-device-token") ||
     req.cookies.get("anil_trusted_device_token")?.value;
 
-  const deviceCheck = deviceAuth.isDeviceAuthorized(deviceToken);
-  if (!deviceCheck.authorized) {
+  const deviceCheck = deviceToken ? deviceAuth.isDeviceAuthorized(deviceToken) : { authorized: false, reason: "No device token" };
+
+  if (!isAdmin && !deviceCheck.authorized) {
     return NextResponse.json(
-      { error: `Invoice Access Denied: ${deviceCheck.reason}` },
-      { status: 403 }
+      { error: "Invoice Access Denied: Unauthorized admin session or trusted device required." },
+      { status: 401 }
     );
   }
 

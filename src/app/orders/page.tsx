@@ -51,20 +51,16 @@ function OrdersContent() {
     setActionMessage(null);
 
     try {
-      const res = await fetch(`/api/reports`);
+      const cleanQ = query.trim();
+      const isPhone = cleanQ.replace(/\D/g, "").length >= 10;
+      const param = isPhone ? `phone=${encodeURIComponent(cleanQ.replace(/\D/g, ""))}` : `orderNumber=${encodeURIComponent(cleanQ)}`;
+
+      const res = await fetch(`/api/orders/user?${param}`);
       const data = await res.json();
-      const allOrders: Order[] = data.recentOrders || [];
+      const foundOrders: Order[] = data.orders || [];
 
-      const cleanQuery = query.trim().toLowerCase();
-      const found = allOrders.find(
-        (o) =>
-          o.orderNumber.toLowerCase() === cleanQuery ||
-          o.customerPhone.includes(cleanQuery.replace(/\D/g, "")) ||
-          o.id === cleanQuery
-      );
-
-      if (found) {
-        setOrder(found);
+      if (foundOrders.length > 0) {
+        setOrder(foundOrders[0]);
       } else {
         setOrder(null);
         setError(`No consignment found matching "${query}". Please verify your Order Number or Phone Number.`);
@@ -96,7 +92,13 @@ function OrdersContent() {
       const res = await fetch("/api/orders/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId: order.id, action: "cancel", reason }),
+        body: JSON.stringify({
+          orderId: order.id,
+          action: "cancel",
+          reason,
+          customerPhone: order.customerPhone,
+          customerEmail: order.customerEmail,
+        }),
       });
       const data = await res.json();
       if (data.success) {
@@ -119,7 +121,13 @@ function OrdersContent() {
       const res = await fetch("/api/orders/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId: order.id, action: "return", reason }),
+        body: JSON.stringify({
+          orderId: order.id,
+          action: "return",
+          reason,
+          customerPhone: order.customerPhone,
+          customerEmail: order.customerEmail,
+        }),
       });
       const data = await res.json();
       if (data.success) {

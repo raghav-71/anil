@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+
+export const dynamic = "force-dynamic";
 import {
   ShieldCheck,
   KeyRound,
@@ -117,7 +119,7 @@ export default function SecurityPage() {
               required
               value={currentPin}
               onChange={(e) => setCurrentPin(e.target.value)}
-              placeholder="Enter current passkey (admin123)"
+              placeholder="Enter current owner passkey"
               className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] max-w-md focus:outline-none focus:border-[#8B597B]"
             />
           </div>

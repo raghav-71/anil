@@ -5,6 +5,7 @@ import {
   dispatchWhatsAppNotification,
 } from "@/lib/whatsapp";
 import { getServiceSupabase } from "@/lib/supabase/client";
+import { verifyAdminSession } from "@/lib/admin-auth";
 
 // In-memory preferences fallback
 let notificationPreferences = {
@@ -18,6 +19,10 @@ let notificationPreferences = {
 };
 
 export async function GET(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const config = getWhatsAppConfig();
     const logs = await getWhatsAppNotificationLogs();
@@ -47,6 +52,10 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     const { action, preferences } = body;

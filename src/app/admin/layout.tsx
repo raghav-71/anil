@@ -17,6 +17,11 @@ import {
   Store,
   ChevronRight,
   ExternalLink,
+  FolderTree,
+  Users,
+  TrendingUp,
+  FileSpreadsheet,
+  FileText,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -27,14 +32,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Check if on login page
-    if (pathname === "/admin/login") {
+    // Check if on login or access-denied page
+    if (pathname?.startsWith("/admin/login") || pathname?.startsWith("/admin/access-denied")) {
       setCheckingAuth(false);
       return;
     }
 
     // Verify session
-    fetch("/api/admin/auth")
+    fetch("/api/admin/auth", { cache: "no-store" })
       .then((res) => {
         if (!res.ok) {
           router.replace("/admin/login");
@@ -47,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       });
   }, [pathname, router]);
 
-  if (pathname === "/admin/login") {
+  if (pathname?.startsWith("/admin/login") || pathname?.startsWith("/admin/access-denied")) {
     return <>{children}</>;
   }
 
@@ -64,14 +69,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // Strictly 6 essential admin sections
+  // Strictly Owner Administration Navigation Sections
   const navItems = [
-    { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/products", label: "Products", icon: Smartphone },
-    { href: "/admin/inventory", label: "Inventory", icon: Package },
+    { href: "/admin/categories", label: "Categories", icon: FolderTree },
     { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
-    { href: "/admin/settings", label: "Settings", icon: Settings },
-    { href: "/admin/security", label: "Security", icon: ShieldCheck },
+    { href: "/admin/customers", label: "Customers", icon: Users },
+    { href: "/admin/inventory", label: "Inventory", icon: Package },
+    { href: "/admin/sales", label: "Sales Analytics", icon: TrendingUp },
+    { href: "/admin/invoices", label: "Invoices", icon: FileText },
+    { href: "/admin/reports", label: "Reports & Tax", icon: FileSpreadsheet },
+    { href: "/admin/settings", label: "Store Settings", icon: Settings },
+    { href: "/admin/security", label: "Owner Security", icon: ShieldCheck },
   ];
 
   return (
@@ -142,8 +152,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
-                item.href === "/admin/dashboard"
-                  ? pathname === "/admin/dashboard"
+                item.href === "/admin"
+                  ? pathname === "/admin" || pathname === "/admin/dashboard"
                   : pathname.startsWith(item.href);
 
               return (

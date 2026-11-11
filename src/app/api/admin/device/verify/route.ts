@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deviceAuth } from "@/lib/device-auth";
+import { verifyAdminSession } from "@/lib/admin-auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,7 +23,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!verifyAdminSession(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   return NextResponse.json({
     devices: deviceAuth.getTrustedDevices(),
     logs: deviceAuth.getAccessLogs(),

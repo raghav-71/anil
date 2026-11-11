@@ -204,49 +204,6 @@
     "createdAt": "2026-11-08T04:28:14.998Z"
   },
   {
-    "id": "prod-realme-c100x",
-    "title": "Realme C100X",
-    "slug": "realme-c100x",
-    "brandId": "b-realme",
-    "brandName": "Realme",
-    "categoryId": "cat-smartphones",
-    "categoryName": "Smartphones",
-    "shortDescription": "Realme C100X with authentic manufacturer warranty. Available at Anil Communications Pant Nagar.",
-    "description": "Realme C100X by Realme in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
-    "basePrice": 12499,
-    "mrp": 14999,
-    "hsnCode": "85171300",
-    "gstRate": 18,
-    "images": [
-      "/images/products/photos/realme-c100x.webp",
-      "/images/products/realme-c100x.svg"
-    ],
-    "isFeatured": false,
-    "isActive": true,
-    "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 4.8,
-    "reviewCount": 12,
-    "variants": [
-      {
-        "id": "var-realme-c100x-01",
-        "productId": "prod-realme-c100x",
-        "sku": "AC-REA-REALME-C-1",
-        "barcode": "8906000000006",
-        "color": "Standard",
-        "colorCode": "#493129",
-        "ram": "4GB",
-        "storage": "64GB",
-        "sellingPrice": 12499,
-        "mrp": 14999,
-        "costPrice": 10800,
-        "stockQuantity": 16,
-        "lowStockThreshold": 5,
-        "isActive": true
-      }
-    ],
-    "createdAt": "2026-11-08T04:28:14.998Z"
-  },
-  {
     "id": "prod-realme-16",
     "title": "Realme 16",
     "slug": "realme-16",
@@ -632,49 +589,6 @@
         "mrp": 11999,
         "costPrice": 8200,
         "stockQuantity": 22,
-        "lowStockThreshold": 5,
-        "isActive": true
-      }
-    ],
-    "createdAt": "2026-11-08T04:28:14.999Z"
-  },
-  {
-    "id": "prod-itel-a100c",
-    "title": "itel A100C",
-    "slug": "itel-a100c",
-    "brandId": "b-itel",
-    "brandName": "itel",
-    "categoryId": "cat-smartphones",
-    "categoryName": "Smartphones",
-    "shortDescription": "itel A100C with authentic manufacturer warranty. Available at Anil Communications Pant Nagar.",
-    "description": "itel A100C by itel in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
-    "basePrice": 6499,
-    "mrp": 7999,
-    "hsnCode": "85171300",
-    "gstRate": 18,
-    "images": [
-      "/images/products/photos/itel-a100c.webp",
-      "/images/products/itel-a100c.svg"
-    ],
-    "isFeatured": false,
-    "isActive": true,
-    "warrantySummary": "1 Year Official Brand Warranty",
-    "rating": 4.8,
-    "reviewCount": 12,
-    "variants": [
-      {
-        "id": "var-itel-a100c-01",
-        "productId": "prod-itel-a100c",
-        "sku": "AC-ITE-ITEL-A10-1",
-        "barcode": "8906000000018",
-        "color": "Standard",
-        "colorCode": "#493129",
-        "ram": "4GB",
-        "storage": "64GB",
-        "sellingPrice": 6499,
-        "mrp": 7999,
-        "costPrice": 5600,
-        "stockQuantity": 30,
         "lowStockThreshold": 5,
         "isActive": true
       }

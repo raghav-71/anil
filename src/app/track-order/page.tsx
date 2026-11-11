@@ -44,19 +44,16 @@ function TrackOrderContent() {
     setSearched(true);
 
     try {
-      const res = await fetch(`/api/reports`);
+      const cleanQ = query.trim();
+      const isPhone = cleanQ.replace(/\D/g, "").length >= 10;
+      const param = isPhone ? `phone=${encodeURIComponent(cleanQ.replace(/\D/g, ""))}` : `orderNumber=${encodeURIComponent(cleanQ)}`;
+
+      const res = await fetch(`/api/orders/user?${param}`);
       const data = await res.json();
-      const allOrders: Order[] = data.recentOrders || [];
+      const foundOrders: Order[] = data.orders || [];
 
-      const found = allOrders.find(
-        (o) =>
-          o.orderNumber.toLowerCase() === query.trim().toLowerCase() ||
-          o.customerPhone === query.trim() ||
-          o.id === query.trim()
-      );
-
-      if (found) {
-        setOrder(found);
+      if (foundOrders.length > 0) {
+        setOrder(foundOrders[0]);
       } else {
         setOrder(null);
         setError(`No order found matching "${query}". Please check your order ID or phone number.`);

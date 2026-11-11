@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/storefront/Navbar";
 import { Footer } from "@/components/storefront/Footer";
 import { useCart } from "@/lib/cart-context";
 import { formatCurrency } from "@/lib/utils";
+import { supabase } from "@/lib/supabase/client";
 import confetti from "canvas-confetti";
 import {
   CreditCard,
@@ -29,9 +30,9 @@ export default function CheckoutPage() {
   const [idempotencyKey] = useState(() => `idemp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`);
 
   const [formData, setFormData] = useState({
-    fullName: "Ramesh Sharma",
-    phone: "9845012345",
-    email: "ramesh.sharma@example.com",
+    fullName: "",
+    phone: "",
+    email: "",
     street: "",
     landmark: "",
     city: "",
@@ -44,7 +45,19 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [orderSuccess, setOrderSuccess] = useState<any | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // Check if customer is authenticated in Supabase
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setFormData((prev) => ({
+          ...prev,
+          fullName: prev.fullName || user.user_metadata?.full_name || "",
+          phone: prev.phone || (user.user_metadata?.phone || "").replace(/\D/g, ""),
+          email: prev.email || user.email || "",
+        }));
+      }
+    });
+
     fetch("/api/addresses")
       .then((res) => res.json())
       .then((d) => {
@@ -55,8 +68,8 @@ export default function CheckoutPage() {
             setSelectedAddressId(defaultAddr.id);
             setFormData((prev) => ({
               ...prev,
-              fullName: defaultAddr.name,
-              phone: defaultAddr.phone.replace(/\D/g, ""),
+              fullName: prev.fullName || defaultAddr.name,
+              phone: prev.phone || defaultAddr.phone.replace(/\D/g, ""),
               street: defaultAddr.street,
               landmark: defaultAddr.landmark || "",
               city: defaultAddr.city,

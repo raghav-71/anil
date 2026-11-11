@@ -9,6 +9,7 @@ import { Footer } from "@/components/storefront/Footer";
 import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { supabase } from "@/lib/supabase/client";
 import { Order, Product, UserAddress } from "@/types";
 import {
   User,
@@ -41,12 +42,25 @@ function AccountContent() {
   const [addresses, setAddresses] = useState<UserAddress[]>([]);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const [customerUser, setCustomerUser] = useState<{
+    id: string;
+    email: string;
+    name: string;
+    phone: string;
+  } | null>(null);
+
+  // Profile update form state
+  const [profileName, setProfileName] = useState("");
+  const [profilePhone, setProfilePhone] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileStatus, setProfileStatus] = useState<string | null>(null);
 
   // Address modal state
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [newAddr, setNewAddr] = useState({
-    name: "Raghav Anil",
-    phone: "+91 98450 12345",
+    name: "",
+    phone: "",
     street: "",
     landmark: "",
     city: "",
@@ -70,20 +84,55 @@ function AccountContent() {
       .then((res) => res.json())
       .then((d) => setAddresses(d.addresses || []));
 
-    // Fetch orders (customer orders)
-    fetch("/api/orders/user?phone=9845012345")
-      .then((res) => res.json())
-      .then((d) => {
-        setOrders(d.orders || []);
-        setLoadingOrders(false);
-      })
-      .catch(() => {
-        // Fallback fetch all orders
-        fetch("/api/reports")
+    // Listen to Supabase Auth & load genuine customer data
+    supabase.auth.getUser().then(({ data: { user: sbUser } }) => {
+      if (sbUser) {
+        const uName =
+          sbUser.user_metadata?.full_name ||
+          sbUser.user_metadata?.name ||
+          sbUser.email?.split("@")[0] ||
+          "Valued Customer";
+        const uPhone = sbUser.user_metadata?.phone || "";
+
+        setCustomerUser({
+          id: sbUser.id,
+          email: sbUser.email || "",
+          name: uName,
+          phone: uPhone,
+        });
+
+        setProfileName(uName);
+        setProfilePhone(uPhone);
+
+        setNewAddr((prev) => ({
+          ...prev,
+          name: uName,
+          phone: uPhone,
+        }));
+
+        // Fetch orders specific to this customer
+        const params = new URLSearchParams();
+        if (uPhone) params.set("phone", uPhone);
+        if (sbUser.email) params.set("email", sbUser.email);
+
+        fetch(`/api/orders/user?${params.toString()}`)
           .then((res) => res.json())
-          .then(() => setLoadingOrders(false))
+          .then((d) => {
+            setOrders(d.orders || []);
+            setLoadingOrders(false);
+          })
           .catch(() => setLoadingOrders(false));
-      });
+      } else {
+        // Fallback for guest or non-session viewing
+        fetch("/api/orders/user?phone=guest")
+          .then((res) => res.json())
+          .then((d) => {
+            setOrders(d.orders || []);
+            setLoadingOrders(false);
+          })
+          .catch(() => setLoadingOrders(false));
+      }
+    });
   }, []);
 
   const handleAddAddress = async (e: React.FormEvent) => {
@@ -142,11 +191,18 @@ function AccountContent() {
   const handleCancelOrder = async (orderId: string) => {
     const reason = prompt("Please provide a reason for cancelling this consignment:");
     if (!reason) return;
+    const targetOrder = orders.find((o) => o.id === orderId);
     try {
       const res = await fetch("/api/orders/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, action: "cancel", reason }),
+        body: JSON.stringify({
+          orderId,
+          action: "cancel",
+          reason,
+          customerPhone: targetOrder?.customerPhone || customerUser?.phone,
+          customerEmail: targetOrder?.customerEmail || customerUser?.email,
+        }),
       });
       const data = await res.json();
       if (data.success) {
@@ -165,11 +221,18 @@ function AccountContent() {
   const handleReturnOrder = async (orderId: string) => {
     const reason = prompt("Please state the reason for requesting return/replacement:");
     if (!reason) return;
+    const targetOrder = orders.find((o) => o.id === orderId);
     try {
       const res = await fetch("/api/orders/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, action: "return", reason }),
+        body: JSON.stringify({
+          orderId,
+          action: "return",
+          reason,
+          customerPhone: targetOrder?.customerPhone || customerUser?.phone,
+          customerEmail: targetOrder?.customerEmail || customerUser?.email,
+        }),
       });
       const data = await res.json();
       if (data.success) {
@@ -197,21 +260,42 @@ function AccountContent() {
         <div className="p-6 sm:p-8 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-[#FFDEC7] border border-[#E8D5C5] flex items-center justify-center font-serif text-2xl font-bold text-[#493129]">
-              {(user?.name || user?.fullName || "Raghav").charAt(0)}
+              {(customerUser?.name || user?.name || "C").charAt(0).toUpperCase()}
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="font-serif text-2xl sm:text-3xl text-[#493129]">
-                  {user?.name || user?.fullName || "Raghav Anil"}
+                  {customerUser?.name || user?.name || "Store Patron"}
                 </h1>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-[#8B597B] text-white">
-                  Verified Customer
+                  {customerUser ? "Verified Account" : "Guest View"}
                 </span>
               </div>
               <p className="text-xs text-[#806D63] mt-0.5 font-sans">
-                {user?.email || ""} • Registered Account
+                {customerUser?.email || user?.email || "Browse and track your customer orders"}
               </p>
             </div>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            {customerUser ? (
+              <button
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  window.location.href = "/login";
+                }}
+                className="px-4 py-2 rounded-full border border-[#E8D5C5] text-xs font-semibold text-[#C0393A] hover:bg-[#C0393A]/10 transition"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="px-4 py-2 rounded-full bg-[#493129] text-[#FFEDDB] text-xs font-semibold hover:bg-[#8B597B] transition"
+              >
+                Sign In to Account
+              </Link>
+            )}
           </div>
         </div>
 
@@ -539,40 +623,109 @@ function AccountContent() {
         {/* TAB 5: Security & Profile */}
         {activeTab === "security" && (
           <div className="max-w-2xl p-6 sm:p-8 rounded-3xl bg-[#FFFAF5] border border-[#E8D5C5] shadow-sm space-y-6 text-xs text-[#30241F]">
-            <h2 className="font-serif text-2xl text-[#493129]">Account Credentials & Security</h2>
-            <div className="space-y-4">
+            <div>
+              <h2 className="font-serif text-2xl text-[#493129]">Account Credentials & Security</h2>
+              <p className="text-xs text-[#806D63] mt-1">Manage your customer profile and login security.</p>
+            </div>
+
+            {profileStatus && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs">
+                {profileStatus}
+              </div>
+            )}
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setProfileSaving(true);
+                setProfileStatus(null);
+                try {
+                  const updatePayload: any = {
+                    data: { full_name: profileName.trim(), phone: profilePhone.trim() },
+                  };
+                  if (newPassword && newPassword.length >= 6) {
+                    updatePayload.password = newPassword;
+                  }
+                  const { error: updErr } = await supabase.auth.updateUser(updatePayload);
+                  if (updErr) throw new Error(updErr.message);
+
+                  setProfileStatus("Profile details updated successfully.");
+                  setNewPassword("");
+                  setCustomerUser((prev) =>
+                    prev ? { ...prev, name: profileName.trim(), phone: profilePhone.trim() } : null
+                  );
+                } catch (err: any) {
+                  setProfileStatus(`Update failed: ${err.message}`);
+                } finally {
+                  setProfileSaving(false);
+                }
+              }}
+              className="space-y-4"
+            >
               <div>
-                <label className="font-semibold block mb-1 text-[#493129]">Full Legal Name</label>
+                <label className="font-semibold block mb-1 text-[#493129]">Full Name</label>
                 <input
                   type="text"
-                  defaultValue={user?.name || user?.fullName || "Raghav Anil"}
+                  required
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  placeholder="Your Name"
                   className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
                 />
               </div>
               <div>
-                <label className="font-semibold block mb-1 text-[#493129]">Registered Contact Email</label>
+                <label className="font-semibold block mb-1 text-[#493129]">Primary Mobile Phone</label>
                 <input
-                  type="email"
-                  defaultValue={user?.email || ""}
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
-                />
-              </div>
-              <div>
-                <label className="font-semibold block mb-1 text-[#493129]">Primary Mobile Number (OTP Verified)</label>
-                <input
-                  type="text"
-                  defaultValue="+91 98450 12345"
+                  type="tel"
+                  value={profilePhone}
+                  onChange={(e) => setProfilePhone(e.target.value)}
+                  placeholder="9845012345"
                   className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none font-mono"
                 />
               </div>
-              <button
-                type="button"
-                onClick={() => alert("Profile credentials updated successfully.")}
-                className="px-6 py-2.5 rounded-full bg-[#493129] text-[#FFEDDB] font-semibold text-xs hover:bg-[#8B597B] transition"
-              >
-                Save Profile Changes
-              </button>
-            </div>
+              <div>
+                <label className="font-semibold block mb-1 text-[#493129]">Registered Email Address</label>
+                <input
+                  type="email"
+                  disabled
+                  value={customerUser?.email || user?.email || "Guest"}
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F5E8DC]/50 border border-[#E8D5C5] text-[#806D63] outline-none cursor-not-allowed"
+                />
+                <p className="text-[10px] text-[#806D63] mt-1">Managed via Supabase Auth email verification.</p>
+              </div>
+              <div>
+                <label className="font-semibold block mb-1 text-[#493129]">New Password (Optional)</label>
+                <input
+                  type="password"
+                  minLength={6}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Leave blank to keep existing password"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:border-[#8B597B] outline-none"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-between">
+                <button
+                  type="submit"
+                  disabled={profileSaving}
+                  className="px-6 py-2.5 rounded-full bg-[#493129] text-[#FFEDDB] font-semibold text-xs hover:bg-[#8B597B] transition disabled:opacity-50"
+                >
+                  {profileSaving ? "Saving..." : "Save Profile Changes"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await supabase.auth.signOut();
+                    window.location.href = "/login";
+                  }}
+                  className="text-xs text-[#C0393A] hover:underline font-semibold"
+                >
+                  Sign Out of Account
+                </button>
+              </div>
+            </form>
           </div>
         )}
 
