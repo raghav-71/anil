@@ -151,7 +151,7 @@ export default function CustomerRegisterPage() {
                     required
                     value={form.fullName}
                     onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                    placeholder="Ramesh Sharma"
+                    placeholder="Your full name"
                     className="w-full pl-9 pr-3 py-2.5 rounded-full bg-[#ffeedb]/60 border border-[#493129]/15 text-[#493129] focus:outline-none focus:border-[#8b597b]"
                   />
                 </div>

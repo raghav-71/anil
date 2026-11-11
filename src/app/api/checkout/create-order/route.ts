@@ -73,8 +73,15 @@ export async function POST(req: NextRequest) {
       order.notes = `Paid via Razorpay Link (https://razorpay.me/@raghavendra4969). UTR/Ref: ${utrNumber}`;
     }
 
-    // Sync order to Supabase PostgreSQL (Single Source of Truth)
-    syncOrderToSupabase(order).catch((e) => console.error("Supabase order sync error:", e));
+    // Sync order to Supabase PostgreSQL (Single Source of Truth) - AWAITED so serverless runtime does not abort it
+    try {
+      const syncRes = await syncOrderToSupabase(order);
+      if (!syncRes.success) {
+        console.error("[Checkout] Supabase order sync failed:", syncRes.error);
+      }
+    } catch (e: any) {
+      console.error("[Checkout] Supabase order sync threw exception:", e.message);
+    }
 
     // Trigger asynchronous owner notification via WhatsApp (non-blocking)
     dispatchWhatsAppNotification({

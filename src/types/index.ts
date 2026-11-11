@@ -182,6 +182,7 @@ export interface OrderItem {
   taxRate: number;
   taxAmount: number;
   totalPrice: number;
+  sku?: string;
   image?: string;
 }
 

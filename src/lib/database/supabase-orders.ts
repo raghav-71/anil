@@ -48,22 +48,21 @@ export async function syncOrderToSupabase(order: Order): Promise<{ success: bool
         product_title: item.productName,
         product_name: item.productName,
         variant_name: item.variantDetails || "",
-        price: item.unitPrice,
+        variant_details: item.variantDetails || "",
+        sku: item.sku || "SKU-ITEM",
         quantity: item.quantity,
-        total: item.totalPrice,
+        unit_price: item.unitPrice,
+        tax_rate: item.taxRate || 18,
+        tax_amount: item.taxAmount || 0,
+        total_price: item.totalPrice,
       }));
 
       const { error: itemsError } = await supabase
         .from("order_items")
-        .upsert(itemsPayload, { onConflict: "order_id,variant_id" });
+        .insert(itemsPayload);
 
       if (itemsError) {
-        // Fallback without conflict target if composite key isn't unique constraint
-        try {
-          await supabase.from("order_items").insert(itemsPayload);
-        } catch {
-          // ignore fallback error
-        }
+        console.error("[Supabase Orders] Order items insert error:", itemsError.message);
       }
     }
 

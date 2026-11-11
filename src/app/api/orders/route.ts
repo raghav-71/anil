@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
         .select("*, items:order_items(*)")
         .order("created_at", { ascending: false });
 
-      if (!error && dbOrders && dbOrders.length > 0) {
+      if (!error && Array.isArray(dbOrders)) {
         orders = dbOrders.map((o: any) => ({
           id: o.id,
           orderNumber: o.order_number,

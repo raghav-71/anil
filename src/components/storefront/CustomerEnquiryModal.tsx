@@ -141,7 +141,7 @@ export function CustomerEnquiryModal({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Anand Kulkarni"
+                  placeholder="Your full name"
                   className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] placeholder-[#806D63]/60 focus:outline-none focus:border-[#8B597B]"
                 />
               </div>

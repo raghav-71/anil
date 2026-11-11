@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       .from("products")
       .select("*", { count: "exact", head: true });
 
-    if (!oErr && dbOrders && dbOrders.length > 0) {
+    if (!oErr && Array.isArray(dbOrders)) {
       orders = dbOrders.map((o: any) => ({
         id: o.id,
         orderNumber: o.order_number,
@@ -51,15 +51,15 @@ export async function GET(req: NextRequest) {
           id: it.id,
           variantId: it.variant_id,
           productName: it.product_title || it.product_name,
-          variantDetails: it.variant_name || "",
+          variantDetails: it.variant_name || it.variant_details || "",
           quantity: it.quantity,
-          unitPrice: Number(it.price || 0),
-          taxRate: 18,
-          taxAmount: 0,
-          totalPrice: Number(it.total || 0),
+          unitPrice: Number(it.unit_price || it.price || 0),
+          taxRate: Number(it.tax_rate || 18),
+          taxAmount: Number(it.tax_amount || 0),
+          totalPrice: Number(it.total_price || it.total || 0),
         })),
       }));
-      productsCount = dbProductsCount || db.getProducts().length;
+      productsCount = dbProductsCount ?? db.getProducts().length;
       isFromSupabase = true;
     }
   } catch (err) {

@@ -219,7 +219,7 @@ export default function ContactPage() {
                         required
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        placeholder="e.g. Ramesh Sharma"
+                        placeholder="Your full name"
                         className="w-full px-4 py-2.5 rounded-full bg-[#FFFFFF] border border-[#E8D5C5] text-[#30241F] focus:outline-none focus:border-[#8B597B]"
                       />
                     </div>
