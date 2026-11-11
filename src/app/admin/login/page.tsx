@@ -12,7 +12,7 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const { loginWithCredentials } = useAuth();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("admin@anilcommunications.com");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
