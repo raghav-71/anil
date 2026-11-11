@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/database/store";
 import { dispatchWhatsAppNotification } from "@/lib/whatsapp";
 import { verifyAdminSession } from "@/lib/admin-auth";
+import { syncOrderStatusToSupabase } from "@/lib/database/supabase-orders";
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,6 +47,11 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: res.message }, { status: 400 });
       }
 
+      // Sync cancellation to Supabase
+      syncOrderStatusToSupabase(orderId, { status: "cancelled" }).catch((e) =>
+        console.error("Supabase cancel status sync error:", e)
+      );
+
       // Dispatch owner notification
       dispatchWhatsAppNotification({
         eventType: "cancellation_requested",
@@ -68,6 +74,11 @@ export async function POST(req: NextRequest) {
       if (!res.success) {
         return NextResponse.json({ error: res.message }, { status: 400 });
       }
+
+      // Sync return to Supabase
+      syncOrderStatusToSupabase(orderId, { status: "returned" }).catch((e) =>
+        console.error("Supabase return status sync error:", e)
+      );
 
       // Dispatch owner notification
       dispatchWhatsAppNotification({

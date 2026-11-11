@@ -112,11 +112,15 @@ export async function POST(req: NextRequest) {
 
         if (!authErr && authData?.user) {
           const user = authData.user;
+          const userRole = user.app_metadata?.role || user.user_metadata?.role;
+          const isConfiguredOwner =
+            user.email?.toLowerCase() === getAdminEmail().toLowerCase() ||
+            userRole === "owner" ||
+            userRole === "admin" ||
+            userRole === "super_admin";
+
           // Verify admin permission against trusted database record
           const dbCheck = await verifyAdminFromDatabase(user.email || providedEmail, user.id);
-
-          const isConfiguredOwner =
-            user.email?.toLowerCase() === getAdminEmail().toLowerCase();
 
           if (dbCheck?.isAdmin || isConfiguredOwner) {
             authSuccess = true;
@@ -232,9 +236,9 @@ export async function POST(req: NextRequest) {
 
     return response;
   } catch (err: any) {
-    console.error("[AdminAuth] Unexpected login error:", err.message || "Unknown");
+    console.error("[AdminAuth] Unexpected login error:", err);
     return NextResponse.json(
-      { error: "Authentication service encountered an unexpected error." },
+      { error: `Authentication service error: ${err.message || "Unexpected failure"}` },
       { status: 500 }
     );
   }

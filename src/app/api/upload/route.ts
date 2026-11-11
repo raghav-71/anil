@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       if (hasSupabase) {
         try {
           const { data, error } = await supabase.storage
-            .from("products")
+            .from("product-images")
             .upload(uniqueName, buffer, {
               contentType: file.type,
               upsert: true,
@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
 
           if (!error && data) {
             const { data: publicUrlData } = supabase.storage
-              .from("products")
+              .from("product-images")
               .getPublicUrl(uniqueName);
 
             if (publicUrlData?.publicUrl) {

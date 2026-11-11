@@ -230,7 +230,7 @@
       {
         "id": "var-realme-16-01",
         "productId": "prod-realme-16",
-        "sku": "AC-REA-REALME-1-1",
+        "sku": "AC-REA-16-01",
         "barcode": "8906000000007",
         "color": "Standard",
         "colorCode": "#493129",
@@ -246,7 +246,7 @@
       {
         "id": "var-realme-16-02",
         "productId": "prod-realme-16",
-        "sku": "AC-REA-REALME-1-2",
+        "sku": "AC-REA-16-02",
         "barcode": "8906000000008",
         "color": "Standard",
         "colorCode": "#493129",
@@ -289,7 +289,7 @@
       {
         "id": "var-realme-16x-01",
         "productId": "prod-realme-16x",
-        "sku": "AC-REA-REALME-1-1",
+        "sku": "AC-REA-16X-01",
         "barcode": "8906000000009",
         "color": "Standard",
         "colorCode": "#493129",
@@ -305,7 +305,7 @@
       {
         "id": "var-realme-16x-02",
         "productId": "prod-realme-16x",
-        "sku": "AC-REA-REALME-1-2",
+        "sku": "AC-REA-16X-02",
         "barcode": "8906000000010",
         "color": "Standard",
         "colorCode": "#493129",
@@ -348,7 +348,7 @@
       {
         "id": "var-realme-16-pro-01",
         "productId": "prod-realme-16-pro",
-        "sku": "AC-REA-REALME-1-1",
+        "sku": "AC-REA-16PRO-01",
         "barcode": "8906000000011",
         "color": "Standard",
         "colorCode": "#493129",
@@ -391,7 +391,7 @@
       {
         "id": "var-realme-16t-01",
         "productId": "prod-realme-16t",
-        "sku": "AC-REA-REALME-1-1",
+        "sku": "AC-REA-16T-01",
         "barcode": "8906000000012",
         "color": "Standard",
         "colorCode": "#493129",
@@ -493,7 +493,7 @@
       {
         "id": "var-realme-11x-01",
         "productId": "prod-realme-11x",
-        "sku": "AC-REA-REALME-1-1",
+        "sku": "AC-REA-11X-01",
         "barcode": "8906000000015",
         "color": "Standard",
         "colorCode": "#493129",
@@ -706,7 +706,7 @@
       {
         "id": "var-cellecor-keypad-01",
         "productId": "prod-cellecor-keypad",
-        "sku": "AC-CEL-CELLECOR-01",
+        "sku": "AC-CEL-KEYPAD-01",
         "barcode": "8906000000021",
         "color": "Standard",
         "colorCode": "#493129",
@@ -829,7 +829,7 @@
       {
         "id": "var-cellecor-cli-01",
         "productId": "prod-cellecor-cli",
-        "sku": "AC-CEL-CELLECOR-01",
+        "sku": "AC-CEL-CLI-01",
         "barcode": "8906000000024",
         "color": "Standard",
         "colorCode": "#493129",
@@ -911,7 +911,7 @@
       {
         "id": "var-boat-airdopes-156-nirvana-01",
         "productId": "prod-boat-airdopes-156-nirvana",
-        "sku": "AC-BOA-BOAT-AIR-01",
+        "sku": "AC-BOA-AIR156-01",
         "barcode": "8906000000026",
         "color": "Standard",
         "colorCode": "#493129",
@@ -1034,7 +1034,7 @@
       {
         "id": "var-boat-airdopes-91-prime-01",
         "productId": "prod-boat-airdopes-91-prime",
-        "sku": "AC-BOA-BOAT-AIR-01",
+        "sku": "AC-BOA-AIR91-01",
         "barcode": "8906000000029",
         "color": "Standard",
         "colorCode": "#493129",
@@ -1075,7 +1075,7 @@
       {
         "id": "var-boat-airdopes-213-01",
         "productId": "prod-boat-airdopes-213",
-        "sku": "AC-BOA-BOAT-AIR-01",
+        "sku": "AC-BOA-AIR213-01",
         "barcode": "8906000000030",
         "color": "Standard",
         "colorCode": "#493129",
@@ -1444,7 +1444,7 @@
       {
         "id": "var-boat-rockerz-103-pro-01",
         "productId": "prod-boat-rockerz-103-pro",
-        "sku": "AC-BOA-BOAT-ROC-01",
+        "sku": "AC-BOA-ROC103-01",
         "barcode": "8906000000039",
         "color": "Standard",
         "colorCode": "#493129",
@@ -1485,7 +1485,7 @@
       {
         "id": "var-boat-rockerz-425-01",
         "productId": "prod-boat-rockerz-425",
-        "sku": "AC-BOA-BOAT-ROC-01",
+        "sku": "AC-BOA-ROC425-01",
         "barcode": "8906000000040",
         "color": "Standard",
         "colorCode": "#493129",
@@ -1526,7 +1526,7 @@
       {
         "id": "var-boat-rockerz-trendz-01",
         "productId": "prod-boat-rockerz-trendz",
-        "sku": "AC-BOA-BOAT-ROC-01",
+        "sku": "AC-BOA-ROCTRENDZ-01",
         "barcode": "8906000000041",
         "color": "Standard",
         "colorCode": "#493129",

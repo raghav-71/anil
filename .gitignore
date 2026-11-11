@@ -35,3 +35,5 @@ next-env.d.ts
 backups/
 *.tmp
 .vscode/
+supabase/.temp/
+src/lib/database/backups/

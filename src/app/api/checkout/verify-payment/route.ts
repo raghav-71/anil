@@ -3,6 +3,7 @@ import { db } from "@/lib/database/store";
 import { verifyRazorpaySignature } from "@/lib/razorpay";
 import { dispatchWhatsAppNotification } from "@/lib/whatsapp";
 import { dispatchOrderEmailNotification } from "@/lib/email";
+import { syncOrderToSupabase } from "@/lib/database/supabase-orders";
 
 export async function POST(req: NextRequest) {
   try {
@@ -48,6 +49,9 @@ export async function POST(req: NextRequest) {
     }
 
     const order = result.order;
+
+    // Sync order to Supabase PostgreSQL (Single Source of Truth)
+    syncOrderToSupabase(order).catch((e) => console.error("Supabase order sync error:", e));
 
     // Trigger WhatsApp notification for verified online payment & order creation (non-blocking)
     dispatchWhatsAppNotification({

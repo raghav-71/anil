@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/database/store";
 import { verifyAdminSession } from "@/lib/admin-auth";
+import { getServiceSupabase } from "@/lib/supabase/client";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,74 @@ export async function GET(req: NextRequest) {
   const inStockOnly = searchParams.get("inStock") === "true";
   const includeUnpublished = searchParams.get("includeUnpublished") === "true";
 
-  let products = db.getProducts();
+  let products: any[] = [];
+  let categories: any[] = [];
+  let brands: any[] = [];
+
+  // 1. Fetch live from Supabase PostgreSQL
+  try {
+    const supabase = getServiceSupabase();
+    const { data: dbProducts, error: pErr } = await supabase
+      .from("products")
+      .select("*, variants:product_variants(*)");
+
+    if (!pErr && dbProducts && dbProducts.length > 0) {
+      products = dbProducts.map((p: any) => ({
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        brandId: p.brand_id,
+        brandName: p.brand_name,
+        categoryId: p.category_id,
+        categoryName: p.category_name,
+        shortDescription: p.short_description,
+        description: p.description,
+        basePrice: Number(p.base_price) || 0,
+        mrp: Number(p.mrp) || 0,
+        hsnCode: p.hsn_code,
+        gstRate: Number(p.gst_rate) || 18,
+        images: p.images || [],
+        isFeatured: Boolean(p.is_featured),
+        isActive: Boolean(p.is_active),
+        warrantySummary: p.warranty_summary,
+        rating: Number(p.rating) || 4.8,
+        reviewCount: Number(p.review_count) || 12,
+        variants: (p.variants || []).map((v: any) => ({
+          id: v.id,
+          productId: v.product_id,
+          sku: v.sku,
+          barcode: v.barcode,
+          color: v.color,
+          colorCode: v.color_code,
+          ram: v.ram,
+          storage: v.storage,
+          sellingPrice: Number(v.selling_price) || 0,
+          mrp: Number(v.mrp) || 0,
+          costPrice: Number(v.cost_price) || 0,
+          stockQuantity: Number(v.stock_quantity) || 0,
+          lowStockThreshold: Number(v.low_stock_threshold) || 5,
+          isActive: Boolean(v.is_active),
+        })),
+        highlights: p.highlights || [],
+        specifications: p.specifications || {},
+        returnPolicy: p.return_policy,
+        createdAt: p.created_at,
+        updatedAt: p.updated_at,
+      }));
+    } else {
+      products = db.getProducts();
+    }
+
+    const { data: dbCats } = await supabase.from("categories").select("*");
+    categories = dbCats && dbCats.length > 0 ? dbCats : db.getCategories();
+
+    const { data: dbBrands } = await supabase.from("brands").select("*");
+    brands = dbBrands && dbBrands.length > 0 ? dbBrands : db.getBrands();
+  } catch {
+    products = db.getProducts();
+    categories = db.getCategories();
+    brands = db.getBrands();
+  }
 
   // Public storefront should only see published/active products unless admin specifies includeUnpublished
   if (!includeUnpublished) {
@@ -33,12 +101,12 @@ export async function GET(req: NextRequest) {
       (p) =>
         p.title.toLowerCase().includes(q) ||
         p.brandName.toLowerCase().includes(q) ||
-        p.variants.some((v) => v.barcode?.includes(q) || v.sku?.toLowerCase().includes(q))
+        p.variants.some((v: any) => v.barcode?.includes(q) || v.sku?.toLowerCase().includes(q))
     );
   }
 
   if (inStockOnly) {
-    products = products.filter((p) => p.variants.some((v) => v.stockQuantity > 0));
+    products = products.filter((p) => p.variants.some((v: any) => v.stockQuantity > 0));
   }
 
   if (sort === "price-low") {
@@ -130,6 +198,56 @@ export async function POST(req: NextRequest) {
     }
 
     const newProduct = db.addProduct(body);
+
+    // Sync to Supabase PostgreSQL
+    try {
+      const supabase = getServiceSupabase();
+      await supabase.from("products").upsert({
+        id: newProduct.id,
+        title: newProduct.title,
+        slug: newProduct.slug,
+        brand_id: newProduct.brandId,
+        brand_name: newProduct.brandName,
+        category_id: newProduct.categoryId,
+        category_name: newProduct.categoryName,
+        short_description: newProduct.shortDescription,
+        description: newProduct.description,
+        base_price: newProduct.basePrice,
+        mrp: newProduct.mrp,
+        hsn_code: newProduct.hsnCode,
+        gst_rate: newProduct.gstRate,
+        images: newProduct.images,
+        is_featured: newProduct.isFeatured,
+        is_active: newProduct.isActive,
+        warranty_summary: newProduct.warrantySummary,
+        rating: newProduct.rating,
+        review_count: newProduct.reviewCount,
+      });
+
+      if (newProduct.variants && newProduct.variants.length > 0) {
+        await supabase.from("product_variants").upsert(
+          newProduct.variants.map((v) => ({
+            id: v.id,
+            product_id: newProduct.id,
+            sku: v.sku,
+            barcode: v.barcode || v.sku,
+            color: v.color,
+            color_code: v.colorCode,
+            ram: v.ram,
+            storage: v.storage,
+            selling_price: v.sellingPrice,
+            mrp: v.mrp,
+            cost_price: v.costPrice,
+            stock_quantity: v.stockQuantity,
+            low_stock_threshold: v.lowStockThreshold,
+            is_active: v.isActive,
+          }))
+        );
+      }
+    } catch (sbErr) {
+      console.warn("[Products] Supabase insert warning:", sbErr);
+    }
+
     return NextResponse.json(
       { success: true, product: newProduct },
       {
@@ -157,6 +275,28 @@ export async function PUT(req: NextRequest) {
     if (!id) return NextResponse.json({ error: "Product ID required" }, { status: 400 });
     const updated = db.updateProduct(id, updates);
     if (!updated) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+
+    // Sync to Supabase PostgreSQL
+    try {
+      const supabase = getServiceSupabase();
+      const sbUpdate: any = {};
+      if (updates.title) sbUpdate.title = updates.title;
+      if (updates.basePrice !== undefined) sbUpdate.base_price = updates.basePrice;
+      if (updates.mrp !== undefined) sbUpdate.mrp = updates.mrp;
+      if (updates.isActive !== undefined) sbUpdate.is_active = updates.isActive;
+      if (updates.images) sbUpdate.images = updates.images;
+      if (updates.description) sbUpdate.description = updates.description;
+      if (updates.shortDescription) sbUpdate.short_description = updates.shortDescription;
+      if (updates.brandName) sbUpdate.brand_name = updates.brandName;
+      if (updates.categoryName) sbUpdate.category_name = updates.categoryName;
+      if (Object.keys(sbUpdate).length > 0) {
+        sbUpdate.updated_at = new Date().toISOString();
+        await supabase.from("products").update(sbUpdate).eq("id", id);
+      }
+    } catch (sbErr) {
+      console.warn("[Products] Supabase update warning:", sbErr);
+    }
+
     return NextResponse.json(
       { success: true, product: updated },
       {
@@ -184,6 +324,15 @@ export async function DELETE(req: NextRequest) {
     if (!id) return NextResponse.json({ error: "Product ID required" }, { status: 400 });
     const ok = db.deleteProduct(id);
     if (!ok) return NextResponse.json({ error: "Product not found" }, { status: 404 });
+
+    // Sync to Supabase PostgreSQL (Soft delete)
+    try {
+      const supabase = getServiceSupabase();
+      await supabase.from("products").update({ is_active: false }).eq("id", id);
+    } catch (sbErr) {
+      console.warn("[Products] Supabase delete warning:", sbErr);
+    }
+
     return NextResponse.json(
       { success: true },
       {

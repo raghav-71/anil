@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/database/store";
+import { getServiceSupabase } from "@/lib/supabase/client";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,63 @@ export async function GET(req: NextRequest) {
     const cleanEmail = email ? email.trim().toLowerCase() : "";
     const cleanOrderNumber = orderNumber ? orderNumber.trim().toLowerCase() : "";
 
+    // 1. Live Query from Supabase PostgreSQL
+    try {
+      const supabase = getServiceSupabase();
+      let query = supabase.from("orders").select("*, items:order_items(*)");
+
+      if (cleanOrderNumber) {
+        query = query.or(`order_number.ilike.%${cleanOrderNumber}%,id.ilike.%${cleanOrderNumber}%`);
+      } else if (cleanPhone && cleanEmail) {
+        query = query.or(`customer_phone.ilike.%${cleanPhone}%,customer_email.ilike.${cleanEmail}`);
+      } else if (cleanPhone) {
+        query = query.ilike("customer_phone", `%${cleanPhone}%`);
+      } else if (cleanEmail) {
+        query = query.ilike("customer_email", cleanEmail);
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
+
+      if (!error && data && data.length > 0) {
+        const formatted = data.map((o: any) => ({
+          id: o.id,
+          orderNumber: o.order_number,
+          customerName: o.customer_name,
+          customerPhone: o.customer_phone,
+          customerEmail: o.customer_email || "",
+          shippingAddress: o.shipping_address || {},
+          fulfillmentType: o.fulfillment_type || "delivery",
+          subtotal: Number(o.subtotal || 0),
+          discountAmount: Number(o.discount_amount || 0),
+          shippingFee: Number(o.shipping_fee || 0),
+          taxAmount: Number(o.tax_amount || 0),
+          grandTotal: Number(o.grand_total || 0),
+          paymentMethod: o.payment_method,
+          paymentStatus: o.payment_status,
+          status: o.status,
+          trackingNumber: o.tracking_number,
+          notes: o.notes,
+          createdAt: o.created_at,
+          updatedAt: o.updated_at,
+          items: (o.items || []).map((it: any) => ({
+            id: it.id,
+            variantId: it.variant_id,
+            productName: it.product_title || it.product_name,
+            variantDetails: it.variant_name || "",
+            quantity: it.quantity,
+            unitPrice: Number(it.price || 0),
+            taxRate: 18,
+            taxAmount: 0,
+            totalPrice: Number(it.total || 0),
+          })),
+        }));
+        return NextResponse.json({ success: true, orders: formatted });
+      }
+    } catch (supaErr) {
+      console.warn("[Orders User API] Supabase query fallback triggered:", supaErr);
+    }
+
+    // 2. Fallback to Local Store
     const allOrders = db.getOrders();
     const filtered = allOrders.filter((o) => {
       // 1. Direct Order Number lookup
