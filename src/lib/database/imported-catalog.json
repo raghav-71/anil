@@ -14,8 +14,7 @@
     "hsnCode": "85171300",
     "gstRate": 18,
     "images": [
-      "/images/products/photos/moto-g37-power.png",
-      "/images/products/moto-g37-power.svg"
+      "https://rznnaukzdytgrhzfezqb.supabase.co/storage/v1/object/public/product-images/catalog/moto-g37-power.png"
     ],
     "isFeatured": true,
     "isActive": true,
@@ -25,40 +24,26 @@
     "variants": [
       {
         "id": "var-moto-g37-power-01",
-        "productId": "prod-moto-g37-power",
-        "sku": "AC-MOT-MOTO-G37-1",
-        "barcode": "8906000000001",
-        "color": "Standard",
-        "colorCode": "#493129",
-        "ram": "4GB",
-        "storage": "128GB",
         "sellingPrice": 14000,
         "mrp": 15999,
-        "costPrice": 11200,
-        "stockQuantity": 17,
-        "lowStockThreshold": 5,
-        "isActive": true
+        "stockQuantity": 16,
+        "ram": "4GB",
+        "storage": "128GB",
+        "color": "Standard"
       },
       {
         "id": "var-moto-g37-power-02",
-        "productId": "prod-moto-g37-power",
-        "sku": "AC-MOT-MOTO-G37-2",
-        "barcode": "8906000000002",
-        "color": "Standard",
-        "colorCode": "#493129",
-        "ram": "12GB",
-        "storage": "256GB",
         "sellingPrice": 14999,
         "mrp": 17999,
-        "costPrice": 12600,
         "stockQuantity": 15,
-        "lowStockThreshold": 5,
-        "isActive": true
+        "ram": "12GB",
+        "storage": "256GB",
+        "color": "Standard"
       }
     ],
-    "createdAt": "2026-11-08T04:28:14.997Z",
-    "updatedAt": "2026-11-09T08:46:28.711Z",
-    "totalStock": 33,
+    "createdAt": "2026-11-11T02:40:45.625252+00:00",
+    "updatedAt": "2026-11-15T05:14:17.636Z",
+    "totalStock": 31,
     "returnPolicy": "7 Days Replacement for Technical & Hardware Defects",
     "highlights": [
       "100% Genuine Brand New Retail Unit",
@@ -66,11 +51,11 @@
       "Express Secure Delivery in Pant Nagar & Across India"
     ],
     "specifications": {
-      "Network Type": "5G, 4G VOLTE, 3G, 2G",
       "SIM Type": "Dual SIM (Nano-SIM, dual stand-by)",
-      "In The Box": "Handset, Adapter, USB Cable, SIM Ejector, Protective Case"
+      "In The Box": "Handset, Adapter, USB Cable, SIM Ejector, Protective Case",
+      "Network Type": "5G, 4G VOLTE, 3G, 2G"
     },
-    "seoTitle": "Moto G37 Power - Anil Communications Pant Nagar",
+    "seoTitle": "Moto G37 Power - ANIL COMMUNICATION & ZEROX Belagavi",
     "seoDescription": "Motorola Moto G37 Power with authentic manufacturer warranty. Available at Anil Communications Pant Nagar."
   },
   {

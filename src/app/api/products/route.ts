@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/lib/database/store";
 import { verifyAdminSession } from "@/lib/admin-auth";
 import { getServiceSupabase } from "@/lib/supabase/client";
@@ -244,6 +245,14 @@ export async function POST(req: NextRequest) {
           }))
         );
       }
+      try {
+        revalidatePath("/", "layout");
+        revalidatePath("/shop");
+        revalidatePath("/catalog");
+        revalidatePath("/mobiles");
+        revalidatePath("/accessories");
+        if (newProduct.slug) revalidatePath(`/product/${newProduct.slug}`);
+      } catch {}
     } catch (sbErr) {
       console.warn("[Products] Supabase insert warning:", sbErr);
     }
@@ -276,22 +285,77 @@ export async function PUT(req: NextRequest) {
     const updated = db.updateProduct(id, updates);
     if (!updated) return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
-    // Sync to Supabase PostgreSQL
+    // Sync to Supabase PostgreSQL (Single Source of Truth)
     try {
       const supabase = getServiceSupabase();
       const sbUpdate: any = {};
-      if (updates.title) sbUpdate.title = updates.title;
-      if (updates.basePrice !== undefined) sbUpdate.base_price = updates.basePrice;
-      if (updates.mrp !== undefined) sbUpdate.mrp = updates.mrp;
-      if (updates.isActive !== undefined) sbUpdate.is_active = updates.isActive;
-      if (updates.images) sbUpdate.images = updates.images;
-      if (updates.description) sbUpdate.description = updates.description;
-      if (updates.shortDescription) sbUpdate.short_description = updates.shortDescription;
+      if (updates.title) sbUpdate.title = updates.title.trim();
+      if (updates.slug) sbUpdate.slug = updates.slug.trim();
+      if (updates.brandId) sbUpdate.brand_id = updates.brandId;
       if (updates.brandName) sbUpdate.brand_name = updates.brandName;
+      if (updates.categoryId) sbUpdate.category_id = updates.categoryId;
       if (updates.categoryName) sbUpdate.category_name = updates.categoryName;
+      if (updates.shortDescription) sbUpdate.short_description = updates.shortDescription;
+      if (updates.description) sbUpdate.description = updates.description;
+      if (updates.basePrice !== undefined) sbUpdate.base_price = Number(updates.basePrice);
+      if (updates.mrp !== undefined) sbUpdate.mrp = Number(updates.mrp);
+      if (updates.hsnCode) sbUpdate.hsn_code = updates.hsnCode;
+      if (updates.gstRate !== undefined) sbUpdate.gst_rate = Number(updates.gstRate);
+      if (updates.images) sbUpdate.images = updates.images;
+      if (updates.isFeatured !== undefined) sbUpdate.is_featured = Boolean(updates.isFeatured);
+      if (updates.isActive !== undefined) sbUpdate.is_active = Boolean(updates.isActive);
+      if (updates.warrantySummary) sbUpdate.warranty_summary = updates.warrantySummary;
+      if (updates.returnPolicy) sbUpdate.return_policy = updates.returnPolicy;
+      if (updates.highlights) sbUpdate.highlights = updates.highlights;
+      if (updates.specifications) sbUpdate.specifications = updates.specifications;
+
       if (Object.keys(sbUpdate).length > 0) {
         sbUpdate.updated_at = new Date().toISOString();
         await supabase.from("products").update(sbUpdate).eq("id", id);
+      }
+
+      // CRITICAL: Synchronize product variants into Supabase PostgreSQL
+      if (updates.variants && Array.isArray(updates.variants) && updates.variants.length > 0) {
+        for (const v of updates.variants) {
+          const vId = v.id || `var-${id}-${Math.random().toString(36).substring(2, 7)}`;
+          const vSellingPrice = Number(v.sellingPrice) || Number(updates.basePrice) || 0;
+          const vMrp = Number(v.mrp) || Number(updates.mrp) || 0;
+
+          await supabase.from("product_variants").upsert({
+            id: vId,
+            product_id: id,
+            sku: v.sku || `SKU-${id}-${vId}`,
+            barcode: v.barcode || v.sku || `BC-${vId}`,
+            color: v.color || "Standard",
+            color_code: v.colorCode || "#493129",
+            ram: v.ram || "",
+            storage: v.storage || "",
+            selling_price: vSellingPrice,
+            mrp: vMrp,
+            cost_price: Number(v.costPrice) || 0,
+            stock_quantity: Number(v.stockQuantity) || 0,
+            low_stock_threshold: Number(v.lowStockThreshold) || 5,
+            is_active: v.isActive !== undefined ? Boolean(v.isActive) : true,
+          });
+        }
+      } else if (updates.basePrice !== undefined || updates.mrp !== undefined) {
+        // Direct price update without variant array: update primary variant(s) in Supabase
+        const varUpdate: any = {};
+        if (updates.basePrice !== undefined) varUpdate.selling_price = Number(updates.basePrice);
+        if (updates.mrp !== undefined) varUpdate.mrp = Number(updates.mrp);
+        await supabase.from("product_variants").update(varUpdate).eq("product_id", id);
+      }
+
+      // Revalidate cache for real-time storefront reflection
+      try {
+        revalidatePath("/", "layout");
+        revalidatePath("/shop");
+        revalidatePath("/catalog");
+        revalidatePath("/mobiles");
+        revalidatePath("/accessories");
+        if (updated.slug) revalidatePath(`/product/${updated.slug}`);
+      } catch (revErr) {
+        // ignore in non-request contexts
       }
     } catch (sbErr) {
       console.warn("[Products] Supabase update warning:", sbErr);

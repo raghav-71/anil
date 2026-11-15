@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { Navbar } from "@/components/storefront/Navbar";
 import { Footer } from "@/components/storefront/Footer";
 import { useCart } from "@/lib/cart-context";
@@ -19,7 +20,6 @@ import {
   MessageCircle,
   Truck,
   Store,
-  ExternalLink,
 } from "lucide-react";
 
 export default function CheckoutPage() {
@@ -42,7 +42,7 @@ export default function CheckoutPage() {
     paymentMethod: "razorpay" as "razorpay" | "cod",
   });
 
-  const [utrNumber, setUtrNumber] = useState("");
+  const [sdkReady, setSdkReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orderSuccess, setOrderSuccess] = useState<any | null>(null);
@@ -116,6 +116,10 @@ export default function CheckoutPage() {
         throw new Error("Please complete all required delivery address details (street, city, pincode).");
       }
 
+      if (items.length === 0) {
+        throw new Error("Your shopping bag is empty.");
+      }
+
       const shippingAddress =
         fulfillmentType === "pickup"
           ? {
@@ -133,39 +137,153 @@ export default function CheckoutPage() {
               pincode: formData.pincode,
             };
 
-      if (formData.paymentMethod === "razorpay" && !utrNumber.trim()) {
-        throw new Error("Please complete payment on the Razorpay link and enter your 12-digit UTR/UPI reference number.");
-      }
-
-      const payload = {
+      const orderPayload = {
         customerName: formData.fullName,
         customerPhone: formData.phone,
         customerEmail: formData.email,
         shippingAddress,
         fulfillmentType,
         items: items.map((i) => ({ variantId: i.variantId, quantity: i.quantity })),
-        paymentMethod: formData.paymentMethod,
         discountAmount: discountAmount || 0,
         couponCode: appliedCoupon?.code,
         idempotencyKey,
-        utrNumber: utrNumber.trim() || undefined,
       };
 
-      const res = await fetch("/api/checkout/create-order", {
+      // CASE 1: Cash on Delivery
+      if (formData.paymentMethod === "cod") {
+        const res = await fetch("/api/checkout/create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...orderPayload,
+            paymentMethod: "cod",
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Order placement failed.");
+
+        setOrderSuccess(data.order);
+        clearCart();
+        confetti({ particleCount: 120, spread: 75, origin: { y: 0.6 } });
+        setLoading(false);
+        return;
+      }
+
+      // CASE 2: Razorpay Standard Web Checkout
+      if (typeof window === "undefined" || !(window as any).Razorpay) {
+        throw new Error("Payment gateway SDK is loading. Please wait 2 seconds and click again.");
+      }
+
+      // STEP 1: Call Backend to create order on Razorpay
+      const amountInPaise = Math.round(grandTotal * 100);
+      const createRes = await fetch("/api/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          amount: amountInPaise,
+          currency: "INR",
+          receipt: `rcpt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+          notes: {
+            customerName: formData.fullName,
+            customerPhone: formData.phone,
+            fulfillmentType,
+          },
+        }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Order placement failed.");
+      const createData = await createRes.json();
+      if (!createRes.ok || !createData.order_id) {
+        throw new Error(createData.error || "Failed to initialize payment gateway order.");
+      }
 
-      setOrderSuccess(data.order);
-      clearCart();
-      confetti({ particleCount: 120, spread: 75, origin: { y: 0.6 } });
+      const razorpayKey =
+        process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_U0K13p9FHXBPXx";
+
+      // STEP 2: Open Razorpay Standard Checkout Modal
+      const options = {
+        key: razorpayKey,
+        amount: createData.amount,
+        currency: createData.currency || "INR",
+        name: "ANIL COMMUNICATION & ZEROX",
+        description: `Order settlement (${items.length} items)`,
+        order_id: createData.order_id,
+        prefill: {
+          name: formData.fullName,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        notes: {
+          city: shippingAddress.city,
+          pincode: shippingAddress.pincode,
+        },
+        theme: {
+          color: "#8B597B",
+        },
+        handler: async (response: {
+          razorpay_order_id: string;
+          razorpay_payment_id: string;
+          razorpay_signature: string;
+        }) => {
+          try {
+            setLoading(true);
+            // STEP 3: Verify signature & record genuine order in Supabase
+            const verifyRes = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                orderDetails: orderPayload,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (!verifyRes.ok || !verifyData.verified) {
+              throw new Error(verifyData.error || "Payment signature verification failed.");
+            }
+
+            setOrderSuccess(
+              verifyData.order || {
+                orderNumber: `ORD-${response.razorpay_order_id.slice(-6)}`,
+                customerName: formData.fullName,
+                customerPhone: formData.phone,
+                grandTotal,
+                fulfillmentType,
+                shippingAddress,
+                paymentMethod: "razorpay",
+                paymentStatus: "paid",
+              }
+            );
+            clearCart();
+            confetti({ particleCount: 120, spread: 75, origin: { y: 0.6 } });
+          } catch (verifyErr: any) {
+            console.error("Verification error:", verifyErr);
+            setError(verifyErr.message || "Payment signature verification failed.");
+          } finally {
+            setLoading(false);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            setError("Payment was cancelled. You can retry payment whenever you are ready.");
+          },
+        },
+      };
+
+      const razorpayInstance = new (window as any).Razorpay(options);
+
+      razorpayInstance.on("payment.failed", (response: any) => {
+        setLoading(false);
+        const desc = response?.error?.description || "Payment failed at gateway. Please try again.";
+        setError(`Payment declined: ${desc}`);
+      });
+
+      razorpayInstance.open();
     } catch (err: any) {
       setError(err.message || "An error occurred while confirming checkout.");
-    } finally {
       setLoading(false);
     }
   };
@@ -272,6 +390,11 @@ export default function CheckoutPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FFEDDB]">
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="lazyOnload"
+        onLoad={() => setSdkReady(true)}
+      />
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
@@ -510,49 +633,22 @@ export default function CheckoutPage() {
                 </label>
 
                 {formData.paymentMethod === "razorpay" && (
-                  <div className="p-5 rounded-2xl bg-[#FFF5EC] border border-[#8B597B]/30 space-y-3.5 animate-fadeIn">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-[#493129]">
-                            Official Store Razorpay Payment Link
-                          </span>
-                          <span className="text-[10px] bg-[#27845A]/15 text-[#27845A] font-bold px-2 py-0.5 rounded-full">
-                            Verified
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-[#806D63] mt-0.5">
-                          Total to pay: <strong className="text-[#8B597B] font-mono text-sm">{formatCurrency(grandTotal)}</strong>
-                        </p>
-                      </div>
-
-                      <a
-                        href="https://razorpay.me/@raghavendra4969"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2.5 rounded-full bg-[#8B597B] hover:bg-[#493129] text-[#FFEDDB] text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs whitespace-nowrap"
-                      >
-                        <span>Open Razorpay Link</span>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
+                  <div className="p-5 rounded-2xl bg-[#FFF5EC] border border-[#8B597B]/30 space-y-2.5 animate-fadeIn">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-[#493129]">
+                        Razorpay Standard Secure Web Checkout
+                      </span>
+                      <span className="text-[10px] bg-[#27845A]/15 text-[#27845A] font-bold px-2 py-0.5 rounded-full">
+                        256-Bit SSL Encrypted
+                      </span>
                     </div>
-
-                    <div className="pt-3 border-t border-[#E8D5C5] space-y-1.5">
-                      <label className="text-xs font-bold text-[#493129] block">
-                        Payment Reference / 12-Digit UTR Number *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={utrNumber}
-                        onChange={(e) => setUtrNumber(e.target.value)}
-                        placeholder="e.g. 429381920192 or UPI Ref ID"
-                        className="w-full px-4 py-2.5 rounded-xl bg-[#FFFFFF] border border-[#E8D5C5] text-xs font-mono text-[#30241F] focus:outline-none focus:border-[#8B597B]"
-                      />
-                      <p className="text-[10px] text-[#806D63] leading-relaxed">
-                        1. Click the button above to pay on the verified Razorpay page. <br />
-                        2. Copy your 12-digit UTR/UPI reference and paste it here to confirm your order.
-                      </p>
+                    <p className="text-[11px] text-[#806D63] leading-relaxed">
+                      Instant payment modal will open upon clicking the button below. Pay securely via <strong>Google Pay, PhonePe, Paytm, Any UPI App, Credit & Debit Cards, or NetBanking</strong>.
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3 text-[10px] text-[#8B597B] font-semibold pt-1 border-t border-[#E8D5C5]/60">
+                      <span>✓ Official Razorpay Gateway</span>
+                      <span>✓ Instant Confirmation</span>
+                      <span>✓ Zero Extra Surcharge</span>
                     </div>
                   </div>
                 )}
@@ -644,7 +740,13 @@ export default function CheckoutPage() {
                 className="w-full py-4 rounded-full bg-[#493129] hover:bg-[#8B597B] disabled:opacity-50 text-[#FFEDDB] font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition"
               >
                 <Lock className="w-3.5 h-3.5" />
-                <span>{loading ? "Authorizing & Reserving Stock..." : `Settle ${formatCurrency(grandTotal)} & Secure Order`}</span>
+                <span>
+                  {loading
+                    ? "Connecting to Payment Gateway..."
+                    : formData.paymentMethod === "razorpay"
+                    ? `Pay ${formatCurrency(grandTotal)} via Razorpay`
+                    : `Confirm Cash on Delivery Order (${formatCurrency(grandTotal)})`}
+                </span>
               </button>
 
               <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#806D63] font-serif">

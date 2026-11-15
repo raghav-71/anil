@@ -50,6 +50,14 @@ export default function HomePage() {
   );
   const recentProducts = products.filter((p) => recentlyViewed.includes(p.id)).slice(0, 4);
 
+  const heroProduct =
+    products.find((p) => p.isFeatured) ||
+    products.find((p) => p.slug === "moto-g37-power") ||
+    smartphones[0] ||
+    products[0];
+  const heroVariant = heroProduct?.variants?.[0];
+  const heroPrice = (heroVariant ? heroVariant.sellingPrice : heroProduct?.basePrice) || 0;
+
   const handleCopyCoupon = (code: string) => {
     navigator.clipboard.writeText(code);
     setCopiedCoupon(code);
@@ -152,8 +160,8 @@ export default function HomePage() {
 
                   <div className="h-72 sm:h-80 w-full rounded-2xl bg-[#ffeedb]/60 flex items-center justify-center p-6">
                     <img
-                      src="https://cdn.beebom.com/mobile/moto-g37-power-back-front.png"
-                      alt="Moto G37 Power"
+                      src={heroProduct?.images?.[0] || "https://cdn.beebom.com/mobile/moto-g37-power-back-front.png"}
+                      alt={heroProduct?.title || "Moto G37 Power"}
                       className="max-h-full max-w-full object-contain filter drop-shadow-xl hover:scale-105 transition-transform duration-500"
                     />
                   </div>
@@ -161,23 +169,31 @@ export default function HomePage() {
                   <div className="mt-6 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8b597b]">
-                        Motorola 5G Series
+                        {heroProduct?.brandName || "Motorola"} 5G Series
                       </span>
                       <div className="flex items-center gap-1 text-[#493129] text-xs font-semibold">
                         <Star className="w-3.5 h-3.5 fill-[#efa3a0] text-[#efa3a0]" />
-                        <span>4.8</span>
+                        <span>{heroProduct?.rating || 4.8}</span>
                       </div>
                     </div>
 
-                    <h3 className="font-serif text-2xl text-[#493129]">Moto G37 Power</h3>
+                    <h3 className="font-serif text-2xl text-[#493129]">
+                      {heroProduct?.title || "Moto G37 Power"}
+                    </h3>
                     <p className="text-xs text-[#493129]/70 line-clamp-1 font-sans">
-                      Massive Battery, Rapid TurboPower Charging, and Vibrant Display
+                      {heroProduct?.shortDescription || "Massive Battery, Rapid TurboPower Charging, and Vibrant Display"}
                     </p>
 
                     <div className="pt-2 flex items-baseline justify-between">
-                      <span className="text-sm font-semibold text-[#8b597b] italic">
-                        Price available in store
-                      </span>
+                      {heroPrice > 0 ? (
+                        <span className="font-serif text-2xl font-bold text-[#493129]">
+                          {formatCurrency(heroPrice)}
+                        </span>
+                      ) : (
+                        <span className="text-sm font-semibold text-[#8b597b] italic">
+                          Price available in store
+                        </span>
+                      )}
                       <span className="text-[10px] font-bold text-[#493129] uppercase tracking-wider bg-[#ffdec7] px-2.5 py-0.5 rounded-full">
                         In Stock Belagavi
                       </span>
@@ -185,7 +201,7 @@ export default function HomePage() {
 
                     <div className="pt-4 flex gap-2">
                       <Link
-                        href="/product/moto-g37-power"
+                        href={`/product/${heroProduct?.slug || "moto-g37-power"}`}
                         className="flex-1 py-3 rounded-full bg-[#493129] hover:bg-[#35221b] text-[#ffeedb] text-xs font-semibold text-center transition"
                       >
                         View Product Details
@@ -492,45 +508,55 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {keypadPhones.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-4 rounded-2xl bg-white border border-[#493129]/10 hover:shadow-md transition flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="h-36 bg-[#ffeedb]/40 rounded-xl p-3 flex items-center justify-center overflow-hidden">
-                      <img
-                        src={item.images[0] || `/images/products/${item.slug}.svg`}
-                        alt={item.title}
-                        onError={(e) => {
-                          const target = e.currentTarget;
-                          if (!target.src.includes(".svg")) {
-                            target.src = `/images/products/${item.slug}.svg`;
-                          } else if (!target.src.includes("fallback-product.svg")) {
-                            target.src = "/images/products/fallback-product.svg";
-                          }
-                        }}
-                        className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
-                      />
+              {keypadPhones.map((item) => {
+                const kpVariant = item.variants[0];
+                const kpPrice = (kpVariant ? kpVariant.sellingPrice : item.basePrice) || 0;
+                return (
+                  <div
+                    key={item.id}
+                    className="p-4 rounded-2xl bg-white border border-[#493129]/10 hover:shadow-md transition flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="h-36 bg-[#ffeedb]/40 rounded-xl p-3 flex items-center justify-center overflow-hidden">
+                        <img
+                          src={item.images[0] || `/images/products/${item.slug}.svg`}
+                          alt={item.title}
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (!target.src.includes(".svg")) {
+                              target.src = `/images/products/${item.slug}.svg`;
+                            } else if (!target.src.includes("fallback-product.svg")) {
+                              target.src = "/images/products/fallback-product.svg";
+                            }
+                          }}
+                          className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div className="pt-3 space-y-1">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#8b597b]">
+                          {item.brandName}
+                        </span>
+                        <h4 className="font-serif text-xs font-bold text-[#493129] truncate">{item.title}</h4>
+                      </div>
                     </div>
-                    <div className="pt-3 space-y-1">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-[#8b597b]">
-                        {item.brandName}
-                      </span>
-                      <h4 className="font-serif text-xs font-bold text-[#493129] truncate">{item.title}</h4>
+                    <div className="pt-3 border-t border-[#493129]/10 mt-3 flex items-center justify-between">
+                      {kpPrice > 0 ? (
+                        <span className="text-[11px] font-bold text-[#493129] font-serif">
+                          {formatCurrency(kpPrice)}
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-[#8b597b] italic">Store stock</span>
+                      )}
+                      <Link
+                        href={`/product/${item.slug}`}
+                        className="text-[10px] font-bold text-[#493129] hover:underline"
+                      >
+                        Details →
+                      </Link>
                     </div>
                   </div>
-                  <div className="pt-3 border-t border-[#493129]/10 mt-3 flex items-center justify-between">
-                    <span className="text-[10px] text-[#8b597b] italic">Store stock</span>
-                    <Link
-                      href={`/product/${item.slug}`}
-                      className="text-[10px] font-bold text-[#493129] hover:underline"
-                    >
-                      Details →
-                    </Link>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>

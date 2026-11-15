@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
 
     const order = result.order;
     if (utrNumber) {
-      order.notes = `Paid via Razorpay Link (https://razorpay.me/@raghavendra4969). UTR/Ref: ${utrNumber}`;
+      order.notes = `Payment Ref / UTR: ${utrNumber}`;
     }
 
     // Sync order to Supabase PostgreSQL (Single Source of Truth) - AWAITED so serverless runtime does not abort it
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     dispatchWhatsAppNotification({
       eventType: isOnlinePayment ? "payment_verified" : "order_created",
       dedupKey: `order_${order.orderNumber}`,
-      title: isOnlinePayment ? "Online Payment Order Received (Razorpay Link)" : "New Cash on Delivery Order Received",
+      title: isOnlinePayment ? "Online Payment Order Received (Razorpay Gateway)" : "New Cash on Delivery Order Received",
       details: {
         orderNumber: order.orderNumber,
         customer: order.customerName,
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
         itemsCount: `${order.items.length} item(s)`,
         totalAmount: `₹${order.grandTotal.toLocaleString("en-IN")}`,
         paymentMode: isOnlinePayment
-          ? `Razorpay Link (${utrNumber ? `UTR: ${utrNumber}` : "Pending Verification"})`
+          ? `Razorpay Standard Checkout (${order.paymentStatus.toUpperCase()})`
           : "Cash on Delivery (Pending Collection)",
         deliveryPincode: order.fulfillmentType === "pickup" ? "In-Store Pickup" : (shippingAddress?.pincode || "591103"),
       },
