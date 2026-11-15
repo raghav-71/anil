@@ -9,7 +9,7 @@
     "categoryName": "Smartphones",
     "shortDescription": "Motorola Moto G37 Power with authentic manufacturer warranty. Available at Anil Communications Pant Nagar.",
     "description": "Moto G37 Power by Motorola in category Smartphones. Fully backed by official Indian warranty and service support. Awaiting retail pricing confirmation from store manager.",
-    "basePrice": 14000,
+    "basePrice": 1,
     "mrp": 15999,
     "hsnCode": "85171300",
     "gstRate": 18,
@@ -24,25 +24,39 @@
     "variants": [
       {
         "id": "var-moto-g37-power-01",
-        "sellingPrice": 14000,
-        "mrp": 15999,
-        "stockQuantity": 16,
+        "productId": "prod-moto-g37-power",
+        "sku": "SKU-prod-moto-g37-power-var-moto-g37-power-01",
+        "barcode": "BC-var-moto-g37-power-01",
+        "color": "Standard",
+        "colorCode": "#493129",
         "ram": "4GB",
         "storage": "128GB",
-        "color": "Standard"
+        "sellingPrice": 1,
+        "mrp": 15999,
+        "costPrice": 0,
+        "stockQuantity": 16,
+        "lowStockThreshold": 5,
+        "isActive": true
       },
       {
         "id": "var-moto-g37-power-02",
-        "sellingPrice": 14999,
-        "mrp": 17999,
-        "stockQuantity": 15,
+        "productId": "prod-moto-g37-power",
+        "sku": "SKU-prod-moto-g37-power-var-moto-g37-power-02",
+        "barcode": "BC-var-moto-g37-power-02",
+        "color": "Standard",
+        "colorCode": "#493129",
         "ram": "12GB",
         "storage": "256GB",
-        "color": "Standard"
+        "sellingPrice": 14999,
+        "mrp": 17999,
+        "costPrice": 0,
+        "stockQuantity": 15,
+        "lowStockThreshold": 5,
+        "isActive": true
       }
     ],
     "createdAt": "2026-11-11T02:40:45.625252+00:00",
-    "updatedAt": "2026-11-15T05:14:17.636Z",
+    "updatedAt": "2026-11-15T05:26:33.721Z",
     "totalStock": 31,
     "returnPolicy": "7 Days Replacement for Technical & Hardware Defects",
     "highlights": [
